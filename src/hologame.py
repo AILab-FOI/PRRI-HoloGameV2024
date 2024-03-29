@@ -1,8 +1,8 @@
-# title:   HoloGameV
-# author:  AILab-FOI
-# desc:    short description
-# site:    https://ai.foi.hr
-# license: GPLv3
+# title:   Hologame-V
+# author:  Leonardo Andrasic
+# desc:    Igra za PRRI
+# site:    website link
+# license: MIT License (change this to your license of choice)
 # version: 0.1
 # script:  python
 
@@ -28,7 +28,7 @@ def TIC():
   scale=3,
   w=2,h=2
  )
- print("HoloGameV",84,84)
+ print("Hologame-V!",84,84)
  t+=1
 
 # <TILES>
