@@ -28,7 +28,7 @@ for filename in os.listdir(modules_dir):
 new_file_content += '# <TILES>' + '<TILES>'.join(main_content_parts[1:])
 
 # Write the new content to the hologamep.py file in the current directory
-with open('hologamep.py', 'w') as new_file:
+with open('hologamev.py', 'w') as new_file:
     new_file.write(new_file_content)
 
 print("Bundling completed.")
