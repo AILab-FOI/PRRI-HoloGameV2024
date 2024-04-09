@@ -8,9 +8,45 @@
 
 t=0
 
+
 class player: 
     x=96
     y=24
+    desno=False
+    shootTimer=0
+    jet
+    
+    
+    
+class prvaPuska:
+    x=0
+    y=0
+    
+    desno=False
+    
+    firerate = 1
+    speed=16
+    dmg=4
+    
+class drugaPuska:
+    x=0
+    y=0
+    
+    desno=False
+    
+    firerate = 0.1
+    speed=6
+    dmg=1
+
+
+metci = []
+
+
+initDone = False
+
+
+
+
 
 
 minY=120 #najniza tocka
@@ -19,6 +55,13 @@ minX=225 #najdesnija tocka
 #Osnovne Varijable
 brzina=3
 gravitacija=2
+
+#jetpack
+jetpackTrajanje=3
+jetpackJacina=2
+
+#granata
+granataVelicinaEksplozije=3
 
 #Varijable skakanja
 skokVar=0 
@@ -31,8 +74,12 @@ skokJacina=2
 
 
 def TIC():
+ Init()
  Final()
+ Pucanje()
  PlayerKontroler()
+
+
 
 
 
@@ -57,8 +104,10 @@ def PlayerKontroler():
     #kretanje lijevo desno
     if btn(2): 
         player.x=player.x-brzina
+        player.desno=False
     if btn(3):
         player.x=player.x+brzina
+        player.desno=True
 
     #gravitacija
 	if player.y<minY:
@@ -72,14 +121,83 @@ def PlayerKontroler():
 		player.x=minX
 		
     if player.x<0:
-		player.x=0
+        player.x=0
+        
+    
+    #jetpack
+        
+    
+        
+    #renderanje spritea
+    if player.desno==True:
+        spr(1+t%60//30*2,player.x,player.y,14,1,1,0,2,2)
+    else:
+        spr(1+t%60//30*2,player.x,player.y,14,1,0,0,2,2)
+        
+        
+        
+        
+        
+
+def Pucanje():
+    
+    player.shootTimer = player.shootTimer - 1
+    
+    if player.shootTimer < 0:
+        if key(6):
+            pucajPrvi()
+        if key(7):
+            pucajDrugi()
+        
+    for metak in metci:
+            spr(1,metak.x,metak.y,14,1,0,1,1,1)
+            
+            if metak.desno == True:   
+                metak.x = metak.x + metak.speed
+            else:
+                metak.x = metak.x - metak.speed
+            
+            if metak.x < 0 or metak.x > minX:
+                del metak
+
+
+
+
+def pucajPrvi(metak):
+  metak = prvaPuska()  
+  metak.x = player.x
+  metak.y = player.y
+  metak.desno = player.desno
+
+  metci.append(metak)
+  player.shootTimer=prvaPuska.firerate*60
+  
+def pucajDrugi():
+  metak = drugaPuska() 
+  metak.x = player.x
+  metak.y = player.y
+  metak.desno = player.desno
+
+  metci.append(metak)
+  player.shootTimer=drugaPuska.firerate*60
+
+
+
+
+
+def Init():
+    if initDone == False:
+        initDone = True
+    
+
+
 
 
 
 def Final():
-    #ispis
 	cls(13)
-	spr(1+t%60//30*2,player.x,player.y,14,1,0,0,2,2)
+    print("F i G za pucanje")
+ 
 	t=t+1
 
 
