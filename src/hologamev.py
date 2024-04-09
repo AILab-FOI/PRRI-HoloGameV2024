@@ -7,74 +7,86 @@
 # script:  python
 
 t=0
-x=96
-y=24
 
-def TIC():
- PlayerKontroler()
+class player: 
+    x=96
+    y=24
 
-
-t=0
-x=96
-y=24
 
 minY=120 #najniza tocka
 minX=225 #najdesnija tocka
 
-
 #Osnovne Varijable
 brzina=3
 gravitacija=2
-
 
 #Varijable skakanja
 skokVar=0 
 skokTrajanje=20
 skokJacina=2
 
+
+
+
+
+
+def TIC():
+ Final()
+ PlayerKontroler()
+
+
+
+
 def PlayerKontroler():
-    global t, x, y, minY, minX, brzina, gravitacija, skokVar, skokTrajanje, skokJacina
+    global skokVar, skokTrajanje, skokJacina, minY, minX, brzina, gravitacija
+
 
      #skakanje
     if btn(0):
-	    if y==minY:
+	    if player.y==minY:
 		    skokVar=skokTrajanje 
                 
     if key(48):
-        if y==minY:
+        if player.y==minY:
             skokVar=skokTrajanje 
+            
     if skokVar>0:
-        y=y-skokJacina
+        player.y=player.y-skokJacina
         skokVar=skokVar-1 
 
     #kretanje lijevo desno
     if btn(2): 
-        x=x-brzina
+        player.x=player.x-brzina
     if btn(3):
-        x=x+brzina
+        player.x=player.x+brzina
 
     #gravitacija
-	if y<minY:
+	if player.y<minY:
 		if skokVar<1:
-		    y=y+gravitacija
+		    player.y=player.y+gravitacija
 	else: 
-		y=minY
-
+		player.y=minY
 
 	#blokiranje lijevo i desno
-	if x>minX:
-		x=minX
+	if player.x>minX:
+		player.x=minX
 		
-    if x<0:
-		x=0
+    if player.x<0:
+		player.x=0
 
 
-	#ispis
+
+def Final():
+    #ispis
 	cls(13)
-	spr(1+t%60//30*2,x,y,14,1,0,0,2,2)
+	spr(1+t%60//30*2,player.x,player.y,14,1,0,0,2,2)
 	t=t+1
-def test( a, b ):
-    return a+b
+
+
+ 
+ 
+
+
 # <TILES>
 # 001:eccccccccc888888caaaaaaaca888888cacccccccacc0ccccacc0ccccacc0ccc
 # 002:ccccceee8888cceeaaaa0cee888a0ceeccca0ccc0cca0c0c0cca0c0c0cca0c0c
