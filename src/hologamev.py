@@ -14,7 +14,8 @@ class player:
     y=24
     desno=False
     shootTimer=0
-    jet
+    jetpackGorivo=0
+    skok=0 
     
     
     
@@ -24,7 +25,7 @@ class prvaPuska:
     
     desno=False
     
-    firerate = 1
+    firerate = 0.6
     speed=16
     dmg=4
     
@@ -42,7 +43,6 @@ class drugaPuska:
 metci = []
 
 
-initDone = False
 
 
 
@@ -56,17 +56,18 @@ minX=225 #najdesnija tocka
 brzina=3
 gravitacija=2
 
+#Varijable skakanja
+skokTrajanje=20
+skokJacina=2
+
 #jetpack
-jetpackTrajanje=3
-jetpackJacina=2
+jetpackTrajanje=50
+jetpackJacina=4
 
 #granata
 granataVelicinaEksplozije=3
 
-#Varijable skakanja
-skokVar=0 
-skokTrajanje=20
-skokJacina=2
+
 
 
 
@@ -74,7 +75,6 @@ skokJacina=2
 
 
 def TIC():
- Init()
  Final()
  Pucanje()
  PlayerKontroler()
@@ -85,36 +85,42 @@ def TIC():
 
 
 def PlayerKontroler():
-    global skokVar, skokTrajanje, skokJacina, minY, minX, brzina, gravitacija
+    global skokTrajanje, skokJacina, minY, minX, brzina, gravitacija
 
 
      #skakanje
     if btn(0):
 	    if player.y==minY:
-		    skokVar=skokTrajanje 
+		    player.skok=skokTrajanje 
                 
     if key(48):
         if player.y==minY:
-            skokVar=skokTrajanje 
-            
-    if skokVar>0:
+            player.skok=skokTrajanje 
+    
+    if player.skok>0:
         player.y=player.y-skokJacina
-        skokVar=skokVar-1 
+        player.skok=player.skok-1 
+
 
     #kretanje lijevo desno
-    if btn(2): 
+    if key(1): 
         player.x=player.x-brzina
         player.desno=False
-    if btn(3):
+    if key(4):
         player.x=player.x+brzina
         player.desno=True
 
+    if key(23):
+        JetpackJoyride()
+        
+
     #gravitacija
 	if player.y<minY:
-		if skokVar<1:
+		if player.skok<1:
 		    player.y=player.y+gravitacija
 	else: 
 		player.y=minY
+
 
 	#blokiranje lijevo i desno
 	if player.x>minX:
@@ -125,7 +131,9 @@ def PlayerKontroler():
         
     
     #jetpack
-        
+    
+    if player.y == minY:
+        player.jetpackGorivo=jetpackTrajanje
     
         
     #renderanje spritea
@@ -135,7 +143,12 @@ def PlayerKontroler():
         spr(1+t%60//30*2,player.x,player.y,14,1,0,0,2,2)
         
         
-        
+def JetpackJoyride():
+    if player.jetpackGorivo > 0:
+        player.y = player.y - jetpackJacina
+        player.jetpackGorivo = player.jetpackGorivo - 1
+        player.skok = 0
+     
         
         
 
@@ -145,9 +158,9 @@ def Pucanje():
     
     if player.shootTimer < 0:
         if key(6):
-            pucajPrvi()
+            pucaj(prvaPuska)
         if key(7):
-            pucajDrugi()
+            pucaj(drugaPuska)
         
     for metak in metci:
             spr(1,metak.x,metak.y,14,1,0,1,1,1)
@@ -160,45 +173,20 @@ def Pucanje():
             if metak.x < 0 or metak.x > minX:
                 del metak
 
-
-
-
-def pucajPrvi(metak):
-  metak = prvaPuska()  
+def pucaj(puska):
+  metak = puska()  
   metak.x = player.x
   metak.y = player.y
   metak.desno = player.desno
 
   metci.append(metak)
-  player.shootTimer=prvaPuska.firerate*60
+  player.shootTimer=puska.firerate*60
   
-def pucajDrugi():
-  metak = drugaPuska() 
-  metak.x = player.x
-  metak.y = player.y
-  metak.desno = player.desno
-
-  metci.append(metak)
-  player.shootTimer=drugaPuska.firerate*60
 
 
 
 
 
-def Init():
-    if initDone == False:
-        initDone = True
-    
-
-
-
-
-
-def Final():
-	cls(13)
-    print("F i G za pucanje")
- 
-	t=t+1
 
 
  

@@ -7,12 +7,21 @@
 # script:  python
 
 t=0
-x=96
-y=24
 
 def TIC():
+ Final()
+ Pucanje()
  PlayerKontroler()
 
+
+
+
+def Final():
+	cls(13)
+    print("A i D za kretanje, SPACE za skakanje", 0, 0)
+    print("W za jetpack, F i G za pucanje", 0, 8)
+ 
+	t=t+1
 # <TILES>
 # 001:eccccccccc888888caaaaaaaca888888cacccccccacc0ccccacc0ccccacc0ccc
 # 002:ccccceee8888cceeaaaa0cee888a0ceeccca0ccc0cca0c0c0cca0c0c0cca0c0c
