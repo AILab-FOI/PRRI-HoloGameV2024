@@ -12,6 +12,8 @@ y=24
 
 def TIC():
  PlayerKontroler()
+ enemyMovement()
+ Projektili()
 
 # <TILES>
 # 001:eccccccccc888888caaaaaaaca888888cacccccccacc0ccccacc0ccccacc0ccc
