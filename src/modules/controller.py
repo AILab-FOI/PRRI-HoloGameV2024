@@ -18,23 +18,29 @@ minY=120 #najniza tocka
 minX=225 #najdesnija tocka
 
 #Osnovne Varijable
-brzina=3
+akceleracija=0.5
+maxBrzina=3
 gravitacija=0.3
 
 #Varijable skakanja
-skokJacina=5
+skokJacina=5.2
 
 #jetpack
 jetpackTrajanje=50
-jetpackJacina=4
+jetpackJacina=5
 
+
+def pomakni(a, b, vrijednost):
+    if vrijednost == 0:
+        return a
+    elif a < b:
+        return min(a + vrijednost, b)
+    else:
+        return max(a - vrijednost, b)
 
 
 
 def PlayerKontroler():
-    global skokJacina, minY, minX, brzina, gravitacija
-
-
      #skakanje
     if key(48) and player.vsp==0:
 	    if player.y>=minY:
@@ -43,11 +49,15 @@ def PlayerKontroler():
 
     #kretanje lijevo desno
     if key(1): 
-        player.x=player.x-brzina
+        #player.x=player.x-brzina
+        player.hsp=pomakni(player.hsp,-maxBrzina,akceleracija)
         player.desno=False
-    if key(4):
-        player.x=player.x+brzina
+    elif key(4):
+        #player.x=player.x+brzina
+        player.hsp=pomakni(player.hsp,maxBrzina,akceleracija)
         player.desno=True
+    else:
+        player.hsp=pomakni(player.hsp,0,akceleracija)
 
     if key(23):
         JetpackJoyride()
@@ -61,13 +71,15 @@ def PlayerKontroler():
         player.vsp=player.vsp+gravitacija
 
 	#blokiranje lijevo i desno
-	if player.x>minX:
+	if player.x>minX: # ZAMIJENITI SA COLLISION PROVJEROM
 		player.x=minX
+        player.hsp=0
 		
-    if player.x<0:
+    if player.x<0: # ZAMIJENITI SA COLLISION PROVJEROM
         player.x=0
+        player.hsp=0
 
-    #player.x=player.x+player.hsp
+    player.x=player.x+player.hsp
     player.y=player.y+player.vsp
         
     
