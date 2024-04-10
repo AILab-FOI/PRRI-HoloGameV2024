@@ -140,6 +140,8 @@ def PlayerKontroler(coll):
     #gravitacija i kolizije
     if player.y+player.vsp>=minY or player.ProvjeriKolizije(player, 0, player.vsp + 1):
         player.vsp=0
+        while player.y<minY and not player.ProvjeriKolizije(player, 0, 1):
+            player.y+=1
     else:
         player.vsp=player.vsp+gravitacija
 
@@ -228,7 +230,7 @@ def Pucanje():
             pucaj(drugaPuska)
         
     for metak in metci:
-            spr(1,metak.x,metak.y,14,1,0,1,1,1)
+            spr(80,metak.x,metak.y,14,1,0,1,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
@@ -262,6 +264,7 @@ def test( a, b ):
 # 018:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
 # 019:cacccccccaaaaaaacaaacaaacaaaaccccaaaaaaac8888888cc000cccecccccec
 # 020:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
+# 080:eee22eeeee2222eee22ee22e22e22e2222e22e22e22ee22eee2222eeeee22eee
 # </TILES>
 
 # <WAVES>
