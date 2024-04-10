@@ -10,6 +10,73 @@ t=0
 x=96
 y=24
 
+def TIC():
+ Render()
+ enemyMovement()
+ Projektili()
+
+
+t=0
+x=96
+y=24
+
+minY=120 #najniza tocka
+minX=225 #najdesnija tocka
+
+
+#Osnovne Varijable
+brzina=3
+gravitacija=2
+
+
+#Varijable skakanja
+skokVar=0 
+skokTrajanje=20
+skokJacina=2
+
+def PlayerKontroler():
+    global t, x, y, minY, minX, brzina, gravitacija, skokVar, skokTrajanje, skokJacina
+
+     #skakanje
+    if btn(0):
+	    if y==minY:
+		    skokVar=skokTrajanje 
+                
+    if key(48):
+        if y==minY:
+            skokVar=skokTrajanje 
+    if skokVar>0:
+        y=y-skokJacina
+        skokVar=skokVar-1 
+
+    #kretanje lijevo desno
+    if btn(2): 
+        x=x-brzina
+    if btn(3):
+        x=x+brzina
+
+    #gravitacija
+	if y<minY:
+		if skokVar<1:
+		    y=y+gravitacija
+	else: 
+		y=minY
+
+
+	#blokiranje lijevo i desno
+	if x>minX:
+		x=minX
+		
+    if x<0:
+		x=0
+
+
+	#ispis
+	cls(13)
+	spr(1+t%60//30*2,x,y,14,1,0,0,2,2)
+	t=t+1
+
+
 class enemy:
   x = 200  
   y = 120
@@ -17,6 +84,7 @@ class enemy:
   dx = -1  
   dy = 0
   desno = False
+  #shotTimer = 0  # timer za pucanje
 
 class Projectile:
   def __init__(self, x, y):  # konstruktor klase
@@ -27,14 +95,12 @@ class Projectile:
     self.speed = 5  # brzina projektila
     self.desno = True
 
-def TIC():
-  Final()
-  PlayerKontroler()
-  enemyMovement()
-  Projektili()
 
-minY=120 #najniza tocka
-minX=225 #najdesnija tocka
+
+
+#lista projektila
+projectiles = []
+
 
 shotTimer = 0  # timer za pucanje
 def enemyMovement():
@@ -54,21 +120,8 @@ def enemyMovement():
   if shotTimer >= 60 * 2:
     shootProjectile()  # poziv funkcije za pucanje
     shotTimer = 0  # resetiranje timera
-
-
-# Osnovne Varijable
-brzina=3
-gravitacija=2
-
-
-# Varijable skakanja
-skokVar=0 
-skokTrajanje=20
-skokJacina=2
-
-def PlayerKontroler():
-  global t, x, y, minY, minX, brzina, gravitacija, skokVar, skokTrajanje, skokJacina
-  
+    
+      
 
 def shootProjectile():
   # kreiranje projektila
@@ -89,13 +142,10 @@ def Projektili():
     if projektil.x < 0 or projektil.x > 240:
      del projektil
 
-#lista projektila
-projectiles = []
 
 
 
-
-def Final():
+def Render():
     cls(13)
 
     for projectile in projectiles:
@@ -108,6 +158,11 @@ def Final():
 
     spr(1+t%60//30*2,x,y,14,1,1,0,2,2)
     t=t+1
+
+
+
+def test( a, b ):
+    return a+b
 # <TILES>
 # 001:eccccccccc888888caaaaaaaca888888cacccccccacc0ccccacc0ccccacc0ccc
 # 002:ccccceee8888cceeaaaa0cee888a0ceeccca0ccc0cca0c0c0cca0c0c0cca0c0c
