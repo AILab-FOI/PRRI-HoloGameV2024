@@ -85,6 +85,8 @@ def PlayerKontroler(coll):
     #gravitacija i kolizije
     if player.y+player.vsp>=minY or player.ProvjeriKolizije(player, 0, player.vsp + 1):
         player.vsp=0
+        while player.y<minY and not player.ProvjeriKolizije(player, 0, 1):
+            player.y+=1
     else:
         player.vsp=player.vsp+gravitacija
 
