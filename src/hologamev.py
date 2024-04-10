@@ -70,7 +70,7 @@ skokJacina=5.2
 
 #jetpack
 jetpackTrajanje=50
-jetpackJacina=5
+jetpackJacina=2
 
 
 def pomakni(a, b, vrijednost):
@@ -89,14 +89,16 @@ def PlayerKontroler():
 	    if player.y>=minY:
             player.vsp=-skokJacina # ZAMIJENITI SA COLLISION PROVJEROM
 
+    #letenje jetpack
+    if key(24):
+        JetpackJoyride()
+
 
     #kretanje lijevo desno
     if key(1): 
-        #player.x=player.x-brzina
         player.hsp=pomakni(player.hsp,-maxBrzina,akceleracija)
         player.desno=False
     elif key(4):
-        #player.x=player.x+brzina
         player.hsp=pomakni(player.hsp,maxBrzina,akceleracija)
         player.desno=True
     else:
@@ -128,7 +130,7 @@ def PlayerKontroler():
     
     #jetpack
     
-    if player.y == minY:
+    if player.y == minY: # ZAMIJENITI SA DOK STOJI NA NEKOM OBJEKTU
         player.jetpackGorivo=jetpackTrajanje
     
         
@@ -141,7 +143,7 @@ def PlayerKontroler():
         
 def JetpackJoyride():
     if player.jetpackGorivo > 0:
-        player.y = player.y - jetpackJacina
+        player.vsp = -jetpackJacina
         player.jetpackGorivo = player.jetpackGorivo - 1
         player.skok = 0
      
