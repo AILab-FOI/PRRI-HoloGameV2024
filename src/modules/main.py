@@ -11,8 +11,9 @@ t=0
 def TIC():
  Final()
  Pucanje()
- PlayerKontroler()
- DefinirajKolizije()
+ collidables = DefinirajKolizije()
+ PlayerKontroler(collidables)
+ 
 
 
 

@@ -11,8 +11,9 @@ t=0
 def TIC():
  Final()
  Pucanje()
- PlayerKontroler()
- DefinirajKolizije()
+ collidables = DefinirajKolizije()
+ PlayerKontroler(collidables)
+ 
 
 
 
@@ -32,6 +33,16 @@ class collidable:
         self.height = height
         self.draw_self()
 
+    def check_collision(self, other):
+        if self.x < other.x + other.width and self.x + self.width > other.x and self.y < other.y + other.height and self.y + self.height > other.y:
+            return True
+        return False
+
+    def check_collision_rectangle(self, xleft, ytop, xright, ybottom):
+        if self.x < xright and self.x + self.width > xleft and self.y < ybottom and self.y + self.height > ytop:
+            return True
+        return False
+
     def draw_self(self):
         rect(self.x, self.y, self.width, self.height, 15)
 
@@ -40,6 +51,8 @@ def DefinirajKolizije():
     coll1 = collidable(20, 70, 60, 15)
     coll2 = collidable(200, 112, 40, 10)
     coll3 = collidable(150, 80, 30, 10)
+    collidables = [coll1, coll2, coll3]
+    return collidables
 
 
 
@@ -47,12 +60,27 @@ def DefinirajKolizije():
 class player: 
     x=96
     y=24
+    width=16
+    height=16
     hsp=0
     vsp=0
     desno=False
     shootTimer=0
     jetpackGorivo=0
-    skok=0 
+    skok=0
+    coll=[]
+
+    def ProvjeriKolizije(self, xdodatak, ydodatak):
+        self.x += xdodatak
+        self.y += ydodatak
+        for obj in self.coll:
+            if obj.check_collision(self):
+                self.x -= xdodatak
+                self.y -= ydodatak
+                return True
+        self.x -= xdodatak
+        self.y -= ydodatak
+        return False
     
 
 
@@ -82,11 +110,13 @@ def pomakni(a, b, vrijednost):
 
 
 
-def PlayerKontroler():
+def PlayerKontroler(coll):
+    player.coll=coll
+
      #skakanje
     if key(48) and player.vsp==0:
-	    if player.y>=minY:
-            player.vsp=-skokJacina # ZAMIJENITI SA COLLISION PROVJEROM
+        if player.ProvjeriKolizije(player, 0, 1) or player.y>=minY:
+            player.vsp=-skokJacina
 
     #letenje jetpack
     if key(24):
@@ -107,21 +137,28 @@ def PlayerKontroler():
         JetpackJoyride()
         
 
-    #gravitacija
-    if player.y+player.vsp>minY:
+    #gravitacija i kolizije
+    if player.y+player.vsp>=minY or player.ProvjeriKolizije(player, 0, player.vsp + 1):
         player.vsp=0
-        player.y=minY
     else:
         player.vsp=player.vsp+gravitacija
 
+    if player.vsp<0:
+        if player.ProvjeriKolizije(player, 0, player.vsp - 1):
+            player.vsp=0
+
+    
+
 	#blokiranje lijevo i desno
-	if player.x>minX: # ZAMIJENITI SA COLLISION PROVJEROM
-		player.x=minX
+	if player.x>minX or player.ProvjeriKolizije(player, 1+player.hsp, 0): # ZAMIJENITI SA COLLISION PROVJEROM
         player.hsp=0
+        while player.ProvjeriKolizije(player, 0, 0) or player.x > minX:
+            player.x-=1
 		
-    if player.x<0: # ZAMIJENITI SA COLLISION PROVJEROM
-        player.x=0
+    if player.x<0 or player.ProvjeriKolizije(player, -1+player.hsp, 0): # ZAMIJENITI SA COLLISION PROVJEROM
         player.hsp=0
+        while player.ProvjeriKolizije(player, 0, 0) or player.x < 0:
+            player.x+=1
 
     player.x=player.x+player.hsp
     player.y=player.y+player.vsp
@@ -129,7 +166,7 @@ def PlayerKontroler():
     
     #jetpack
     
-    if player.y == minY: # ZAMIJENITI SA DOK STOJI NA NEKOM OBJEKTU
+    if player.ProvjeriKolizije(player, 0, 1) or player.y>=minY: # ZAMIJENITI SA DOK STOJI NA NEKOM OBJEKTU
         player.jetpackGorivo=jetpackTrajanje
     
         
