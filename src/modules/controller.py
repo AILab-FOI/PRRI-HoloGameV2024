@@ -5,6 +5,8 @@
 class player: 
     x=96
     y=24
+    hsp=0
+    vsp=0
     desno=False
     shootTimer=0
     jetpackGorivo=0
@@ -17,11 +19,10 @@ minX=225 #najdesnija tocka
 
 #Osnovne Varijable
 brzina=3
-gravitacija=2
+gravitacija=0.3
 
 #Varijable skakanja
-skokTrajanje=20
-skokJacina=2
+skokJacina=5
 
 #jetpack
 jetpackTrajanje=50
@@ -31,21 +32,13 @@ jetpackJacina=4
 
 
 def PlayerKontroler():
-    global skokTrajanje, skokJacina, minY, minX, brzina, gravitacija
+    global skokJacina, minY, minX, brzina, gravitacija
 
 
      #skakanje
-    if btn(0):
-	    if player.y==minY:
-		    player.skok=skokTrajanje 
-                
-    if key(48):
-        if player.y==minY:
-            player.skok=skokTrajanje 
-    
-    if player.skok>0:
-        player.y=player.y-skokJacina
-        player.skok=player.skok-1 
+    if key(48) and player.vsp==0:
+	    if player.y>=minY:
+            player.vsp=-skokJacina # ZAMIJENITI SA COLLISION PROVJEROM
 
 
     #kretanje lijevo desno
@@ -61,12 +54,11 @@ def PlayerKontroler():
         
 
     #gravitacija
-	if player.y<minY:
-		if player.skok<1:
-		    player.y=player.y+gravitacija
-	else: 
-		player.y=minY
-
+    if player.y+player.vsp>minY:
+        player.vsp=0
+        player.y=minY
+    else:
+        player.vsp=player.vsp+gravitacija
 
 	#blokiranje lijevo i desno
 	if player.x>minX:
@@ -74,6 +66,9 @@ def PlayerKontroler():
 		
     if player.x<0:
         player.x=0
+
+    #player.x=player.x+player.hsp
+    player.y=player.y+player.vsp
         
     
     #jetpack
@@ -84,9 +79,9 @@ def PlayerKontroler():
         
     #renderanje spritea
     if player.desno==True:
-        spr(1+t%60//30*2,player.x,player.y,14,1,1,0,2,2)
+        spr(1+t%60//30*2,int(player.x),int(player.y),14,1,1,0,2,2)
     else:
-        spr(1+t%60//30*2,player.x,player.y,14,1,0,0,2,2)
+        spr(1+t%60//30*2,int(player.x),int(player.y),14,1,0,0,2,2)
         
         
 def JetpackJoyride():
