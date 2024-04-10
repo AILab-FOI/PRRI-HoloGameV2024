@@ -12,6 +12,7 @@ def TIC():
  Final()
  Pucanje()
  PlayerKontroler()
+ DefinirajKolizije()
 
 
 
