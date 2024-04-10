@@ -51,8 +51,8 @@ def Pucanje():
 
 def pucaj(puska):
   metak = puska()  
-  metak.x = player.x
-  metak.y = player.y
+  metak.x = int(player.x)
+  metak.y = int(player.y)
   metak.desno = player.desno
 
   metci.append(metak)
