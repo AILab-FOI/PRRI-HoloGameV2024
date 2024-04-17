@@ -133,6 +133,8 @@ def PlayerKontroler(coll):
         spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),14,1,0,0,2,2)
     elif player.desno==False and player.is_walking==True:
         spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),14,1,1,0,2,2)
+    elif player.desno==False:
+        spr(player.frame,int(player.x),int(player.y),14,1,1,0,2,2)
     else:
         spr(player.frame,int(player.x),int(player.y),14,1,0,0,2,2)
 
