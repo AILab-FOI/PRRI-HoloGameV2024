@@ -7,11 +7,8 @@
 # script:  python
 
 t=0
-x=96
-y=24
 
 def TIC():
- PlayerKontroler()
  Render()
  enemyMovement()
  Projektili()
