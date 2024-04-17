@@ -10,6 +10,10 @@ t=0
 
 def TIC():
  Final()
+ 
+ Render()
+ enemyMovement()
+ Projektili()
  Pucanje()
  collidables = DefinirajKolizije()
  PlayerKontroler(collidables)
@@ -30,10 +34,14 @@ def Final():
 # 002:ccccceee8888cceeaaaa0cee888a0ceeccca0ccc0cca0c0c0cca0c0c0cca0c0c
 # 003:eccccccccc888888caaaaaaaca888888cacccccccacccccccacc0ccccacc0ccc
 # 004:ccccceee8888cceeaaaa0cee888a0ceeccca0cccccca0c0c0cca0c0c0cca0c0c
+# 005:eccccccccceeeeeec6666666c6eeeeeec6b00bbbc6bb00b0c6bb20b0c00b2bbb
+# 006:ccccceeeeeeeccee66665ceeeee65cee00b65ccc0bb65c0c2bb65c0c2bb65c0c
 # 017:cacccccccaaaaaaacaaacaaacaaaaccccaaaaaaac8888888cc000cccecccccec
 # 018:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
 # 019:cacccccccaaaaaaacaaacaaacaaaaccccaaaaaaac8888888cc000cccecccccec
 # 020:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
+# 021:c00bbbbbc2006666c2666000c6666000c6666666ceeeeeeecc555cccecccccec
+# 022:bb0055cc60065cce66265cee66265cee66665ceeeeeeccee555cceeecccceeee
 # 080:eee22eeeee2222eee22ee22e22e22e2222e22e22e22ee22eee2222eeeee22eee
 # </TILES>
 
