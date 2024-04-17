@@ -79,7 +79,5 @@ def Render():
     else:
         spr(5,enemy.x,enemy.y,14,1,0,0,2,2)
 
-    spr(1+t%60//30*2,x,y,14,1,1,0,2,2)
-    t=t+1
 
 
