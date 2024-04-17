@@ -10,10 +10,13 @@ class player:
     hsp=0
     vsp=0
     desno=False
+    is_walking = False
+    frame = 256
     shootTimer=0
     jetpackGorivo=0
     skok=0
     coll=[]
+    spriteTimer = 0
 
     def ProvjeriKolizije(self, xdodatak, ydodatak):
         self.x += xdodatak
@@ -36,6 +39,7 @@ minX=225 #najdesnija tocka
 akceleracija=0.5
 maxBrzina=3
 gravitacija=0.3
+
 
 #Varijable skakanja
 skokJacina=5.2
@@ -72,11 +76,14 @@ def PlayerKontroler(coll):
     if key(1): 
         player.hsp=pomakni(player.hsp,-maxBrzina,akceleracija)
         player.desno=False
+        player.is_walking = True
     elif key(4):
         player.hsp=pomakni(player.hsp,maxBrzina,akceleracija)
+        player.is_walking = True
         player.desno=True
     else:
         player.hsp=pomakni(player.hsp,0,akceleracija)
+        player.is_walking = False
 
     if key(23):
         JetpackJoyride()
@@ -115,13 +122,20 @@ def PlayerKontroler(coll):
     
     if player.ProvjeriKolizije(player, 0, 1) or player.y>=minY: # ZAMIJENITI SA DOK STOJI NA NEKOM OBJEKTU
         player.jetpackGorivo=jetpackTrajanje
-    
-        
+
+    if player.is_walking == True:
+        player.spriteTimer += 0.1
+
+    print(player.spriteTimer, 0, 32)
+
     #renderanje spritea
-    if player.desno==True:
-        spr(1+t%60//30*2,int(player.x),int(player.y),14,1,1,0,2,2)
+    if player.desno==True and player.is_walking==True:
+        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),14,1,0,0,2,2)
+    elif player.desno==False and player.is_walking==True:
+        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),14,1,1,0,2,2)
     else:
-        spr(1+t%60//30*2,int(player.x),int(player.y),14,1,0,0,2,2)
+        spr(player.frame,int(player.x),int(player.y),14,1,0,0,2,2)
+
         
         
 def JetpackJoyride():
