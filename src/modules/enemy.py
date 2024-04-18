@@ -68,8 +68,7 @@ def Projektili():
 
 
 
-def Render():
-    cls(13)
+def RenderBullets():
 
     for projectile in projectiles:
      spr(80, projectile.x, projectile.y, 14, 1, 0, 0, 1, 1)

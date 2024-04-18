@@ -11,7 +11,9 @@ t=0
 def TIC():
  Final()
  
- Render()
+ cls(0)
+
+ RenderBullets()
  enemyMovement()
  Projektili()
  Pucanje()
