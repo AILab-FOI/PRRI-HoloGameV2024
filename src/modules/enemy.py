@@ -71,9 +71,9 @@ def Projektili():
 def RenderBullets():
 
     for projectile in projectiles:
-     spr(80, projectile.x, projectile.y, 14, 1, 0, 0, 1, 1)
+     spr(80, projectile.x - int(pogled.x), projectile.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
     if enemy.desno==True:
-        spr(290,enemy.x,enemy.y,6,1,0,0,2,2)
+        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
     else:
-        spr(290,enemy.x,enemy.y,6,1,1,0,2,2)
+        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)

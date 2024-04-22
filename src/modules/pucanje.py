@@ -39,7 +39,7 @@ def Pucanje():
             pucaj(drugaPuska)
         
     for metak in metci:
-            spr(80,metak.x,metak.y,14,1,0,1,1,1)
+            spr(80,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,1,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed

@@ -19,6 +19,7 @@ def TIC():
  Pucanje()
  collidables = DefinirajKolizije()
  PlayerKontroler(collidables)
+ pogled.pratiIgraca()
  
 
 
@@ -52,7 +53,7 @@ class collidable:
         return False
 
     def draw_self(self):
-        rect(self.x, self.y, self.width, self.height, 15)
+        rect(self.x - int(pogled.x), self.y - int(pogled.y), self.width, self.height, 15)
 
 
 def DefinirajKolizije():
@@ -96,7 +97,7 @@ class player:
 
 
 minY=120 #najniza tocka
-minX=225 #najdesnija tocka
+minX=10000 #najdesnija tocka
 
 #Osnovne Varijable
 akceleracija=0.5
@@ -193,11 +194,11 @@ def PlayerKontroler(coll):
 
     #renderanje spritea
     if player.desno==True and player.is_walking==True:
-        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),6,1,0,0,2,2)
+        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,0,0,2,2)
     elif player.desno==False and player.is_walking==True:
-        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),6,1,1,0,2,2)
+        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,1,0,2,2)
     else:
-        spr(player.frame,int(player.x),int(player.y),6,1,0,0,2,2)
+        spr(player.frame,int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,int(player.desno==False),0,2,2)
 
         
         
@@ -207,7 +208,7 @@ def JetpackJoyride():
         player.jetpackGorivo = player.jetpackGorivo - 1
         player.skok = 0
      
-        
+    
 
 
 
@@ -284,12 +285,36 @@ def Projektili():
 def RenderBullets():
 
     for projectile in projectiles:
-     spr(80, projectile.x, projectile.y, 14, 1, 0, 0, 1, 1)
+     spr(80, projectile.x - int(pogled.x), projectile.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
     if enemy.desno==True:
-        spr(290,enemy.x,enemy.y,6,1,0,0,2,2)
+        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
     else:
-        spr(290,enemy.x,enemy.y,6,1,1,0,2,2)
+        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+def lerp(a, b, t):
+    return (1-t)*a + t*b
+
+class Pogled:
+    x = 0
+    y = 0
+    w = 240
+    h = 136
+
+    def prati(self, objekt):
+        self.x = objekt.x - (self.w - objekt.width)/2
+        #self.y = objekt.y - (self.h - objekt.height)/2
+
+    def pratiIgraca(self):
+        lerpSnaga = 0.05
+        lerpSnagaHoda = 0.2
+        ispredStoji = 6
+        ispredHoda = 16
+        if player.is_walking:
+            self.x = lerp(self.x, player.x - (self.w - player.width)/2 + ispredHoda*int(player.desno == True) - ispredHoda*int(player.desno == False), lerpSnagaHoda)
+        else:
+            self.x = lerp(self.x, player.x - (self.w - player.width)/2 + ispredStoji*int(player.desno == True) - ispredStoji*int(player.desno == False), lerpSnaga)
+
+pogled = Pogled()
 
 
 
@@ -331,7 +356,7 @@ def Pucanje():
             pucaj(drugaPuska)
         
     for metak in metci:
-            spr(80,metak.x,metak.y,14,1,0,1,1,1)
+            spr(80,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,1,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
