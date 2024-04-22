@@ -19,6 +19,7 @@ def TIC():
  Pucanje()
  collidables = DefinirajKolizije()
  PlayerKontroler(collidables)
+ pogled.prati(player)
  
 
 
@@ -96,7 +97,7 @@ class player:
 
 
 minY=120 #najniza tocka
-minX=225 #najdesnija tocka
+minX=10000 #najdesnija tocka
 
 #Osnovne Varijable
 akceleracija=0.5
@@ -197,7 +198,7 @@ def PlayerKontroler(coll):
     elif player.desno==False and player.is_walking==True:
         spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,1,0,2,2)
     else:
-        spr(player.frame,int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,0,0,2,2)
+        spr(player.frame,int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,int(player.desno==False),0,2,2)
 
         
         
@@ -207,7 +208,7 @@ def JetpackJoyride():
         player.jetpackGorivo = player.jetpackGorivo - 1
         player.skok = 0
      
-        
+    
 
 
 
@@ -292,7 +293,13 @@ def RenderBullets():
         spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
 class Pogled:
     x = 0
-    y = 50
+    y = 0
+    w = 240
+    h = 136
+
+    def prati(self, objekt):
+        self.x = objekt.x - (self.w - objekt.width)/2
+        #self.y = objekt.y - (self.h - objekt.height)/2
 
 pogled = Pogled()
 

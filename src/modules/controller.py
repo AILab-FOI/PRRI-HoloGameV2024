@@ -33,7 +33,7 @@ class player:
 
 
 minY=120 #najniza tocka
-minX=225 #najdesnija tocka
+minX=10000 #najdesnija tocka
 
 #Osnovne Varijable
 akceleracija=0.5
@@ -134,7 +134,7 @@ def PlayerKontroler(coll):
     elif player.desno==False and player.is_walking==True:
         spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,1,0,2,2)
     else:
-        spr(player.frame,int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,0,0,2,2)
+        spr(player.frame,int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,int(player.desno==False),0,2,2)
 
         
         
@@ -144,6 +144,6 @@ def JetpackJoyride():
         player.jetpackGorivo = player.jetpackGorivo - 1
         player.skok = 0
      
-        
+    
 
 
