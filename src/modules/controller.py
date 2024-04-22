@@ -130,11 +130,11 @@ def PlayerKontroler(coll):
 
     #renderanje spritea
     if player.desno==True and player.is_walking==True:
-        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),6,1,0,0,2,2)
+        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,0,0,2,2)
     elif player.desno==False and player.is_walking==True:
-        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),6,1,1,0,2,2)
+        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,1,0,2,2)
     else:
-        spr(player.frame,int(player.x),int(player.y),6,1,0,0,2,2)
+        spr(player.frame,int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,0,0,2,2)
 
         
         

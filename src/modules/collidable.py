@@ -17,7 +17,7 @@ class collidable:
         return False
 
     def draw_self(self):
-        rect(self.x, self.y, self.width, self.height, 15)
+        rect(self.x - int(pogled.x), self.y - int(pogled.y), self.width, self.height, 15)
 
 
 def DefinirajKolizije():

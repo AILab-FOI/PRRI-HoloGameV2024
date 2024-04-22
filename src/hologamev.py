@@ -52,7 +52,7 @@ class collidable:
         return False
 
     def draw_self(self):
-        rect(self.x, self.y, self.width, self.height, 15)
+        rect(self.x - int(pogled.x), self.y - int(pogled.y), self.width, self.height, 15)
 
 
 def DefinirajKolizije():
@@ -193,11 +193,11 @@ def PlayerKontroler(coll):
 
     #renderanje spritea
     if player.desno==True and player.is_walking==True:
-        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),6,1,0,0,2,2)
+        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,0,0,2,2)
     elif player.desno==False and player.is_walking==True:
-        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x),int(player.y),6,1,1,0,2,2)
+        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,1,0,2,2)
     else:
-        spr(player.frame,int(player.x),int(player.y),6,1,0,0,2,2)
+        spr(player.frame,int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,0,0,2,2)
 
         
         
@@ -284,12 +284,17 @@ def Projektili():
 def RenderBullets():
 
     for projectile in projectiles:
-     spr(80, projectile.x, projectile.y, 14, 1, 0, 0, 1, 1)
+     spr(80, projectile.x - int(pogled.x), projectile.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
     if enemy.desno==True:
-        spr(290,enemy.x,enemy.y,6,1,0,0,2,2)
+        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
     else:
-        spr(290,enemy.x,enemy.y,6,1,1,0,2,2)
+        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+class Pogled:
+    x = 0
+    y = 50
+
+pogled = Pogled()
 
 
 
@@ -331,7 +336,7 @@ def Pucanje():
             pucaj(drugaPuska)
         
     for metak in metci:
-            spr(80,metak.x,metak.y,14,1,0,1,1,1)
+            spr(80,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,1,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
