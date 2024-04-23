@@ -24,8 +24,6 @@ def TIC():
  elif state=='menu':
     Menu()
 
-
-
 def Final():
 	cls(13)
     map(0,0,30,17)
@@ -292,6 +290,8 @@ def RenderBullets():
         spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
     else:
         spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+m_ind=0
+
 def Menu():
     global m_ind
     cls(0)
@@ -302,6 +302,13 @@ def Menu():
     rect(1,48+10*m_ind,238,10,2)
     print('Play', 40, 50, 4, False, 1, False)
     print('Quit', 40, 60, 4, False, 1, False)
+
+#  Šetanje po opcijama na meniju
+    if btnp(1) and 48+10*m_ind<50:
+        m_ind += 1
+    elif btnp(0) and 48+10*m_ind>=50:
+        m_ind += -1
+
 def lerp(a, b, t):
     return (1-t)*a + t*b
 
