@@ -2,13 +2,16 @@
 projectiles = []
 
 class enemy:
-  x = 100  
+  x = 90 
   y = 90
   width = 16
   height = 16
   sprite = 1  
   dx = -1  
-  dy = 0
+  vsp = 0
+  gravitacija = 0.3
+  skokJacina = 3
+  minY = 120
   desno = False
   shotTimer = 0  # timer za pucanje
   coll = []
@@ -16,8 +19,14 @@ class enemy:
   def movement(self, coll):
     self.coll = coll
     self.x = self.x + self.dx
-    self.y = self.y + self.dy
-    if self.ProvjeriKolizije(self, 3*self.dx, 0):
+    if self.ProvjeriKolizije(self, 6*self.dx, 0):
+      if not self.ProvjeriKolizije(self, 3*self.dx, -9):
+        if self.ProvjeriKolizije(self, 0, 1):
+          self.vsp = -self.skokJacina
+        else:
+          self.dx = -self.dx
+          self.desno = not self.desno
+    elif self.ProvjeriKolizije(self, 3*self.dx, 0):
       self.dx = -self.dx
       self.desno = not self.desno
     if self.x <= 0:
@@ -29,6 +38,20 @@ class enemy:
 
     self.shotTimer += 1  # svaki frame se povecava za 1
 
+    # gravitacija
+    if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
+      self.vsp=0
+      while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+        self.y+=1
+    else:
+      self.vsp=self.vsp+self.gravitacija
+
+    if self.vsp<0:
+      if self.ProvjeriKolizije(self, 0, self.vsp - 1):
+        self.vsp=0
+
+    self.y = self.y + self.vsp
+
     # puca svakih dvije sekunde
     if self.shotTimer >= 60 * 2:
       self.shootProjectile(self)  # poziv funkcije za pucanje
@@ -36,12 +59,12 @@ class enemy:
 
     #crtanje samog sebe
     if enemy.desno==True:
-      spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
+      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,0,0,2,2)
     else:
-      spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
-    projectile = Projectile(self.x + 5, self.y) 
+    projectile = Projectile(self.x + 5, int(self.y)) 
 
     projectile.desno = self.desno
     # doda projektil u listu

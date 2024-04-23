@@ -15,7 +15,7 @@ def TIC():
 
  map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
 
- collidables = DefinirajKolizije()
+ collidables = DefinirajKolizije([player, enemy])
  enemy.movement(enemy, collidables)
  for projektil in projectiles:
     projektil.movement()
@@ -57,20 +57,23 @@ class collidable:
         rect(self.x - int(pogled.x), self.y - int(pogled.y), self.width, self.height, 15)
 
 
-def DefinirajKolizije():
+def DefinirajKolizije(listaObjekata):
     collidables = []
 
     tile_size = 8
-    px = min(max(int(player.x/tile_size) - 5, 0), 239)
-    py = min(max(int(player.y/tile_size) - 5, 0), 135)
-    xrepeat = 12
-    yrepeat = 12
+    for objekt in listaObjekata:
+        px = min(max(int(objekt.x/tile_size) - 4, 0), 239)
+        py = min(max(int(objekt.y/tile_size) - 4, 0), 135)
+        xrepeat = 10
+        yrepeat = 10
 
-    for xx in range(xrepeat):
-        for yy in range(yrepeat):
-            tileHere = mget(xx + px, yy + py)
-            if tileHere != 0:
-                collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+        for xx in range(xrepeat):
+            for yy in range(yrepeat):
+                tileHere = mget(xx + px, yy + py)
+                if tileHere != 0:
+                    collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+
+    
 
     return collidables
 def pomakni(a, b, vrijednost):
@@ -211,13 +214,16 @@ class player:
 projectiles = []
 
 class enemy:
-  x = 100  
+  x = 90 
   y = 90
   width = 16
   height = 16
   sprite = 1  
   dx = -1  
-  dy = 0
+  vsp = 0
+  gravitacija = 0.3
+  skokJacina = 3
+  minY = 120
   desno = False
   shotTimer = 0  # timer za pucanje
   coll = []
@@ -225,8 +231,14 @@ class enemy:
   def movement(self, coll):
     self.coll = coll
     self.x = self.x + self.dx
-    self.y = self.y + self.dy
-    if self.ProvjeriKolizije(self, 3*self.dx, 0):
+    if self.ProvjeriKolizije(self, 6*self.dx, 0):
+      if not self.ProvjeriKolizije(self, 3*self.dx, -9):
+        if self.ProvjeriKolizije(self, 0, 1):
+          self.vsp = -self.skokJacina
+        else:
+          self.dx = -self.dx
+          self.desno = not self.desno
+    elif self.ProvjeriKolizije(self, 3*self.dx, 0):
       self.dx = -self.dx
       self.desno = not self.desno
     if self.x <= 0:
@@ -238,6 +250,20 @@ class enemy:
 
     self.shotTimer += 1  # svaki frame se povecava za 1
 
+    # gravitacija
+    if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
+      self.vsp=0
+      while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+        self.y+=1
+    else:
+      self.vsp=self.vsp+self.gravitacija
+
+    if self.vsp<0:
+      if self.ProvjeriKolizije(self, 0, self.vsp - 1):
+        self.vsp=0
+
+    self.y = self.y + self.vsp
+
     # puca svakih dvije sekunde
     if self.shotTimer >= 60 * 2:
       self.shootProjectile(self)  # poziv funkcije za pucanje
@@ -245,12 +271,12 @@ class enemy:
 
     #crtanje samog sebe
     if enemy.desno==True:
-      spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
+      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,0,0,2,2)
     else:
-      spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
-    projectile = Projectile(self.x + 5, self.y) 
+    projectile = Projectile(self.x + 5, int(self.y)) 
 
     projectile.desno = self.desno
     # doda projektil u listu

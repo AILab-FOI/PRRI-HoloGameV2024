@@ -20,19 +20,22 @@ class collidable:
         rect(self.x - int(pogled.x), self.y - int(pogled.y), self.width, self.height, 15)
 
 
-def DefinirajKolizije():
+def DefinirajKolizije(listaObjekata):
     collidables = []
 
     tile_size = 8
-    px = min(max(int(player.x/tile_size) - 5, 0), 239)
-    py = min(max(int(player.y/tile_size) - 5, 0), 135)
-    xrepeat = 12
-    yrepeat = 12
+    for objekt in listaObjekata:
+        px = min(max(int(objekt.x/tile_size) - 4, 0), 239)
+        py = min(max(int(objekt.y/tile_size) - 4, 0), 135)
+        xrepeat = 10
+        yrepeat = 10
 
-    for xx in range(xrepeat):
-        for yy in range(yrepeat):
-            tileHere = mget(xx + px, yy + py)
-            if tileHere != 0:
-                collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+        for xx in range(xrepeat):
+            for yy in range(yrepeat):
+                tileHere = mget(xx + px, yy + py)
+                if tileHere != 0:
+                    collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+
+    
 
     return collidables
