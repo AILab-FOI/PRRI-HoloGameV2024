@@ -13,6 +13,8 @@ def TIC():
  
  cls(0)
 
+ map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
+
  RenderBullets()
  enemyMovement()
  Projektili()
