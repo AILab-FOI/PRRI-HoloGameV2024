@@ -2,17 +2,24 @@
 projectiles = []
 
 class enemy:
-  x = 200  
-  y = 120
+  x = 100  
+  y = 90
+  width = 16
+  height = 16
   sprite = 1  
   dx = -1  
   dy = 0
   desno = False
   shotTimer = 0  # timer za pucanje
+  coll = []
 
-  def movement(self):
+  def movement(self, coll):
+    self.coll = coll
     self.x = self.x + self.dx
     self.y = self.y + self.dy
+    if self.ProvjeriKolizije(self, 3*self.dx, 0):
+      self.dx = -self.dx
+      self.desno = not self.desno
     if self.x <= 0:
       self.dx = 1  # mijenja stranu kad takne lijevu stranu
       self.desno = True
@@ -27,12 +34,30 @@ class enemy:
       self.shootProjectile(self)  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
+    #crtanje samog sebe
+    if enemy.desno==True:
+      spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
+    else:
+      spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+
   def shootProjectile(self):
     projectile = Projectile(self.x + 5, self.y) 
 
     projectile.desno = self.desno
     # doda projektil u listu
     projectiles.append(projectile)
+
+  def ProvjeriKolizije(self, xdodatak, ydodatak):
+    self.x += xdodatak
+    self.y += ydodatak
+    for obj in self.coll:
+      if obj.check_collision(self):
+        self.x -= xdodatak
+        self.y -= ydodatak
+        return True
+    self.x -= xdodatak
+    self.y -= ydodatak
+    return False
 
 class Projectile:
   def __init__(self, x, y):  # konstruktor klase
@@ -43,25 +68,16 @@ class Projectile:
     self.speed = 5  # brzina projektila
     self.desno = True
   
-  
-def Projektili():
-  for projektil in projectiles:
-    if projektil.desno == True:
-      projektil.x = projektil.x + projektil.speed
+  def movement(self):
+    if self.desno == True:
+      self.x = self.x + self.speed
     else:
-      projektil.x = projektil.x - projektil.speed
+      self.x = self.x - self.speed
 
-    if projektil.x < 0 or projektil.x > 240:
-     del projektil
+    #crtanje sebe
+    spr(80, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
-
-
-
-def RenderBullets():
-    for projectile in projectiles:
-     spr(80, projectile.x - int(pogled.x), projectile.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
-
-    if enemy.desno==True:
-        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
-    else:
-        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+    #brisanje ako se unisti
+    if self.x < 0 or self.x > pogled.ogranicenjeX:
+      del self
+     
