@@ -46,7 +46,7 @@ def Pucanje():
             else:
                 metak.x = metak.x - metak.speed
             
-            if metak.x < 0 or metak.x > minX:
+            if metak.x < 0 or metak.x > pogled.ogranicenjeX:
                 del metak
 
 def pucaj(puska):

@@ -13,12 +13,14 @@ def TIC():
  
  cls(0)
 
- RenderBullets()
- enemyMovement()
- Projektili()
+ map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
+
+ collidables = DefinirajKolizije([player, enemy])
+ enemy.movement(enemy, collidables)
+ for projektil in projectiles:
+    projektil.movement()
  Pucanje()
- collidables = DefinirajKolizije()
- PlayerKontroler(collidables)
+ player.PlayerKontroler(player, collidables)
  pogled.pratiIgraca()
  
 
@@ -27,7 +29,6 @@ def TIC():
 
 def Final():
 	cls(13)
-    map(0,0,30,17)
     print("A i D za kretanje, SPACE za skakanje", 0, 0)
     print("W za jetpack, F i G za pucanje", 0, 8)
  
@@ -40,7 +41,7 @@ class collidable:
         self.y = y
         self.width = width
         self.height = height
-        self.draw_self()
+        #self.draw_self()
 
     def check_collision(self, other):
         if self.x < other.x + other.width and self.x + self.width > other.x and self.y < other.y + other.height and self.y + self.height > other.y:
@@ -56,15 +57,32 @@ class collidable:
         rect(self.x - int(pogled.x), self.y - int(pogled.y), self.width, self.height, 15)
 
 
-def DefinirajKolizije():
-    coll1 = collidable(20, 70, 60, 15)
-    coll2 = collidable(200, 112, 40, 10)
-    coll3 = collidable(150, 80, 30, 10)
-    collidables = [coll1, coll2, coll3]
+def DefinirajKolizije(listaObjekata):
+    collidables = []
+
+    tile_size = 8
+    for objekt in listaObjekata:
+        px = min(max(int(objekt.x/tile_size) - 4, 0), 239)
+        py = min(max(int(objekt.y/tile_size) - 4, 0), 135)
+        xrepeat = 10
+        yrepeat = 10
+
+        for xx in range(xrepeat):
+            for yy in range(yrepeat):
+                tileHere = mget(xx + px, yy + py)
+                if tileHere != 0:
+                    collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+
+    
+
     return collidables
-
-
-
+def pomakni(a, b, vrijednost):
+    if vrijednost == 0:
+        return a
+    elif a < b:
+        return min(a + vrijednost, b)
+    else:
+        return max(a - vrijednost, b)
 
 class player: 
     x=96
@@ -94,134 +112,187 @@ class player:
         self.y -= ydodatak
         return False
     
+    minY=120 #najniza tocka
+    minX=10000 #najdesnija tocka
+
+    #Osnovne Varijable
+    akceleracija=0.5
+    maxBrzina=3
+    gravitacija=0.3
 
 
-minY=120 #najniza tocka
-minX=10000 #najdesnija tocka
+    #Varijable skakanja
+    skokJacina=5.2
 
-#Osnovne Varijable
-akceleracija=0.5
-maxBrzina=3
-gravitacija=0.3
-
-
-#Varijable skakanja
-skokJacina=5.2
-
-#jetpack
-jetpackTrajanje=50
-jetpackJacina=2
-
-
-def pomakni(a, b, vrijednost):
-    if vrijednost == 0:
-        return a
-    elif a < b:
-        return min(a + vrijednost, b)
-    else:
-        return max(a - vrijednost, b)
-
-
-
-def PlayerKontroler(coll):
-    player.coll=coll
-
-     #skakanje
-    if key(48) and player.vsp==0:
-        if player.ProvjeriKolizije(player, 0, 1) or player.y>=minY:
-            player.vsp=-skokJacina
-
-    #letenje jetpack
-    if key(24):
-        JetpackJoyride()
-
-
-    #kretanje lijevo desno
-    if key(1): 
-        player.hsp=pomakni(player.hsp,-maxBrzina,akceleracija)
-        player.desno=False
-        player.is_walking = True
-    elif key(4):
-        player.hsp=pomakni(player.hsp,maxBrzina,akceleracija)
-        player.is_walking = True
-        player.desno=True
-    else:
-        player.hsp=pomakni(player.hsp,0,akceleracija)
-        player.is_walking = False
-
-    if key(23):
-        JetpackJoyride()
-        
-
-    #gravitacija i kolizije
-    if player.y+player.vsp>=minY or player.ProvjeriKolizije(player, 0, player.vsp + 1):
-        player.vsp=0
-        while player.y<minY and not player.ProvjeriKolizije(player, 0, 1):
-            player.y+=1
-    else:
-        player.vsp=player.vsp+gravitacija
-
-    if player.vsp<0:
-        if player.ProvjeriKolizije(player, 0, player.vsp - 1):
-            player.vsp=0
-
-    
-
-	#blokiranje lijevo i desno
-	if player.x>minX or player.ProvjeriKolizije(player, 1+player.hsp, 0): # ZAMIJENITI SA COLLISION PROVJEROM
-        player.hsp=0
-        while player.ProvjeriKolizije(player, 0, 0) or player.x > minX:
-            player.x-=1
-		
-    if player.x<0 or player.ProvjeriKolizije(player, -1+player.hsp, 0): # ZAMIJENITI SA COLLISION PROVJEROM
-        player.hsp=0
-        while player.ProvjeriKolizije(player, 0, 0) or player.x < 0:
-            player.x+=1
-
-    player.x=player.x+player.hsp
-    player.y=player.y+player.vsp
-        
-    
     #jetpack
-    
-    if player.ProvjeriKolizije(player, 0, 1) or player.y>=minY: # ZAMIJENITI SA DOK STOJI NA NEKOM OBJEKTU
-        player.jetpackGorivo=jetpackTrajanje
+    jetpackTrajanje=50
+    jetpackJacina=2
 
-    if player.is_walking == True:
-        player.spriteTimer += 0.1
+    def PlayerKontroler(self, coll):
+        self.coll=coll
 
-    print(player.spriteTimer, 0, 32)
+        #skakanje
+        if key(48) and self.vsp == 0:
+            if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY:
+                self.vsp = -self.skokJacina
 
-    #renderanje spritea
-    if player.desno==True and player.is_walking==True:
-        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,0,0,2,2)
-    elif player.desno==False and player.is_walking==True:
-        spr(258 + 2*(round(player.spriteTimer)%2==0),int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,1,0,2,2)
-    else:
-        spr(player.frame,int(player.x) - int(pogled.x),int(player.y) - int(pogled.y),6,1,int(player.desno==False),0,2,2)
+        #kretanje lijevo desno
+        if key(1): 
+            self.hsp=pomakni(self.hsp,-self.maxBrzina,self.akceleracija)
+            self.desno=False
+            self.is_walking = True
+        elif key(4):
+            self.hsp=pomakni(self.hsp,self.maxBrzina,self.akceleracija)
+            self.is_walking = True
+            self.desno=True
+        else:
+            self.hsp=pomakni(self.hsp,0,self.akceleracija)
+            self.is_walking = False
+
+        if key(23):
+            self.JetpackJoyride(self)
+            
+
+        #gravitacija i kolizije
+        if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
+            self.vsp=0
+            while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+                self.y+=1
+        else:
+            self.vsp=self.vsp+self.gravitacija
+
+        if self.vsp<0:
+            if self.ProvjeriKolizije(self, 0, self.vsp - 1):
+                self.vsp=0
 
         
+
+        #blokiranje lijevo i desno
+        if self.x>(pogled.ogranicenjeX - self.width) or self.ProvjeriKolizije(self, 1+self.hsp, 0):
+            self.hsp=0
+            while self.ProvjeriKolizije(self, 0, 0) or self.x > (pogled.ogranicenjeX - self.width):
+                self.x-=1
+            
+        if self.x<0 or self.ProvjeriKolizije(self, -1+self.hsp, 0):
+            self.hsp=0
+            while self.ProvjeriKolizije(self, 0, 0) or self.x < 0:
+                self.x+=1
+
+        self.x=self.x+self.hsp
+        self.y=self.y+self.vsp
+            
         
-def JetpackJoyride():
-    if player.jetpackGorivo > 0:
-        player.vsp = -jetpackJacina
-        player.jetpackGorivo = player.jetpackGorivo - 1
-        player.skok = 0
+        #jetpack
+        
+        if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY: # ZAMIJENITI SA DOK STOJI NA NEKOM OBJEKTU
+            self.jetpackGorivo=self.jetpackTrajanje
+
+        if self.is_walking == True:
+            self.spriteTimer += 0.1
+
+        #renderanje spritea
+        if self.desno==True and self.is_walking==True:
+            spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
+        elif self.desno==False and self.is_walking==True:
+            spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
+        else:
+            spr(self.frame,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
+
+            
+            
+    def JetpackJoyride(self):
+        if self.jetpackGorivo > 0:
+            self.vsp = -self.jetpackJacina
+            self.jetpackGorivo = self.jetpackGorivo - 1
+            self.skok = 0
      
     
 
 
 
-
+#lista projektila
+projectiles = []
 
 class enemy:
-  x = 200  
-  y = 120
+  x = 90 
+  y = 90
+  width = 16
+  height = 16
   sprite = 1  
   dx = -1  
-  dy = 0
+  vsp = 0
+  gravitacija = 0.3
+  skokJacina = 3
+  minY = 120
   desno = False
-  #shotTimer = 0  # timer za pucanje
+  shotTimer = 0  # timer za pucanje
+  coll = []
+
+  def movement(self, coll):
+    self.coll = coll
+    self.x = self.x + self.dx
+    if self.ProvjeriKolizije(self, 6*self.dx, 0):
+      if not self.ProvjeriKolizije(self, 3*self.dx, -9):
+        if self.ProvjeriKolizije(self, 0, 1):
+          self.vsp = -self.skokJacina
+        else:
+          self.dx = -self.dx
+          self.desno = not self.desno
+    elif self.ProvjeriKolizije(self, 3*self.dx, 0):
+      self.dx = -self.dx
+      self.desno = not self.desno
+    if self.x <= 0:
+      self.dx = 1  # mijenja stranu kad takne lijevu stranu
+      self.desno = True
+    elif self.x >= pogled.ogranicenjeX:
+      self.dx = -1  # mijenja stranu kad takne desnu stranu
+      self.desno = False
+
+    self.shotTimer += 1  # svaki frame se povecava za 1
+
+    # gravitacija
+    if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
+      self.vsp=0
+      while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+        self.y+=1
+    else:
+      self.vsp=self.vsp+self.gravitacija
+
+    if self.vsp<0:
+      if self.ProvjeriKolizije(self, 0, self.vsp - 1):
+        self.vsp=0
+
+    self.y = self.y + self.vsp
+
+    # puca svakih dvije sekunde
+    if self.shotTimer >= 60 * 2:
+      self.shootProjectile(self)  # poziv funkcije za pucanje
+      self.shotTimer = 0  # resetiranje timera
+
+    #crtanje samog sebe
+    if enemy.desno==True:
+      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,0,0,2,2)
+    else:
+      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,1,0,2,2)
+
+  def shootProjectile(self):
+    projectile = Projectile(self.x + 5, int(self.y)) 
+
+    projectile.desno = self.desno
+    # doda projektil u listu
+    projectiles.append(projectile)
+
+  def ProvjeriKolizije(self, xdodatak, ydodatak):
+    self.x += xdodatak
+    self.y += ydodatak
+    for obj in self.coll:
+      if obj.check_collision(self):
+        self.x -= xdodatak
+        self.y -= ydodatak
+        return True
+    self.x -= xdodatak
+    self.y -= ydodatak
+    return False
 
 class Projectile:
   def __init__(self, x, y):  # konstruktor klase
@@ -231,66 +302,20 @@ class Projectile:
     self.dy = 0
     self.speed = 5  # brzina projektila
     self.desno = True
-
-
-
-
-#lista projektila
-projectiles = []
-
-
-shotTimer = 0  # timer za pucanje
-def enemyMovement():
-  enemy.x = enemy.x + enemy.dx
-  enemy.y = enemy.y + enemy.dy
-  if enemy.x <= 0:
-    enemy.dx = 1  # mijenja stranu kad takne lijevu stranu
-    enemy.desno = True
-  elif enemy.x >= minX:
-    enemy.dx = -1  # mijenja stranu kad takne desnu stranu
-    enemy.desno = False
-
-  global shotTimer
-  shotTimer += 1  # svaki frame se povecava za 1
-
-  # puca svakih dvije sekunde
-  if shotTimer >= 60 * 2:
-    shootProjectile()  # poziv funkcije za pucanje
-    shotTimer = 0  # resetiranje timera
-    
-      
-
-def shootProjectile():
-  # kreiranje projektila
-  projectile = Projectile(enemy.x + 5, enemy.y) 
-
-  projectile.desno = enemy.desno
-  # doda projektil u listu
-  projectiles.append(projectile)
   
-  
-def Projektili():
-  for projektil in projectiles:
-    if projektil.desno == True:
-      projektil.x = projektil.x + projektil.speed
+  def movement(self):
+    if self.desno == True:
+      self.x = self.x + self.speed
     else:
-      projektil.x = projektil.x - projektil.speed
+      self.x = self.x - self.speed
 
-    if projektil.x < 0 or projektil.x > 240:
-     del projektil
+    #crtanje sebe
+    spr(80, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
-
-
-
-def RenderBullets():
-
-    for projectile in projectiles:
-     spr(80, projectile.x - int(pogled.x), projectile.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
-
-    if enemy.desno==True:
-        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
-    else:
-        spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+    #brisanje ako se unisti
+    if self.x < 0 or self.x > pogled.ogranicenjeX:
+      del self
+     
 def lerp(a, b, t):
     return (1-t)*a + t*b
 
@@ -299,10 +324,19 @@ class Pogled:
     y = 0
     w = 240
     h = 136
+    ograniceno = False
+    ogranicenjeX = 0
+
+    def __init__(self):
+        self.postaviOgranicenja(1000)
 
     def prati(self, objekt):
         self.x = objekt.x - (self.w - objekt.width)/2
         #self.y = objekt.y - (self.h - objekt.height)/2
+
+    def postaviOgranicenja(self, maxX):
+        self.ograniceno = True
+        self.ogranicenjeX = maxX
 
     def pratiIgraca(self):
         lerpSnaga = 0.05
@@ -313,6 +347,9 @@ class Pogled:
             self.x = lerp(self.x, player.x - (self.w - player.width)/2 + ispredHoda*int(player.desno == True) - ispredHoda*int(player.desno == False), lerpSnagaHoda)
         else:
             self.x = lerp(self.x, player.x - (self.w - player.width)/2 + ispredStoji*int(player.desno == True) - ispredStoji*int(player.desno == False), lerpSnaga)
+
+        if self.ograniceno:
+            self.x = min(max(0, self.x), self.ogranicenjeX - self.w)
 
 pogled = Pogled()
 
@@ -363,7 +400,7 @@ def Pucanje():
             else:
                 metak.x = metak.x - metak.speed
             
-            if metak.x < 0 or metak.x > minX:
+            if metak.x < 0 or metak.x > pogled.ogranicenjeX:
                 del metak
 
 def pucaj(puska):

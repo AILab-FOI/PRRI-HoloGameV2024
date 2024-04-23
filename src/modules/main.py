@@ -13,12 +13,14 @@ def TIC():
  
  cls(0)
 
- RenderBullets()
- enemyMovement()
- Projektili()
+ map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
+
+ collidables = DefinirajKolizije([player, enemy])
+ enemy.movement(enemy, collidables)
+ for projektil in projectiles:
+    projektil.movement()
  Pucanje()
- collidables = DefinirajKolizije()
- PlayerKontroler(collidables)
+ player.PlayerKontroler(player, collidables)
  pogled.pratiIgraca()
  
 
@@ -27,7 +29,6 @@ def TIC():
 
 def Final():
 	cls(13)
-    map(0,0,30,17)
     print("A i D za kretanje, SPACE za skakanje", 0, 0)
     print("W za jetpack, F i G za pucanje", 0, 8)
  
