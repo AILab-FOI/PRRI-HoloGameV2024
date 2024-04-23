@@ -14,6 +14,8 @@ def TIC():
  global state
  if state=='game':
     cls(0)
+    if key(13):
+        state = 'menu'
     RenderBullets()
     enemyMovement()
     Projektili()
@@ -26,7 +28,6 @@ def TIC():
 
 def Final():
 	cls(13)
-    map(0,0,30,17)
     print("A i D za kretanje, SPACE za skakanje", 0, 0)
     print("W za jetpack, F i G za pucanje", 0, 8)
  

@@ -14,6 +14,8 @@ def TIC():
  global state
  if state=='game':
     cls(0)
+    if key(13):
+        state = 'menu'
     RenderBullets()
     enemyMovement()
     Projektili()
@@ -26,7 +28,6 @@ def TIC():
 
 def Final():
 	cls(13)
-    map(0,0,30,17)
     print("A i D za kretanje, SPACE za skakanje", 0, 0)
     print("W za jetpack, F i G za pucanje", 0, 8)
  
@@ -290,24 +291,33 @@ def RenderBullets():
         spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
     else:
         spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+
+
 m_ind=0
 
 def Menu():
-    global m_ind
+    global m_ind, state
     cls(0)
     rectb(0,0,240,136,12)
     print('NEON ESCAPE', 30, 20, 4, False, 2, False)
 
-# Opcije menija
+    # Opcije menija
     rect(1,48+10*m_ind,238,10,2)
     print('Play', 40, 50, 4, False, 1, False)
     print('Quit', 40, 60, 4, False, 1, False)
 
-#  Šetanje po opcijama na meniju
-    if btnp(1) and 48+10*m_ind<50:
+    #  Šetanje po opcijama na meniju
+    if btnp(1) and 48+10*m_ind<50: #ako se budu dodavale još koje opcije, promijeniti uvijet
         m_ind += 1
     elif btnp(0) and 48+10*m_ind>=50:
         m_ind += -1
+
+    # Odabir 
+    if key(48) and m_ind==0:
+        state = 'game'
+    elif key(48) and m_ind==1:
+        exit()
+
 
 def lerp(a, b, t):
     return (1-t)*a + t*b
