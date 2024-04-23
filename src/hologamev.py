@@ -16,7 +16,7 @@ def TIC():
  map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
 
  RenderBullets()
- enemyMovement()
+ enemy.movement(enemy)
  Projektili()
  Pucanje()
  collidables = DefinirajKolizije()
@@ -207,7 +207,8 @@ class player:
 
 
 
-
+#lista projektila
+projectiles = []
 
 class enemy:
   x = 200  
@@ -216,7 +217,31 @@ class enemy:
   dx = -1  
   dy = 0
   desno = False
-  #shotTimer = 0  # timer za pucanje
+  shotTimer = 0  # timer za pucanje
+
+  def movement(self):
+    self.x = self.x + self.dx
+    self.y = self.y + self.dy
+    if self.x <= 0:
+      self.dx = 1  # mijenja stranu kad takne lijevu stranu
+      self.desno = True
+    elif self.x >= pogled.ogranicenjeX:
+      self.dx = -1  # mijenja stranu kad takne desnu stranu
+      self.desno = False
+
+    self.shotTimer += 1  # svaki frame se povecava za 1
+
+    # puca svakih dvije sekunde
+    if self.shotTimer >= 60 * 2:
+      self.shootProjectile(self)  # poziv funkcije za pucanje
+      self.shotTimer = 0  # resetiranje timera
+
+  def shootProjectile(self):
+    projectile = Projectile(self.x + 5, self.y) 
+
+    projectile.desno = self.desno
+    # doda projektil u listu
+    projectiles.append(projectile)
 
 class Projectile:
   def __init__(self, x, y):  # konstruktor klase
@@ -226,42 +251,6 @@ class Projectile:
     self.dy = 0
     self.speed = 5  # brzina projektila
     self.desno = True
-
-
-
-
-#lista projektila
-projectiles = []
-
-
-shotTimer = 0  # timer za pucanje
-def enemyMovement():
-  enemy.x = enemy.x + enemy.dx
-  enemy.y = enemy.y + enemy.dy
-  if enemy.x <= 0:
-    enemy.dx = 1  # mijenja stranu kad takne lijevu stranu
-    enemy.desno = True
-  elif enemy.x >= pogled.ogranicenjeX:
-    enemy.dx = -1  # mijenja stranu kad takne desnu stranu
-    enemy.desno = False
-
-  global shotTimer
-  shotTimer += 1  # svaki frame se povecava za 1
-
-  # puca svakih dvije sekunde
-  if shotTimer >= 60 * 2:
-    shootProjectile()  # poziv funkcije za pucanje
-    shotTimer = 0  # resetiranje timera
-    
-      
-
-def shootProjectile():
-  # kreiranje projektila
-  projectile = Projectile(enemy.x + 5, enemy.y) 
-
-  projectile.desno = enemy.desno
-  # doda projektil u listu
-  projectiles.append(projectile)
   
   
 def Projektili():
@@ -278,7 +267,6 @@ def Projektili():
 
 
 def RenderBullets():
-
     for projectile in projectiles:
      spr(80, projectile.x - int(pogled.x), projectile.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 

@@ -16,7 +16,7 @@ def TIC():
  map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
 
  RenderBullets()
- enemyMovement()
+ enemy.movement(enemy)
  Projektili()
  Pucanje()
  collidables = DefinirajKolizije()
