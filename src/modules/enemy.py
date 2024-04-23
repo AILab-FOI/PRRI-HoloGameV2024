@@ -32,7 +32,7 @@ def enemyMovement():
   if enemy.x <= 0:
     enemy.dx = 1  # mijenja stranu kad takne lijevu stranu
     enemy.desno = True
-  elif enemy.x >= minX:
+  elif enemy.x >= pogled.ogranicenjeX:
     enemy.dx = -1  # mijenja stranu kad takne desnu stranu
     enemy.desno = False
 

@@ -20,7 +20,7 @@ def TIC():
  Projektili()
  Pucanje()
  collidables = DefinirajKolizije()
- PlayerKontroler(collidables)
+ player.PlayerKontroler(player, collidables)
  pogled.pratiIgraca()
  
 
