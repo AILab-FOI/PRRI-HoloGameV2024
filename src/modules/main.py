@@ -24,7 +24,7 @@ def TIC():
     PlayerKontroler(collidables)
     pogled.pratiIgraca()
  elif state=='menu':
-    Menu()
+    menu.Menu()
 
 def Final():
 	cls(13)
