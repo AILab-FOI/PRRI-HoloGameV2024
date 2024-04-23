@@ -8,25 +8,6 @@
 
 t=0
 
-def TIC():
- Final()
- 
- cls(0)
-
- map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
-
- collidables = DefinirajKolizije([player, enemy])
- enemy.movement(enemy, collidables)
- for projektil in projectiles:
-    projektil.movement()
- Pucanje()
- player.PlayerKontroler(player, collidables)
- pogled.pratiIgraca()
- 
-
-
-
-
 def Final():
 	cls(13)
     print("A i D za kretanje, SPACE za skakanje", 0, 0)
@@ -310,12 +291,7 @@ class Projectile:
       self.x = self.x - self.speed
 
     #crtanje sebe
-    spr(80, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
-    #brisanje ako se unisti
-    if self.x < 0 or self.x > pogled.ogranicenjeX:
-      del self
-     
 def lerp(a, b, t):
     return (1-t)*a + t*b
 

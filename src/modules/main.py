@@ -7,25 +7,26 @@
 # script:  python
 
 t=0
+state='menu' #varijabla za game state
 
 def TIC():
  Final()
- 
- cls(0)
 
- map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
+ global state
+ if state=='game':
+   cls(0)
 
- collidables = DefinirajKolizije([player, enemy])
- enemy.movement(enemy, collidables)
- for projektil in projectiles:
-    projektil.movement()
- Pucanje()
- player.PlayerKontroler(player, collidables)
- pogled.pratiIgraca()
- 
+   map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
 
-
-
+   collidables = DefinirajKolizije([player, enemy])
+   enemy.movement(enemy, collidables)
+   for projektil in projectiles:
+      projektil.movement()
+   Pucanje()
+   player.PlayerKontroler(player, collidables)
+   pogled.pratiIgraca()
+ elif state=='menu':
+   menu.Menu()
 
 def Final():
 	cls(13)
