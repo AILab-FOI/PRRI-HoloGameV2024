@@ -4,7 +4,7 @@ class collidable:
         self.y = y
         self.width = width
         self.height = height
-        self.draw_self()
+        #self.draw_self()
 
     def check_collision(self, other):
         if self.x < other.x + other.width and self.x + self.width > other.x and self.y < other.y + other.height and self.y + self.height > other.y:
@@ -21,8 +21,18 @@ class collidable:
 
 
 def DefinirajKolizije():
-    coll1 = collidable(20, 70, 60, 15)
-    coll2 = collidable(200, 112, 40, 10)
-    coll3 = collidable(150, 80, 30, 10)
-    collidables = [coll1, coll2, coll3]
+    collidables = []
+
+    tile_size = 8
+    px = min(max(int(player.x/tile_size) - 5, 0), 239)
+    py = min(max(int(player.y/tile_size) - 5, 0), 135)
+    xrepeat = 12
+    yrepeat = 12
+
+    for xx in range(xrepeat):
+        for yy in range(yrepeat):
+            tileHere = mget(xx + px, yy + py)
+            if tileHere != 0:
+                collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+
     return collidables
