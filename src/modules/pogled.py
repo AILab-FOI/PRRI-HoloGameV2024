@@ -31,6 +31,6 @@ class Pogled:
             self.x = lerp(self.x, player.x - (self.w - player.width)/2 + ispredStoji*int(player.desno == True) - ispredStoji*int(player.desno == False), lerpSnaga)
 
         if self.ograniceno:
-            self.x = max(0, self.x)
+            self.x = min(max(0, self.x), self.ogranicenjeX - self.w)
 
 pogled = Pogled()

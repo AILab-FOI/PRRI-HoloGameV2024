@@ -104,9 +104,9 @@ def PlayerKontroler(coll):
     
 
 	#blokiranje lijevo i desno
-	if player.x>minX or player.ProvjeriKolizije(player, 1+player.hsp, 0): # ZAMIJENITI SA COLLISION PROVJEROM
+	if player.x>(pogled.ogranicenjeX - player.width) or player.ProvjeriKolizije(player, 1+player.hsp, 0): # ZAMIJENITI SA COLLISION PROVJEROM
         player.hsp=0
-        while player.ProvjeriKolizije(player, 0, 0) or player.x > minX:
+        while player.ProvjeriKolizije(player, 0, 0) or player.x > (pogled.ogranicenjeX - player.width):
             player.x-=1
 		
     if player.x<0 or player.ProvjeriKolizije(player, -1+player.hsp, 0): # ZAMIJENITI SA COLLISION PROVJEROM
