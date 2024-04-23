@@ -7,23 +7,22 @@
 # script:  python
 
 t=0
+state='menu' #varijabla za game state
 
 def TIC():
  Final()
- 
- cls(0)
-
- RenderBullets()
- enemyMovement()
- Projektili()
- Pucanje()
- collidables = DefinirajKolizije()
- PlayerKontroler(collidables)
- pogled.pratiIgraca()
- 
-
-
-
+ global state
+ if state=='game':
+    cls(0)
+    RenderBullets()
+    enemyMovement()
+    Projektili()
+    Pucanje()
+    collidables = DefinirajKolizije()
+    PlayerKontroler(collidables)
+    pogled.pratiIgraca()
+ elif state=='menu':
+    Menu()
 
 def Final():
 	cls(13)

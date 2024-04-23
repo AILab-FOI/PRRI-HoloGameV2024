@@ -7,21 +7,22 @@
 # script:  python
 
 t=0
+state='menu' #varijabla za game state
 
 def TIC():
  Final()
- 
- cls(0)
-
- RenderBullets()
- enemyMovement()
- Projektili()
- Pucanje()
- collidables = DefinirajKolizije()
- PlayerKontroler(collidables)
- pogled.pratiIgraca()
- 
-
+ global state
+ if state=='game':
+    cls(0)
+    RenderBullets()
+    enemyMovement()
+    Projektili()
+    Pucanje()
+    collidables = DefinirajKolizije()
+    PlayerKontroler(collidables)
+    pogled.pratiIgraca()
+ elif state=='menu':
+    Menu()
 
 
 
@@ -291,6 +292,16 @@ def RenderBullets():
         spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,0,0,2,2)
     else:
         spr(290,enemy.x - int(pogled.x),enemy.y - int(pogled.y),6,1,1,0,2,2)
+def Menu():
+    global m_ind
+    cls(0)
+    rectb(0,0,240,136,12)
+    print('NEON ESCAPE', 30, 20, 4, False, 2, False)
+
+# Opcije menija
+    rect(1,48+10*m_ind,238,10,2)
+    print('Play', 40, 50, 4, False, 1, False)
+    print('Quit', 40, 60, 4, False, 1, False)
 def lerp(a, b, t):
     return (1-t)*a + t*b
 
