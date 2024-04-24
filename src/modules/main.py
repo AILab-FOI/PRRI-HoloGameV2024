@@ -9,29 +9,8 @@
 t=0
 
 def TIC():
- Final()
+ SoundEffects()
  
- cls(0)
-
- RenderBullets()
- enemyMovement()
- Projektili()
- Pucanje()
- collidables = DefinirajKolizije()
- PlayerKontroler(collidables)
- 
-
-
-
-
-def Final():
-	cls(13)
-    map(0,0,30,17)
-    print("A i D za kretanje, SPACE za skakanje", 0, 0)
-    print("W za jetpack, F i G za pucanje", 0, 8)
- 
-	t=t+1
-
 # <TILES>
 # 001:8888888888888888888888888888888888888888888888888888888888888888
 # 002:9999999999999999999999999999999999999999999999999999999999999999

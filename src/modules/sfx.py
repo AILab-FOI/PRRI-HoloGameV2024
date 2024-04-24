@@ -8,7 +8,7 @@
 
 id=0
 
-def TIC():
+def SoundEffects():
  global id
 
  if key(1): sfx(2, "C-4")
