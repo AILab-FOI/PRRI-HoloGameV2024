@@ -311,7 +311,7 @@ class Projectile:
       self.x = self.x - self.speed
 
     #crtanje sebe
-    spr(80, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
+    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
     #brisanje ako se unisti
     if self.x < 0 or self.x > pogled.ogranicenjeX:
@@ -424,6 +424,16 @@ class drugaPuska:
     firerate = 0.1
     speed=6
     dmg=1
+    
+class trecaPuska:
+    x=0
+    y=0
+    
+    desno=False
+    
+    firerate = 0.2
+    speed=9
+    dmg=2
 
 
 metci = []
@@ -441,9 +451,11 @@ def Pucanje():
             pucaj(prvaPuska)
         if key(7):
             pucaj(drugaPuska)
+        if key(8):
+            pucaj(trecaPuska)
         
     for metak in metci:
-            spr(80,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,1,1,1)
+            spr(104,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,1,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed

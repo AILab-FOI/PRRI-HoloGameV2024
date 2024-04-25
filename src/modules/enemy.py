@@ -98,7 +98,7 @@ class Projectile:
       self.x = self.x - self.speed
 
     #crtanje sebe
-    spr(80, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
+    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
     #brisanje ako se unisti
     if self.x < 0 or self.x > pogled.ogranicenjeX:
