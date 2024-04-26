@@ -160,7 +160,7 @@ class player:
     def PlayerKontroler(self, coll):
         self.coll=coll
         #skakanje
-        if key(48) and not self.jumped: #and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time
+        if key(48) and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
             if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime:
                 self.vsp = -self.skokJacina
                 self.jumped = True
@@ -193,8 +193,8 @@ class player:
         #gravitacija i kolizije
         if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
             self.vsp=0
-            #while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
-                #self.y+=1
+            while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+                self.y+=1
         else:
             self.vsp=self.vsp+self.gravitacija
 
@@ -263,7 +263,7 @@ class enemy:
   minY = 120
   desno = False
   shotTimer = 0  # timer za pucanje
-  shotFreq = 2 # koliko cesto puca
+  shotFreq = 0.5 # koliko cesto puca
   coll = []
 
   def movement(self, coll):
@@ -370,6 +370,17 @@ class Projectile:
                     del metak
                 else:
                     del metak
+            elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
+                if metak in projectiles:
+                    print("Player pogoen")
+                    projectiles.remove(metak)
+                    del metak
+                else:
+                    del metak
+            # ako je pogoden player (kod iznad)
+              
+    
+  # 1-2.-3 5---8.---11
     
   def ProvjeriKolizije(self, xdodatak, ydodatak):
         self.x += xdodatak

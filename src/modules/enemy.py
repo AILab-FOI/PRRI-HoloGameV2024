@@ -14,7 +14,7 @@ class enemy:
   minY = 120
   desno = False
   shotTimer = 0  # timer za pucanje
-  shotFreq = 2 # koliko cesto puca
+  shotFreq = 0.5 # koliko cesto puca
   coll = []
 
   def movement(self, coll):
@@ -121,6 +121,17 @@ class Projectile:
                     del metak
                 else:
                     del metak
+            elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
+                if metak in projectiles:
+                    print("Player pogoen")
+                    projectiles.remove(metak)
+                    del metak
+                else:
+                    del metak
+            # ako je pogoden player (kod iznad)
+              
+    
+  # 1-2.-3 5---8.---11
     
   def ProvjeriKolizije(self, xdodatak, ydodatak):
         self.x += xdodatak
