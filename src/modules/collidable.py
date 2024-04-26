@@ -39,3 +39,6 @@ def DefinirajKolizije(listaObjekata):
     
 
     return collidables
+
+
+
