@@ -22,7 +22,7 @@ class collidable:
 
 def DefinirajKolizije(listaObjekata):
     collidables = []
-
+    # ako objekt nije lista prvi dio koda se raunna, inace je drugi (else)
     tile_size = 8
     for objekt in listaObjekata:
       if not isinstance (objekt, list):

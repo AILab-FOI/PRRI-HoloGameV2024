@@ -109,12 +109,10 @@ class Projectile:
     #crtanje sebe
     spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
-    #brisanje ako se unisti
-    #if self.x < 0 or self.x > pogled.ogranicenjeX:
-      #del self
       
   def MetakCheck(metak, colls):
             metak.coll=colls
+            # metak se unisti
             if metak.x < 0 or metak.x > pogled.ogranicenjeX or Projectile.ProvjeriKolizije(metak, 0, 1):
                 if metak in projectiles:
                     projectiles.remove(metak)
@@ -128,7 +126,7 @@ class Projectile:
                     del metak
                 else:
                     del metak
-            # ako je pogoden player (kod iznad)
+            # ako je pogoden player (elif)
               
     
   # 1-2.-3 5---8.---11
