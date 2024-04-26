@@ -14,6 +14,7 @@ class enemy:
   minY = 120
   desno = False
   shotTimer = 0  # timer za pucanje
+  shotFreq = 2 # koliko cesto puca
   coll = []
 
   def movement(self, coll):
@@ -53,7 +54,7 @@ class enemy:
     self.y = self.y + self.vsp
 
     # puca svakih dvije sekunde
-    if self.shotTimer >= 60 * 2:
+    if self.shotTimer >= 60 * self.shotFreq:
       self.shootProjectile(self)  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
@@ -83,6 +84,12 @@ class enemy:
     return False
 
 class Projectile:
+  x=0
+  y=0
+    
+  width=4
+  height=4
+  
   def __init__(self, x, y):  # konstruktor klase
     self.x = x
     self.y = y
@@ -90,6 +97,8 @@ class Projectile:
     self.dy = 0
     self.speed = 5  # brzina projektila
     self.desno = True
+    self.width = 4
+    self.height = 4
   
   def movement(self):
     if self.desno == True:
@@ -101,6 +110,27 @@ class Projectile:
     spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
     #brisanje ako se unisti
-    if self.x < 0 or self.x > pogled.ogranicenjeX:
-      del self
+    #if self.x < 0 or self.x > pogled.ogranicenjeX:
+      #del self
+      
+  def MetakCheck(metak, colls):
+            metak.coll=colls
+            if metak.x < 0 or metak.x > pogled.ogranicenjeX or Projectile.ProvjeriKolizije(metak, 0, 1):
+                if metak in projectiles:
+                    projectiles.remove(metak)
+                    del metak
+                else:
+                    del metak
+    
+  def ProvjeriKolizije(self, xdodatak, ydodatak):
+        self.x += xdodatak
+        self.y += ydodatak
+        for obj in self.coll:
+            if obj.check_collision(self):
+                self.x -= xdodatak
+                self.y -= ydodatak
+                return True
+        self.x -= xdodatak
+        self.y -= ydodatak
+        return False
      

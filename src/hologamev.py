@@ -18,15 +18,18 @@ def TIC():
 
    map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
 
-   collidables = DefinirajKolizije([player, enemy, Metak])
+   collidables = DefinirajKolizije([player, enemy, metci, projectiles])
    enemy.movement(enemy, collidables)
    for projektil in projectiles:
       projektil.movement()
+      Projectile.MetakCheck(projektil, collidables)
    Pucanje()
    player.PlayerKontroler(player, collidables)
    pogled.pratiIgraca()
    for metak in metci:
      Metak.MetakCheck(metak, collidables)
+   for metak in projectiles:
+     Projectile.MetakCheck(metak, collidables)
  elif state=='menu':
    menu.Menu()
 
@@ -65,6 +68,7 @@ def DefinirajKolizije(listaObjekata):
 
     tile_size = 8
     for objekt in listaObjekata:
+      if not isinstance (objekt, list):
         px = min(max(int(objekt.x/tile_size) - 4, 0), 239)
         py = min(max(int(objekt.y/tile_size) - 4, 0), 135)
         xrepeat = 10
@@ -75,6 +79,19 @@ def DefinirajKolizije(listaObjekata):
                 tileHere = mget(xx + px, yy + py)
                 if tileHere != 0:
                     collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+      else:
+          for obj in objekt:
+              px = min(max(int(obj.x/tile_size) - 4, 0), 239)
+              py = min(max(int(obj.y/tile_size) - 4, 0), 135)
+              xrepeat = 10
+              yrepeat = 10
+
+              for xx in range(xrepeat):
+               for yy in range(yrepeat):
+                tileHere = mget(xx + px, yy + py)
+                if tileHere != 0:
+                    collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+            
 
     
 
@@ -136,15 +153,14 @@ class player:
     jetpackJacina=2
     
     #Koyote time
-    coyoteTime=5
+    coyoteTime=7
     ctVar=0
     jumped=False
 
     def PlayerKontroler(self, coll):
         self.coll=coll
-        print(self.ctVar)
         #skakanje
-        if key(48) and not self.jumped:
+        if key(48) and not self.jumped: #and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time
             if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime:
                 self.vsp = -self.skokJacina
                 self.jumped = True
@@ -177,8 +193,8 @@ class player:
         #gravitacija i kolizije
         if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
             self.vsp=0
-            while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
-                self.y+=1
+            #while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+                #self.y+=1
         else:
             self.vsp=self.vsp+self.gravitacija
 
@@ -247,6 +263,7 @@ class enemy:
   minY = 120
   desno = False
   shotTimer = 0  # timer za pucanje
+  shotFreq = 2 # koliko cesto puca
   coll = []
 
   def movement(self, coll):
@@ -286,7 +303,7 @@ class enemy:
     self.y = self.y + self.vsp
 
     # puca svakih dvije sekunde
-    if self.shotTimer >= 60 * 2:
+    if self.shotTimer >= 60 * self.shotFreq:
       self.shootProjectile(self)  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
@@ -316,6 +333,12 @@ class enemy:
     return False
 
 class Projectile:
+  x=0
+  y=0
+    
+  width=4
+  height=4
+  
   def __init__(self, x, y):  # konstruktor klase
     self.x = x
     self.y = y
@@ -323,6 +346,8 @@ class Projectile:
     self.dy = 0
     self.speed = 5  # brzina projektila
     self.desno = True
+    self.width = 4
+    self.height = 4
   
   def movement(self):
     if self.desno == True:
@@ -334,8 +359,29 @@ class Projectile:
     spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
     #brisanje ako se unisti
-    if self.x < 0 or self.x > pogled.ogranicenjeX:
-      del self
+    #if self.x < 0 or self.x > pogled.ogranicenjeX:
+      #del self
+      
+  def MetakCheck(metak, colls):
+            metak.coll=colls
+            if metak.x < 0 or metak.x > pogled.ogranicenjeX or Projectile.ProvjeriKolizije(metak, 0, 1):
+                if metak in projectiles:
+                    projectiles.remove(metak)
+                    del metak
+                else:
+                    del metak
+    
+  def ProvjeriKolizije(self, xdodatak, ydodatak):
+        self.x += xdodatak
+        self.y += ydodatak
+        for obj in self.coll:
+            if obj.check_collision(self):
+                self.x -= xdodatak
+                self.y -= ydodatak
+                return True
+        self.x -= xdodatak
+        self.y -= ydodatak
+        return False
      
 
 

@@ -18,15 +18,18 @@ def TIC():
 
    map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
 
-   collidables = DefinirajKolizije([player, enemy, Metak])
+   collidables = DefinirajKolizije([player, enemy, metci, projectiles])
    enemy.movement(enemy, collidables)
    for projektil in projectiles:
       projektil.movement()
+      Projectile.MetakCheck(projektil, collidables)
    Pucanje()
    player.PlayerKontroler(player, collidables)
    pogled.pratiIgraca()
    for metak in metci:
      Metak.MetakCheck(metak, collidables)
+   for metak in projectiles:
+     Projectile.MetakCheck(metak, collidables)
  elif state=='menu':
    menu.Menu()
 
