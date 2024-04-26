@@ -23,7 +23,7 @@ def TIC():
    for projektil in projectiles:
       projektil.movement()
       Projectile.MetakCheck(projektil, collidables)
-   Pucanje()
+   Puska.Pucanje()
    player.PlayerKontroler(player, collidables)
    pogled.pratiIgraca()
    for metak in metci:
@@ -65,7 +65,7 @@ class collidable:
 
 def DefinirajKolizije(listaObjekata):
     collidables = []
-
+    # ako objekt nije lista prvi dio koda se raunna, inace je drugi (else)
     tile_size = 8
     for objekt in listaObjekata:
       if not isinstance (objekt, list):
@@ -263,7 +263,7 @@ class enemy:
   minY = 120
   desno = False
   shotTimer = 0  # timer za pucanje
-  shotFreq = 0.5 # koliko cesto puca
+  shotFreq = 2 # koliko cesto puca
   coll = []
 
   def movement(self, coll):
@@ -358,12 +358,10 @@ class Projectile:
     #crtanje sebe
     spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
-    #brisanje ako se unisti
-    #if self.x < 0 or self.x > pogled.ogranicenjeX:
-      #del self
       
   def MetakCheck(metak, colls):
             metak.coll=colls
+            # metak se unisti
             if metak.x < 0 or metak.x > pogled.ogranicenjeX or Projectile.ProvjeriKolizije(metak, 0, 1):
                 if metak in projectiles:
                     projectiles.remove(metak)
@@ -377,7 +375,7 @@ class Projectile:
                     del metak
                 else:
                     del metak
-            # ako je pogoden player (kod iznad)
+            # ako je pogoden player (elif)
               
     
   # 1-2.-3 5---8.---11
@@ -568,45 +566,92 @@ class Metak:
         return False
 
 
-def Pucanje():
+
+class Puska:
+    x=0
+    y=0
     
-    player.shootTimer = player.shootTimer - 1
+    g1 = 360
+    g2 = 361
+    g3 = 376
     
-    if player.shootTimer < 0:
+    svep = [prvaPuska, drugaPuska, trecaPuska]  # sve puske
+    tp = 0   # trenutna puska
+    p = [0, 1]  # puske koje imamo
+    
+    
+    def pucaj(puska):
+        metak = Metak()  
+        metak.x = int(Puska.x)
+        metak.y = int(Puska.y)
+        metak.desno = player.desno
+  
+        metak.dmg = Puska.svep[Puska.p[Puska.tp]].dmg
+        metak.speed = Puska.svep[Puska.p[Puska.tp]].speed
+        metak.explosive = Puska.svep[Puska.p[Puska.tp]].explosive
+        metak.spr = Puska.svep[Puska.p[Puska.tp]].spr
+
+        metci.append(metak)
+        player.shootTimer=Puska.svep[Puska.p[Puska.tp]].firerate*60
+    
+    
+    def PromijeniPusku():
+        if Puska.p[0] == Puska.p[Puska.tp]:
+            Puska.tp = 1
+        else:
+            Puska.tp = 0
+    
+    
+    def Pucanje():
+      if player.shootTimer < 0:
         if key(6):
-            pucaj(prvaPuska)
+            Puska.pucaj(prvaPuska)
         if key(7):
-            pucaj(drugaPuska)
+            Puska.pucaj(drugaPuska)
         if key(8):
-            pucaj(trecaPuska)
+            Puska.pucaj(trecaPuska)
+        if keyp(19):
+            Puska.PromijeniPusku()
+      
+      eksdes = 12
+      fliph = 0
+      sprN = 360
+      
+      # gdje i kako ce se puska renderati
+      if player.desno:
+        Puska.x = int(player.x) + eksdes
+        Puska.y = int(player.y)
+      else:
+        Puska.x = int(player.x) - int(eksdes / 2)
+        Puska.y = int(player.y) 
+        fliph = 1
+    
+    # koji sprite uzimamo
+      if Puska.p[Puska.tp] == 1:
+          sprN = 361
+      elif Puska.p[Puska.tp] == 2:
+          sprN = 376
+    
+      spr(sprN, Puska.x - int(pogled.x), Puska.y - int(pogled.y), 14,1,fliph,0,1,1)
+    
+      player.shootTimer = player.shootTimer - 1
         
-    for metak in metci:
+      for metak in metci:
             spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
             else:
                 metak.x = metak.x - metak.speed
+
             
                 
                 
-            
+
             
             
 
-def pucaj(puska):
-  metak = Metak()  
-  metak.x = int(player.x)
-  metak.y = int(player.y)
-  metak.desno = player.desno
-  
-  metak.dmg = puska.dmg
-  metak.speed = puska.speed
-  metak.explosive = puska.explosive
-  metak.spr = puska.spr
 
-  metci.append(metak)
-  player.shootTimer=puska.firerate*60
   
 
 
@@ -818,8 +863,8 @@ def test( a, b ):
 # 101:886666f69986fff6999888f6899988f628998f66228986663228f6663328f666
 # 102:a6666888aaa68999a9989999a99999886a99982266a982336698233466982344
 # 103:886666f69986fff6999888f6899988f628998f66328986663328f6664328f666
-# 104:6666666666266666222222226242666662266666626666666666666666666666
-# 105:6666666666444666466466663443444444f46466644664666466666666666666
+# 104:0000000000200000222222220242000002200000020000000000000000000000
+# 105:0000000000444000400400003443444444f40400044004000400000000000000
 # 106:0000000000000000444440440044440004000044444404400000000000000000
 # 107:000000000000000000bbbbb00000000000bbbbb0000000000000000000000000
 # 112:66a99f2d66a999ff6aaa9999aa999999a9999996999999866999886666666666
@@ -830,8 +875,7 @@ def test( a, b ):
 # 117:3228f6662289f66622898f66889998f6899998f6899999f6899999f66888ff66
 # 118:66a8233466a982336a9a8222a9999888a9999986999999869999998669988866
 # 119:3328f6663289f66622898f66889998f6899998f6899999f6899999f66888ff66
-# 120:666666668855888e8888588e6868666668866666686666666666666666666666
-# 121:6666666666666666666666666666666666666666666666666666666666666666
+# 120:000000008855888e8888588e0868000008800000080000000000000000000000
 # 122:0000000000000000002233000222333000223300000000000000000000000000
 # 123:6666666666666666662332666223322666233266666666666666666666666666
 # </SPRITES>

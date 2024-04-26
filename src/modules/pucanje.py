@@ -87,46 +87,92 @@ class Metak:
         return False
 
 
-def Pucanje():
+
+class Puska:
+    x=0
+    y=0
     
-    player.shootTimer = player.shootTimer - 1
+    g1 = 360
+    g2 = 361
+    g3 = 376
     
-    if player.shootTimer < 0:
+    svep = [prvaPuska, drugaPuska, trecaPuska]  # sve puske
+    tp = 0   # trenutna puska
+    p = [0, 1]  # puske koje imamo
+    
+    
+    def pucaj(puska):
+        metak = Metak()  
+        metak.x = int(Puska.x)
+        metak.y = int(Puska.y)
+        metak.desno = player.desno
+  
+        metak.dmg = Puska.svep[Puska.p[Puska.tp]].dmg
+        metak.speed = Puska.svep[Puska.p[Puska.tp]].speed
+        metak.explosive = Puska.svep[Puska.p[Puska.tp]].explosive
+        metak.spr = Puska.svep[Puska.p[Puska.tp]].spr
+
+        metci.append(metak)
+        player.shootTimer=Puska.svep[Puska.p[Puska.tp]].firerate*60
+    
+    
+    def PromijeniPusku():
+        if Puska.p[0] == Puska.p[Puska.tp]:
+            Puska.tp = 1
+        else:
+            Puska.tp = 0
+    
+    
+    def Pucanje():
+      if player.shootTimer < 0:
         if key(6):
-            pucaj(prvaPuska)
+            Puska.pucaj(prvaPuska)
         if key(7):
-            pucaj(drugaPuska)
+            Puska.pucaj(drugaPuska)
         if key(8):
-            pucaj(trecaPuska)
+            Puska.pucaj(trecaPuska)
+        if keyp(19):
+            Puska.PromijeniPusku()
+      
+      eksdes = 12
+      fliph = 0
+      sprN = 360
+      
+      # gdje i kako ce se puska renderati
+      if player.desno:
+        Puska.x = int(player.x) + eksdes
+        Puska.y = int(player.y)
+      else:
+        Puska.x = int(player.x) - int(eksdes / 2)
+        Puska.y = int(player.y) 
+        fliph = 1
+    
+    # koji sprite uzimamo
+      if Puska.p[Puska.tp] == 1:
+          sprN = 361
+      elif Puska.p[Puska.tp] == 2:
+          sprN = 376
+    
+      spr(sprN, Puska.x - int(pogled.x), Puska.y - int(pogled.y), 14,1,fliph,0,1,1)
+    
+      player.shootTimer = player.shootTimer - 1
         
-    for metak in metci:
+      for metak in metci:
             spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
             else:
                 metak.x = metak.x - metak.speed
-            
-                
-                
-            
-            
-            
 
-def pucaj(puska):
-  metak = Metak()  
-  metak.x = int(player.x)
-  metak.y = int(player.y)
-  metak.desno = player.desno
-  
-  metak.dmg = puska.dmg
-  metak.speed = puska.speed
-  metak.explosive = puska.explosive
-  metak.spr = puska.spr
+            
+class PromjenaPuska:
+    puskaBr = 0
+    x = 0
+    y = 0
 
-  metci.append(metak)
-  player.shootTimer=puska.firerate*60
-  
+
+
 
 
 

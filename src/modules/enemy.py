@@ -14,7 +14,7 @@ class enemy:
   minY = 120
   desno = False
   shotTimer = 0  # timer za pucanje
-  shotFreq = 0.5 # koliko cesto puca
+  shotFreq = 2 # koliko cesto puca
   coll = []
 
   def movement(self, coll):
