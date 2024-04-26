@@ -136,20 +136,23 @@ class player:
     jetpackJacina=2
     
     #Koyote time
-    coyoteTime=2225
+    coyoteTime=5
     ctVar=0
+    jumped=False
 
     def PlayerKontroler(self, coll):
         self.coll=coll
         print(self.ctVar)
         #skakanje
-        if key(48) and self.vsp == 0:
+        if key(48) and not self.jumped:
             if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime:
                 self.vsp = -self.skokJacina
+                self.jumped = True
 
         #coyote time
         if self.ProvjeriKolizije(self, 0, 1):
             self.ctVar = 0
+            self.jumped = False
         else:
             self.ctVar += 1
         
