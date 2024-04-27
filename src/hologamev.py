@@ -6,7 +6,7 @@
 # version: 0.1
 # script:  python
 
-t=0
+
 state='menu' #varijabla za game state
 
 def TIC():
@@ -35,11 +35,14 @@ def TIC():
    menu.Menu()
 
 def Final():
-	cls(13)
-    print("A i D za kretanje, SPACE za skakanje", 0, 0)
-    print("W za jetpack, F i G za pucanje", 0, 8)
+	cls(13) 
+  
+  
+  #print("A i D za kretanje, SPACE za skakanje", 0, 0)
+  #print("W za jetpack, F ", 0, 8)
+  #print("S za promjenu oruzja,", 0, 16)
  
-	t=t+1
+	
 
 
 class collidable:
@@ -620,10 +623,6 @@ class Puska:
       if player.shootTimer < 0:
         if key(6):
             Puska.pucaj(prvaPuska)
-        if key(7):
-            Puska.pucaj(drugaPuska)
-        if key(8):
-            Puska.pucaj(trecaPuska)
         if keyp(19):
             Puska.PromijeniPusku()
       
@@ -645,7 +644,11 @@ class Puska:
       player.shootTimer = player.shootTimer - 1
         
       for metak in metci:
-            spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
+          
+            if metak.explosive:
+                spr(metak.spr + (int(metak.x) % 2),metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
+            else:
+                spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
@@ -898,7 +901,7 @@ def test( a, b ):
 # 119:3328f6663289f66622898f66889998f6899998f6899999f6899999f66888ff66
 # 120:000000008855888e8888588e0868000008800000080000000000000000000000
 # 122:0000000000000000002233000222333000223300000000000000000000000000
-# 123:6666666666666666662332666223322666233266666666666666666666666666
+# 123:0000000000000000002332000223322000233200000000000000000000000000
 # </SPRITES>
 
 

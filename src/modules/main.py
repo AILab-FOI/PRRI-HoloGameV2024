@@ -6,7 +6,7 @@
 # version: 0.1
 # script:  python
 
-t=0
+
 state='menu' #varijabla za game state
 
 def TIC():
@@ -35,11 +35,14 @@ def TIC():
    menu.Menu()
 
 def Final():
-	cls(13)
-    print("A i D za kretanje, SPACE za skakanje", 0, 0)
-    print("W za jetpack, F i G za pucanje", 0, 8)
+	cls(13) 
+  
+  
+  #print("A i D za kretanje, SPACE za skakanje", 0, 0)
+  #print("W za jetpack, F ", 0, 8)
+  #print("S za promjenu oruzja,", 0, 16)
  
-	t=t+1
+	
 
 # <TILES>
 # 001:8888888888888888888888888888888888888888888888888888888888888888
@@ -259,7 +262,7 @@ def Final():
 # 119:3328f6663289f66622898f66889998f6899998f6899999f6899999f66888ff66
 # 120:000000008855888e8888588e0868000008800000080000000000000000000000
 # 122:0000000000000000002233000222333000223300000000000000000000000000
-# 123:6666666666666666662332666223322666233266666666666666666666666666
+# 123:0000000000000000002332000223322000233200000000000000000000000000
 # </SPRITES>
 
 

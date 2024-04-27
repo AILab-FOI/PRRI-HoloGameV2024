@@ -140,10 +140,6 @@ class Puska:
       if player.shootTimer < 0:
         if key(6):
             Puska.pucaj(prvaPuska)
-        if key(7):
-            Puska.pucaj(drugaPuska)
-        if key(8):
-            Puska.pucaj(trecaPuska)
         if keyp(19):
             Puska.PromijeniPusku()
       
@@ -165,7 +161,11 @@ class Puska:
       player.shootTimer = player.shootTimer - 1
         
       for metak in metci:
-            spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
+          
+            if metak.explosive:
+                spr(metak.spr + (int(metak.x) % 2),metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
+            else:
+                spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
