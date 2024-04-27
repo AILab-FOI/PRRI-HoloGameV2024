@@ -121,7 +121,7 @@ class Projectile:
                     del metak
             elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
                 if metak in projectiles:
-                    print("Player pogoen")
+                    print("Player pogoen", 80, 50)
                     projectiles.remove(metak)
                     del metak
                 else:

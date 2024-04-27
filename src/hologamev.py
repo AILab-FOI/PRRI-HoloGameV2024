@@ -30,6 +30,7 @@ def TIC():
      Metak.MetakCheck(metak, collidables)
    for metak in projectiles:
      Projectile.MetakCheck(metak, collidables)
+   PromjenaPuska.PickUp(PromjenaPuska)
  elif state=='menu':
    menu.Menu()
 
@@ -370,7 +371,7 @@ class Projectile:
                     del metak
             elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
                 if metak in projectiles:
-                    print("Player pogoen")
+                    print("Player pogoen", 80, 50)
                     projectiles.remove(metak)
                     del metak
                 else:
@@ -517,6 +518,8 @@ class trecaPuska:
     dmg=2
     
     explosive=True
+    explLenght = 1
+    explSize = 16
     spr=378
 
 
@@ -537,21 +540,34 @@ class Metak:
     speed=9
     dmg=2
     
-    explosive=True
+    explosive=False
+    explVar = 0
+    explSizeVar = 2
+    
     spr=378
     coll = []
+    
     
     
     def MetakCheck(metak, colls):
             metak.coll=colls
             if metak.x < 0 or metak.x > pogled.ogranicenjeX or Metak.ProvjeriKolizije(metak, 0, 1):
                 if metak in metci:
-                    metci.remove(metak)
-                    del metak
+                    # za rakete i ekpslozije
+                    if metak.explosive and metak.explVar < trecaPuska.explLenght * 60:
+                        metak.speed = 0
+                        metak.explVar += 1
+                        metak.explSizeVar += int(metak.explVar / 5)
+                        
+                        minSize = min(metak.explSizeVar, trecaPuska.explSize)
+                        
+                        rect(int(metak.x) - int(pogled.x) - int(minSize / 2) + 2, int(metak.y) - int(pogled.y) - int(minSize / 2) + 2, minSize, minSize, 3)
+                    else:
+                        metci.remove(metak)
+                        del metak
                 else:
                     del metak
             
-    
     
     def ProvjeriKolizije(self, xdodatak, ydodatak):
         self.x += xdodatak
@@ -571,9 +587,7 @@ class Puska:
     x=0
     y=0
     
-    g1 = 360
-    g2 = 361
-    g3 = 376
+    svespr = [360, 361, 376]
     
     svep = [prvaPuska, drugaPuska, trecaPuska]  # sve puske
     tp = 0   # trenutna puska
@@ -592,7 +606,7 @@ class Puska:
         metak.spr = Puska.svep[Puska.p[Puska.tp]].spr
 
         metci.append(metak)
-        player.shootTimer=Puska.svep[Puska.p[Puska.tp]].firerate*60
+        player.shootTimer=Puska.svep[Puska.p[Puska.tp]].firerate * 60
     
     
     def PromijeniPusku():
@@ -615,7 +629,6 @@ class Puska:
       
       eksdes = 12
       fliph = 0
-      sprN = 360
       
       # gdje i kako ce se puska renderati
       if player.desno:
@@ -626,13 +639,8 @@ class Puska:
         Puska.y = int(player.y) 
         fliph = 1
     
-    # koji sprite uzimamo
-      if Puska.p[Puska.tp] == 1:
-          sprN = 361
-      elif Puska.p[Puska.tp] == 2:
-          sprN = 376
     
-      spr(sprN, Puska.x - int(pogled.x), Puska.y - int(pogled.y), 14,1,fliph,0,1,1)
+      spr(int(Puska.svespr[Puska.p[Puska.tp]]), Puska.x - int(pogled.x), Puska.y - int(pogled.y), 14,1,fliph,0,1,1)
     
       player.shootTimer = player.shootTimer - 1
         
@@ -645,17 +653,30 @@ class Puska:
                 metak.x = metak.x - metak.speed
 
             
-                
-                
-
-            
-            
-
-
-  
-
-
-
+class PromjenaPuska:
+    puskaBr = 2
+    puskaSpr = 376
+    x = 100
+    y = 100
+    
+    pickUpBool = True
+    
+    def __init__(self):  # konstruktor klase
+        self.x = 100
+        self.y = 100
+    
+    def PickUp(self):
+        spr(self.puskaSpr, int(self.x) - int(pogled.x), int(self.y) - int(pogled.y), 14,1,0,0,1,1)
+        
+        if self.pickUpBool and self.x < player.x + player.width and self.y < player.y + player.height and self.x > player.x - player.width + 8 and self.y > player.y - player.height:
+            #zamijeni puske
+            self.puskaSpr = Puska.svespr[Puska.p[Puska.tp]]
+            noviBr = self.puskaBr
+            self.puskaBr = Puska.p[Puska.tp] 
+            Puska.p[Puska.tp] = noviBr
+            self.pickUpBool = False
+        elif not (self.x < player.x + player.width and self.y < player.y + player.height and self.x > player.x - player.width + 8 and self.y > player.y - player.height):
+            self.pickUpBool = True
 
 def test( a, b ):
     return a+b

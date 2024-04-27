@@ -30,6 +30,7 @@ def TIC():
      Metak.MetakCheck(metak, collidables)
    for metak in projectiles:
      Projectile.MetakCheck(metak, collidables)
+   PromjenaPuska.PickUp(PromjenaPuska)
  elif state=='menu':
    menu.Menu()
 
