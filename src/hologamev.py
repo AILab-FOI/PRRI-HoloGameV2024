@@ -161,6 +161,13 @@ class player:
     ctVar=0
     jumped=False
 
+    #hp
+    health = 3
+    hitTimer = 10
+    hitVar = 0
+
+
+
     def PlayerKontroler(self, coll):
         self.coll=coll
         #skakanje
@@ -239,6 +246,15 @@ class player:
         else:
             spr(self.frame,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
 
+
+        if self.hitTimer > self.hitVar:
+            self.hitVar += 1
+            if self.desno==True and self.is_walking==True:
+                spr(266 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
+            elif self.desno==False and self.is_walking==True:
+                spr(266 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
+            else:
+                spr(266,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
             
             
     def JetpackJoyride(self):
@@ -247,7 +263,11 @@ class player:
             self.jetpackGorivo = self.jetpackGorivo - 1
             self.skok = 0
      
-    
+    def Pogoden(self, dmg):
+        self.health -= dmg
+        self.hitVar = 0
+        if self.health < 0:
+            print("HP MANJI OD 0")
 
 
 
@@ -313,9 +333,9 @@ class enemy:
 
     #crtanje samog sebe
     if enemy.desno==True:
-      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,0,0,2,2)
+      spr(320,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,0,0,2,2)
     else:
-      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,1,0,2,2)
+      spr(320,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
     projectile = Projectile(self.x + 5, int(self.y)) 
@@ -360,7 +380,7 @@ class Projectile:
       self.x = self.x - self.speed
 
     #crtanje sebe
-    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
+    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 0, 1, 0, 0, 1, 1)
 
       
   def MetakCheck(metak, colls):
@@ -375,6 +395,7 @@ class Projectile:
             elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
                 if metak in projectiles:
                     print("Player pogoen", 80, 50)
+                    player.Pogoden(player, 1) # damage ovdje ide ako cemo ga mijenjati 
                     projectiles.remove(metak)
                     del metak
                 else:
@@ -627,28 +648,30 @@ class Puska:
             Puska.PromijeniPusku()
       
       eksdes = 12
+      ekslijevo = -4
+      eksGori = 6
       fliph = 0
       
       # gdje i kako ce se puska renderati
       if player.desno:
         Puska.x = int(player.x) + eksdes
-        Puska.y = int(player.y)
+        Puska.y = int(player.y) + eksGori
       else:
-        Puska.x = int(player.x) - int(eksdes / 2)
-        Puska.y = int(player.y) 
+        Puska.x = int(player.x) + ekslijevo
+        Puska.y = int(player.y) + eksGori
         fliph = 1
     
     
-      spr(int(Puska.svespr[Puska.p[Puska.tp]]), Puska.x - int(pogled.x), Puska.y - int(pogled.y), 14,1,fliph,0,1,1)
+      spr(int(Puska.svespr[Puska.p[Puska.tp]]), Puska.x - int(pogled.x), Puska.y - int(pogled.y), 0,1,fliph,0,1,1)
     
       player.shootTimer = player.shootTimer - 1
         
       for metak in metci:
           
             if metak.explosive:
-                spr(metak.spr + (int(metak.x) % 2),metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
+                spr(metak.spr + (int(metak.x) % 2),metak.x - int(pogled.x),metak.y - int(pogled.y),0,1,0,0,1,1)
             else:
-                spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
+                spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),0,1,0,0,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
@@ -669,7 +692,7 @@ class PromjenaPuska:
         self.y = 100
     
     def PickUp(self):
-        spr(self.puskaSpr, int(self.x) - int(pogled.x), int(self.y) - int(pogled.y), 14,1,0,0,1,1)
+        spr(self.puskaSpr, int(self.x) - int(pogled.x), int(self.y) - int(pogled.y), 0,1,0,0,1,1)
         
         if self.pickUpBool and self.x < player.x + player.width and self.y < player.y + player.height and self.x > player.x - player.width + 8 and self.y > player.y - player.height:
             #zamijeni puske

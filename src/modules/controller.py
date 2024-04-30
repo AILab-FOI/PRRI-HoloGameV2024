@@ -55,6 +55,13 @@ class player:
     ctVar=0
     jumped=False
 
+    #hp
+    health = 3
+    hitTimer = 10
+    hitVar = 0
+
+
+
     def PlayerKontroler(self, coll):
         self.coll=coll
         #skakanje
@@ -133,6 +140,15 @@ class player:
         else:
             spr(self.frame,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
 
+
+        if self.hitTimer > self.hitVar:
+            self.hitVar += 1
+            if self.desno==True and self.is_walking==True:
+                spr(266 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
+            elif self.desno==False and self.is_walking==True:
+                spr(266 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
+            else:
+                spr(266,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
             
             
     def JetpackJoyride(self):
@@ -141,6 +157,10 @@ class player:
             self.jetpackGorivo = self.jetpackGorivo - 1
             self.skok = 0
      
-    
+    def Pogoden(self, dmg):
+        self.health -= dmg
+        self.hitVar = 0
+        if self.health < 0:
+            print("HP MANJI OD 0")
 
 

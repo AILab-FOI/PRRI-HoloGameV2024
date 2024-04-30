@@ -60,9 +60,9 @@ class enemy:
 
     #crtanje samog sebe
     if enemy.desno==True:
-      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,0,0,2,2)
+      spr(320,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,0,0,2,2)
     else:
-      spr(290,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,1,0,2,2)
+      spr(320,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
     projectile = Projectile(self.x + 5, int(self.y)) 
@@ -107,7 +107,7 @@ class Projectile:
       self.x = self.x - self.speed
 
     #crtanje sebe
-    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
+    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 0, 1, 0, 0, 1, 1)
 
       
   def MetakCheck(metak, colls):
@@ -122,6 +122,7 @@ class Projectile:
             elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
                 if metak in projectiles:
                     print("Player pogoen", 80, 50)
+                    player.Pogoden(player, 1) # damage ovdje ide ako cemo ga mijenjati 
                     projectiles.remove(metak)
                     del metak
                 else:

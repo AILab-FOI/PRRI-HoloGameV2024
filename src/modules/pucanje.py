@@ -144,28 +144,30 @@ class Puska:
             Puska.PromijeniPusku()
       
       eksdes = 12
+      ekslijevo = -4
+      eksGori = 6
       fliph = 0
       
       # gdje i kako ce se puska renderati
       if player.desno:
         Puska.x = int(player.x) + eksdes
-        Puska.y = int(player.y)
+        Puska.y = int(player.y) + eksGori
       else:
-        Puska.x = int(player.x) - int(eksdes / 2)
-        Puska.y = int(player.y) 
+        Puska.x = int(player.x) + ekslijevo
+        Puska.y = int(player.y) + eksGori
         fliph = 1
     
     
-      spr(int(Puska.svespr[Puska.p[Puska.tp]]), Puska.x - int(pogled.x), Puska.y - int(pogled.y), 14,1,fliph,0,1,1)
+      spr(int(Puska.svespr[Puska.p[Puska.tp]]), Puska.x - int(pogled.x), Puska.y - int(pogled.y), 0,1,fliph,0,1,1)
     
       player.shootTimer = player.shootTimer - 1
         
       for metak in metci:
           
             if metak.explosive:
-                spr(metak.spr + (int(metak.x) % 2),metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
+                spr(metak.spr + (int(metak.x) % 2),metak.x - int(pogled.x),metak.y - int(pogled.y),0,1,0,0,1,1)
             else:
-                spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
+                spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),0,1,0,0,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
@@ -186,7 +188,7 @@ class PromjenaPuska:
         self.y = 100
     
     def PickUp(self):
-        spr(self.puskaSpr, int(self.x) - int(pogled.x), int(self.y) - int(pogled.y), 14,1,0,0,1,1)
+        spr(self.puskaSpr, int(self.x) - int(pogled.x), int(self.y) - int(pogled.y), 0,1,0,0,1,1)
         
         if self.pickUpBool and self.x < player.x + player.width and self.y < player.y + player.height and self.x > player.x - player.width + 8 and self.y > player.y - player.height:
             #zamijeni puske
