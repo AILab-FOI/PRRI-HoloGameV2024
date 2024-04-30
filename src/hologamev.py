@@ -6,7 +6,7 @@
 # version: 0.1
 # script:  python
 
-t=0
+
 state='menu' #varijabla za game state
 
 def TIC():
@@ -18,22 +18,31 @@ def TIC():
 
    map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
 
-   collidables = DefinirajKolizije([player, enemy])
+   collidables = DefinirajKolizije([player, enemy, metci, projectiles])
    enemy.movement(enemy, collidables)
    for projektil in projectiles:
       projektil.movement()
-   Pucanje()
+      Projectile.MetakCheck(projektil, collidables)
+   Puska.Pucanje()
    player.PlayerKontroler(player, collidables)
    pogled.pratiIgraca()
+   for metak in metci:
+     Metak.MetakCheck(metak, collidables)
+   for metak in projectiles:
+     Projectile.MetakCheck(metak, collidables)
+   PromjenaPuska.PickUp(PromjenaPuska)
  elif state=='menu':
    menu.Menu()
 
 def Final():
-	cls(13)
-    print("A i D za kretanje, SPACE za skakanje", 0, 0)
-    print("W za jetpack, F i G za pucanje", 0, 8)
+	cls(13) 
+  
+  
+  #print("A i D za kretanje, SPACE za skakanje", 0, 0)
+  #print("W za jetpack, F ", 0, 8)
+  #print("S za promjenu oruzja,", 0, 16)
  
-	t=t+1
+	
 
 
 class collidable:
@@ -60,9 +69,10 @@ class collidable:
 
 def DefinirajKolizije(listaObjekata):
     collidables = []
-
+    # ako objekt nije lista prvi dio koda se raunna, inace je drugi (else)
     tile_size = 8
     for objekt in listaObjekata:
+      if not isinstance (objekt, list):
         px = min(max(int(objekt.x/tile_size) - 4, 0), 239)
         py = min(max(int(objekt.y/tile_size) - 4, 0), 135)
         xrepeat = 10
@@ -73,10 +83,27 @@ def DefinirajKolizije(listaObjekata):
                 tileHere = mget(xx + px, yy + py)
                 if tileHere != 0:
                     collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+      else:
+          for obj in objekt:
+              px = min(max(int(obj.x/tile_size) - 4, 0), 239)
+              py = min(max(int(obj.y/tile_size) - 4, 0), 135)
+              xrepeat = 10
+              yrepeat = 10
+
+              for xx in range(xrepeat):
+               for yy in range(yrepeat):
+                tileHere = mget(xx + px, yy + py)
+                if tileHere != 0:
+                    collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+            
 
     
 
     return collidables
+
+
+
+
 def pomakni(a, b, vrijednost):
     if vrijednost == 0:
         return a
@@ -128,14 +155,27 @@ class player:
     #jetpack
     jetpackTrajanje=50
     jetpackJacina=2
+    
+    #Koyote time
+    coyoteTime=7
+    ctVar=0
+    jumped=False
 
     def PlayerKontroler(self, coll):
         self.coll=coll
-
         #skakanje
-        if key(48) and self.vsp == 0:
-            if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY:
+        if key(48) and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
+            if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime:
                 self.vsp = -self.skokJacina
+                self.jumped = True
+
+        #coyote time
+        if self.ProvjeriKolizije(self, 0, 1):
+            self.ctVar = 0
+            self.jumped = False
+        else:
+            self.ctVar += 1
+        
 
         #kretanje lijevo desno
         if key(1): 
@@ -227,6 +267,7 @@ class enemy:
   minY = 120
   desno = False
   shotTimer = 0  # timer za pucanje
+  shotFreq = 2 # koliko cesto puca
   coll = []
 
   def movement(self, coll):
@@ -266,7 +307,7 @@ class enemy:
     self.y = self.y + self.vsp
 
     # puca svakih dvije sekunde
-    if self.shotTimer >= 60 * 2:
+    if self.shotTimer >= 60 * self.shotFreq:
       self.shootProjectile(self)  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
@@ -296,6 +337,12 @@ class enemy:
     return False
 
 class Projectile:
+  x=0
+  y=0
+    
+  width=4
+  height=4
+  
   def __init__(self, x, y):  # konstruktor klase
     self.x = x
     self.y = y
@@ -303,6 +350,8 @@ class Projectile:
     self.dy = 0
     self.speed = 5  # brzina projektila
     self.desno = True
+    self.width = 4
+    self.height = 4
   
   def movement(self):
     if self.desno == True:
@@ -311,11 +360,41 @@ class Projectile:
       self.x = self.x - self.speed
 
     #crtanje sebe
-    spr(80, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
+    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 14, 1, 0, 0, 1, 1)
 
-    #brisanje ako se unisti
-    if self.x < 0 or self.x > pogled.ogranicenjeX:
-      del self
+      
+  def MetakCheck(metak, colls):
+            metak.coll=colls
+            # metak se unisti
+            if metak.x < 0 or metak.x > pogled.ogranicenjeX or Projectile.ProvjeriKolizije(metak, 0, 1):
+                if metak in projectiles:
+                    projectiles.remove(metak)
+                    del metak
+                else:
+                    del metak
+            elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
+                if metak in projectiles:
+                    print("Player pogoen", 80, 50)
+                    projectiles.remove(metak)
+                    del metak
+                else:
+                    del metak
+            # ako je pogoden player (elif)
+              
+    
+  # 1-2.-3 5---8.---11
+    
+  def ProvjeriKolizije(self, xdodatak, ydodatak):
+        self.x += xdodatak
+        self.y += ydodatak
+        for obj in self.coll:
+            if obj.check_collision(self):
+                self.x -= xdodatak
+                self.y -= ydodatak
+                return True
+        self.x -= xdodatak
+        self.y -= ydodatak
+        return False
      
 
 
@@ -415,6 +494,9 @@ class prvaPuska:
     speed=16
     dmg=4
     
+    explosive=False
+    spr=363
+    
 class drugaPuska:
     x=0
     y=0
@@ -424,47 +506,180 @@ class drugaPuska:
     firerate = 0.1
     speed=6
     dmg=1
+    
+    explosive=False
+    spr=362
+    
+class trecaPuska:
+    x=0
+    y=0
+    
+    desno=False
+    
+    firerate = 0.2
+    speed=9
+    dmg=2
+    
+    explosive=True
+    explLenght = 1
+    explSize = 16
+    spr=378
 
 
 metci = []
 
 
 
-   
 
-def Pucanje():
+class Metak:
+    x=0
+    y=0
     
-    player.shootTimer = player.shootTimer - 1
+    width=4
+    height=4
     
-    if player.shootTimer < 0:
+    desno=False
+    
+    speed=9
+    dmg=2
+    
+    explosive=False
+    explVar = 0
+    explSizeVar = 2
+    
+    spr=378
+    coll = []
+    
+    
+    
+    def MetakCheck(metak, colls):
+            metak.coll=colls
+            if metak.x < 0 or metak.x > pogled.ogranicenjeX or Metak.ProvjeriKolizije(metak, 0, 1):
+                if metak in metci:
+                    # za rakete i ekpslozije
+                    if metak.explosive and metak.explVar < trecaPuska.explLenght * 60:
+                        metak.speed = 0
+                        metak.explVar += 1
+                        metak.explSizeVar += int(metak.explVar / 5)
+                        
+                        minSize = min(metak.explSizeVar, trecaPuska.explSize)
+                        
+                        rect(int(metak.x) - int(pogled.x) - int(minSize / 2) + 2, int(metak.y) - int(pogled.y) - int(minSize / 2) + 2, minSize, minSize, 3)
+                    else:
+                        metci.remove(metak)
+                        del metak
+                else:
+                    del metak
+            
+    
+    def ProvjeriKolizije(self, xdodatak, ydodatak):
+        self.x += xdodatak
+        self.y += ydodatak
+        for obj in self.coll:
+            if obj.check_collision(self):
+                self.x -= xdodatak
+                self.y -= ydodatak
+                return True
+        self.x -= xdodatak
+        self.y -= ydodatak
+        return False
+
+
+
+class Puska:
+    x=0
+    y=0
+    
+    svespr = [360, 361, 376]
+    
+    svep = [prvaPuska, drugaPuska, trecaPuska]  # sve puske
+    tp = 0   # trenutna puska
+    p = [0, 1]  # puske koje imamo
+    
+    
+    def pucaj(puska):
+        metak = Metak()  
+        metak.x = int(Puska.x)
+        metak.y = int(Puska.y)
+        metak.desno = player.desno
+  
+        metak.dmg = Puska.svep[Puska.p[Puska.tp]].dmg
+        metak.speed = Puska.svep[Puska.p[Puska.tp]].speed
+        metak.explosive = Puska.svep[Puska.p[Puska.tp]].explosive
+        metak.spr = Puska.svep[Puska.p[Puska.tp]].spr
+
+        metci.append(metak)
+        player.shootTimer=Puska.svep[Puska.p[Puska.tp]].firerate * 60
+    
+    
+    def PromijeniPusku():
+        if Puska.p[0] == Puska.p[Puska.tp]:
+            Puska.tp = 1
+        else:
+            Puska.tp = 0
+    
+    
+    def Pucanje():
+      if player.shootTimer < 0:
         if key(6):
-            pucaj(prvaPuska)
-        if key(7):
-            pucaj(drugaPuska)
+            Puska.pucaj(prvaPuska)
+        if keyp(19):
+            Puska.PromijeniPusku()
+      
+      eksdes = 12
+      fliph = 0
+      
+      # gdje i kako ce se puska renderati
+      if player.desno:
+        Puska.x = int(player.x) + eksdes
+        Puska.y = int(player.y)
+      else:
+        Puska.x = int(player.x) - int(eksdes / 2)
+        Puska.y = int(player.y) 
+        fliph = 1
+    
+    
+      spr(int(Puska.svespr[Puska.p[Puska.tp]]), Puska.x - int(pogled.x), Puska.y - int(pogled.y), 14,1,fliph,0,1,1)
+    
+      player.shootTimer = player.shootTimer - 1
         
-    for metak in metci:
-            spr(80,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,1,1,1)
+      for metak in metci:
+          
+            if metak.explosive:
+                spr(metak.spr + (int(metak.x) % 2),metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
+            else:
+                spr(metak.spr,metak.x - int(pogled.x),metak.y - int(pogled.y),14,1,0,0,1,1)
             
             if metak.desno == True:   
                 metak.x = metak.x + metak.speed
             else:
                 metak.x = metak.x - metak.speed
+
             
-            if metak.x < 0 or metak.x > pogled.ogranicenjeX:
-                del metak
-
-def pucaj(puska):
-  metak = puska()  
-  metak.x = int(player.x)
-  metak.y = int(player.y)
-  metak.desno = player.desno
-
-  metci.append(metak)
-  player.shootTimer=puska.firerate*60
-  
-
-
-
+class PromjenaPuska:
+    puskaBr = 2
+    puskaSpr = 376
+    x = 100
+    y = 100
+    
+    pickUpBool = True
+    
+    def __init__(self):  # konstruktor klase
+        self.x = 100
+        self.y = 100
+    
+    def PickUp(self):
+        spr(self.puskaSpr, int(self.x) - int(pogled.x), int(self.y) - int(pogled.y), 14,1,0,0,1,1)
+        
+        if self.pickUpBool and self.x < player.x + player.width and self.y < player.y + player.height and self.x > player.x - player.width + 8 and self.y > player.y - player.height:
+            #zamijeni puske
+            self.puskaSpr = Puska.svespr[Puska.p[Puska.tp]]
+            noviBr = self.puskaBr
+            self.puskaBr = Puska.p[Puska.tp] 
+            Puska.p[Puska.tp] = noviBr
+            self.pickUpBool = False
+        elif not (self.x < player.x + player.width and self.y < player.y + player.height and self.x > player.x - player.width + 8 and self.y > player.y - player.height):
+            self.pickUpBool = True
 
 def test( a, b ):
     return a+b
@@ -578,56 +793,117 @@ def test( a, b ):
 # 132:f5feeeef5ffeeeeffffeeeefeeefeeefeeeefeefeeeeefefeeeeeeffffffffff
 # </TILES>
 
+
 # <SPRITES>
-# 000:666666fe66666fee6666feee6666feee66666fee666666fe66600e0066fee034
-# 001:d6666666ed66666622d66666eed66666ed666666e66666660e00666640ed6666
-# 002:666666fe66666fee6666feee6666ffee66666ffe666666ff66600e0066fee034
-# 003:d6666666ed66666622d66666eed66666ed666666e66666660e00666640eed666
-# 004:666666fe66666fee6666feee6666ffee66666ffe666666ff66666ee066666e03
-# 005:d6666666ed66666622d66666eed66666ed666666e66666660e66666640666666
-# 016:66feee0366feffe066fe6fe066fe6eee666ffee66666fe666666fe666666fff6
-# 017:0eeed666ef6ee666ee6ee666ed66e666fed66666fee66666fee666666fee6666
-# 018:6feeee036fe6f0e06fee6fe066f66eee6666fee66666fe66666fee66666ffee6
-# 019:0ee6ed66e0e6ee66ee66eed6ed666d66fed66666ffed66666ffd666666fed666
-# 020:6666eee06666eeee6666efee66666ffe66666fee6666fee66666fe6666666ff6
-# 021:0e666666e0666666ee666666ed666666fe666666ffe66666fee66666ff666666
-# 032:666666fe66666fee6666feee6666ffee66666ffe666666ff66666ee066666e03
-# 033:d6666666ed66666622d66666eed66666ed666666e66666660f66666630fefeff
-# 034:6666ff66666feef666ffffee6feeffff6feef66666feeff7666feef766ffff7f
-# 035:6666666666666666ef66666666666666666666667dd66666fffd6666222f6666
-# 036:6666ff66666feef666ffffee6feeffff6feef66666feeff7666feef766ffff7f
-# 037:6666666666666666ef66666666666666666666667dd66666fffd6666233f6666
-# 048:6666eee06666eeee6666efee66666ffe66666fee6666fee66666fe6666666ff6
-# 049:0effeff6eff6f666ee66f666ed666666fe666666ffe66666fee66666ff666666
-# 050:66fee777666fe77766fee77766fe777f66fe777666fe77d6666fe77d666ffff7
-# 051:f2fd66667f7d66667777666677776666f7776666fe7d66666fe7d6666ffedd66
-# 052:66fee777666fe77766fee77766fe777766fe77776ffe77776fffeeee6ffffffe
-# 053:f2fd66667f7d66667777666677776666766666667d66666677d66666e7766666
-# 064:6666ff66666feef666feffee6fefffff6feef66666feefff666feef766ffff7f
-# 065:6666666666666666ef666666666666666666666677d66666fffd6666233f6666
-# 066:a6666888aaa68999a9989999a99999ff6a999fdd66a9fddd6699fd226699fd22
-# 067:886666f69986fff6999888f6f99988f6df998f66ddf986662df9f6662df9f666
-# 068:a6666a99aaa6a999aa9a9999aa9999ff6aa99fdd66a9fddd6699f2226699f222
-# 069:886666f69986fff6999888f6f99998f6df998f66ddf98666ddf9f666ddf9f666
-# 080:66fee777666fe777666fe777666fe77e66ffe77e66ffe7776feffeee6feefffe
-# 081:f2f766667f776666777d666677d66666ed6666667edd6666777d6666ee776666
-# 082:66a99fd266a999ff6a9a9999a9999888a9999986999999869999998669988866
-# 083:df99f666f998f66699898f66889998f6899998f6899999f6899999f66888ff66
-# 084:66a99f2d66a999ff6aaa9999aa999999a9999996999999866999886666666666
-# 085:df99f666f999f66699998f66899998f6899998f6899999f6899999f66888ff66
+# 000:666666006666600566600055660011116605055466000544666000446600e154
+# 001:0006666655006666555006661111066644040666440406664444066644440666
+# 002:600066006050600560000055666011116660555466605544666000546660ee15
+# 003:0006666655006666555006661111066644040666440406664444066644440666
+# 004:666666006000600560500055600011116660555466605544666000546660ee15
+# 005:0006666655006666555006661111066644040666440406664444066644440666
+# 006:666666006000600560500055600011116660555466605544666000546660ee15
+# 007:0006666655006666555006661111066644040666440406664444066644440666
+# 008:666666006000600560500055600011116660555466605544666000546600ee15
+# 009:0006666655006666555006661111066644040666440406664444066644440666
+# 010:6666660066666002666000226600222266020222660002226660002266002222
+# 011:0006666622006666222006662222066622020666220206662222066622220666
+# 012:6666660060006002602000226000222266602222666022226660002266602222
+# 013:0006666622006666222006662222066622020666220206662222066622220666
+# 016:660eee15600ee0e160ee0eee6044000060000eee6660ee00660ee00666000066
+# 017:55500666eee00666110e0666001ee066eee040660ee0066660ee066660000666
+# 018:6660ee016600e0ee660440ee660000006660eee0660ee0066600006666666666
+# 019:555000661ee04066e10ee066000006660eee0066600ee0666600006666666666
+# 020:6660ee016600e0ee660ee0ee66044000660000ee6660ee00660eee0666000066
+# 021:555000661ee04066e10ee0660011e066eee006660ee0066660ee066660000666
+# 022:660eee01660ee00e660eee406660ee40666000006660eee06660ee0066600006
+# 023:555066661ee06666e10e666600116666eee06666ee0066660ee0666600006666
+# 024:66000e0160ee0ee060ee0eee60440ee06600eeee6660ee00660eee0666000066
+# 025:5550006600004066ee0e4066eeee4066000006660ee0066660ee066660000666
+# 026:6602222260022022602202226022000060000222666022006602200666000066
+# 027:2220066622200666220206660022206622202066022006666022066660000666
+# 028:6660220266002022660220226602200066000022666022006602220666000066
+# 029:2220006622202066220220660022206622200666022006666022066660000666
+# 032:6000660060206002600000226660222266602222666022226660002266602222
+# 033:0006666622006666222006662222066622020666220206662222066622220666
+# 034:6666666066666605666660556666011160060555044015550ee015550eeee155
+# 035:0006666655006666555066661111066655550666555506665555066655550006
+# 036:666666606666660566666055666601116666055566601555600015550440e155
+# 037:0006666655006666555066661111066655550666555500065555044055550ee0
+# 038:66666000666600556600055560011111605055446000544466000444600e1544
+# 039:0066666650066666550066661110666640406666404066664440666644406666
+# 040:66666000666600556600055560011111605055446000544466000444600e1544
+# 041:0066666650066666550066661110666640406666404066664440666644400000
+# 042:66666000666600556600055560011111605055446000544466000444600e1544
+# 043:0066666650066666550066661110666640406666404066664440666644406666
+# 044:666666fe66666fee6666feee6666feee66666fee666666fe66600e0066fee034
+# 045:d6666666ed66666622d66666eed66666ed666666e66666660e00666640ed6666
+# 048:6660220266002022660220226600000066602220660220066600006666666666
+# 049:2220006622202066220220660000066602220066600220666600006666666666
+# 050:600eee15660ee0e166000eee6666000066600eee6660eee0660ee00666000066
+# 051:55e00440eee0eee0110eee0000110066eee0066600ee06666000066666666666
+# 052:0eeeee15600ee0e1660eeeee666000006660eeee660ee0006600006666666666
+# 053:55e0eee0eee0ee06110ee00600110666eee066660ee0066660ee066660000666
+# 054:60eee15500ee0e1e0ee0eee1044000000000eeee660ee00060ee006660000666
+# 055:55006006e000022000422400ee420066ee000666ee0066660ee0666600006666
+# 056:60eee15500ee0e1e0ee0eee1044000000000eeee660ee00060ee006660000666
+# 057:55003330e000030000430930ee439300ee000006ee0066660ee0666600006666
+# 058:60eee15500ee0e1e0ee0eee1044000000000eeee660ee00060ee006660000666
+# 059:55006006e0000aa0004aa5aaee4a5aaaee00aa00ee0000660ee0666600006666
+# 060:66feee0366feffe066fe6fe066fe6eee666ffee66666fe666666fe666666fff6
+# 061:0eeed666ef6ee666ee6ee666ed66e666fed66666fee66666fee666666fee6666
+# 064:666666fe66666fee6666feee6666ffee66666ffe666666ff66600e0066fee034
+# 065:d6666666ed66666622d66666eed66666ed666666e66666660e00666640eed666
+# 066:666666fe66666fee6666feee6666ffee66666ffe666666ff66666ee066666e03
+# 067:d6666666ed66666622d66666eed66666ed666666e66666660e66666640666666
+# 068:666666fe66666fee6666feee6666ffee66666ffe666666ff66666ee066666e03
+# 069:d6666666ed66666622d66666eed66666ed666666e66666660f66666630fefeff
+# 070:6666ff66666feef666ffffee6feeffff6feef66666feeff7666feef766ffff7f
+# 071:6666666666666666ef66666666666666666666667dd66666fffd6666222f6666
+# 072:6666ff66666feef666ffffee6feeffff6feef66666feeff7666feef766ffff7f
+# 073:6666666666666666ef66666666666666666666667dd66666fffd6666233f6666
+# 074:6666ff66666feef666feffee6fefffff6feef66666feefff666feef766ffff7f
+# 075:6666666666666666ef666666666666666666666677d66666fffd6666233f6666
+# 076:a6666888aaa68999a9989999a99999ff6a999fdd66a9fddd6699fd226699fd22
+# 077:886666f69986fff6999888f6f99988f6df998f66ddf986662df9f6662df9f666
+# 080:6feeee036fe6f0e06fee6fe066f66eee6666fee66666fe66666fee66666ffee6
+# 081:0ee6ed66e0e6ee66ee66eed6ed666d66fed66666ffed66666ffd666666fed666
+# 082:6666eee06666eeee6666efee66666ffe66666fee6666fee66666fe6666666ff6
+# 083:0e666666e0666666ee666666ed666666fe666666ffe66666fee66666ff666666
+# 084:6666eee06666eeee6666efee66666ffe66666fee6666fee66666fe6666666ff6
+# 085:0effeff6eff6f666ee66f666ed666666fe666666ffe66666fee66666ff666666
+# 086:66fee777666fe77766fee77766fe777f66fe777666fe77d6666fe77d666ffff7
+# 087:f2fd66667f7d66667777666677776666f7776666fe7d66666fe7d6666ffedd66
+# 088:66fee777666fe77766fee77766fe777766fe77776ffe77776fffeeee6ffffffe
+# 089:f2fd66667f7d66667777666677776666766666667d66666677d66666e7766666
+# 090:66fee777666fe777666fe777666fe77e66ffe77e66ffe7776feffeee6feefffe
+# 091:f2f766667f776666777d666677d66666ed6666667edd6666777d6666ee776666
+# 092:66a99fd266a999ff6a9a9999a9999888a9999986999999869999998669988866
+# 093:df99f666f998f66699898f66889998f6899998f6899999f6899999f66888ff66
 # 096:a6666a99aaa6a999aa9a9999aa9999ff6aa99fdd66a9fddd6699f2226699f222
 # 097:886666f69986fff6999888f6f99998f6df998f66ddf98666ddf9f666ddf9f666
-# 098:a6666888aaa68999a9989999a99999886a99982266a982236698223366982334
-# 099:886666f69986fff6999888f6899988f628998f66228986663228f6663328f666
-# 100:a6666888aaa68999a9989999a99999886a99982266a982336698233466982344
-# 101:886666f69986fff6999888f6899988f628998f66328986663328f6664328f666
-# 112:66a99f2d66a999ff6aaa9999aa999999a9999986a99999869999998669998866
-# 113:df99f666f999f66699998f66899998f6899999f6899999f66888ff6666666666
-# 114:66a8223366a982236a9a8222a9999888a9999986999999869999998669988866
-# 115:3228f6662289f66622898f66889998f6899998f6899999f6899999f66888ff66
-# 116:66a8233466a982336a9a8222a9999888a9999986999999869999998669988866
-# 117:3328f6663289f66622898f66889998f6899998f6899999f6899999f66888ff66
+# 098:a6666a99aaa6a999aa9a9999aa9999ff6aa99fdd66a9fddd6699f2226699f222
+# 099:886666f69986fff6999888f6f99998f6df998f66ddf98666ddf9f666ddf9f666
+# 100:a6666888aaa68999a9989999a99999886a99982266a982236698223366982334
+# 101:886666f69986fff6999888f6899988f628998f66228986663228f6663328f666
+# 102:a6666888aaa68999a9989999a99999886a99982266a982336698233466982344
+# 103:886666f69986fff6999888f6899988f628998f66328986663328f6664328f666
+# 104:0000000000200000222222220242000002200000020000000000000000000000
+# 105:0000000000444000400400003443444444f40400044004000400000000000000
+# 106:0000000000000000444440440044440004000044444404400000000000000000
+# 107:000000000000000000bbbbb00000000000bbbbb0000000000000000000000000
+# 112:66a99f2d66a999ff6aaa9999aa999999a9999996999999866999886666666666
+# 113:df99f666f999f66699998f66899998f6899998f6899999f6899999f66888ff66
+# 114:66a99f2d66a999ff6aaa9999aa999999a9999986a99999869999998669998866
+# 115:df99f666f999f66699998f66899998f6899999f6899999f66888ff6666666666
+# 116:66a8223366a982236a9a8222a9999888a9999986999999869999998669988866
+# 117:3228f6662289f66622898f66889998f6899998f6899999f6899999f66888ff66
+# 118:66a8233466a982336a9a8222a9999888a9999986999999869999998669988866
+# 119:3328f6663289f66622898f66889998f6899998f6899999f6899999f66888ff66
+# 120:000000008855888e8888588e0868000008800000080000000000000000000000
+# 122:0000000000000000002233000222333000223300000000000000000000000000
+# 123:0000000000000000002332000223322000233200000000000000000000000000
 # </SPRITES>
+
 
 # <MAP>
 # 006:000000000000006137472131810000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -657,4 +933,3 @@ def test( a, b ):
 # <PALETTE>
 # 000:1a1c2c5d275db13e53ef7d57ffcd75a7f07038b76425717929366f3b5dc941a6f673eff7f4f4f494b0c2566c86333c57
 # </PALETTE>
-
