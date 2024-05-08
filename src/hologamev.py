@@ -420,6 +420,7 @@ class Projectile:
 
 
 class menu:
+    ##a
     m_ind=0
 
     def Menu():
