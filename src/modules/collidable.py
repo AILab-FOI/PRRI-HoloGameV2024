@@ -22,9 +22,10 @@ class collidable:
 
 def DefinirajKolizije(listaObjekata):
     collidables = []
-
+    # ako objekt nije lista prvi dio koda se raunna, inace je drugi (else)
     tile_size = 8
     for objekt in listaObjekata:
+      if not isinstance (objekt, list):
         px = min(max(int(objekt.x/tile_size) - 4, 0), 239)
         py = min(max(int(objekt.y/tile_size) - 4, 0), 135)
         xrepeat = 10
@@ -35,7 +36,23 @@ def DefinirajKolizije(listaObjekata):
                 tileHere = mget(xx + px, yy + py)
                 if tileHere != 0:
                     collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+      else:
+          for obj in objekt:
+              px = min(max(int(obj.x/tile_size) - 4, 0), 239)
+              py = min(max(int(obj.y/tile_size) - 4, 0), 135)
+              xrepeat = 10
+              yrepeat = 10
+
+              for xx in range(xrepeat):
+               for yy in range(yrepeat):
+                tileHere = mget(xx + px, yy + py)
+                if tileHere != 0:
+                    collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+            
 
     
 
     return collidables
+
+
+
