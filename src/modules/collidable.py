@@ -4,7 +4,7 @@ class collidable:
         self.y = y
         self.width = width
         self.height = height
-        self.draw_self()
+        #self.draw_self()
 
     def check_collision(self, other):
         if self.x < other.x + other.width and self.x + self.width > other.x and self.y < other.y + other.height and self.y + self.height > other.y:

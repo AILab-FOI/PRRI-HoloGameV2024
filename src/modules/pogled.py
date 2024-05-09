@@ -10,7 +10,7 @@ class Pogled:
     ogranicenjeX = 0
 
     def __init__(self):
-        self.postaviOgranicenja(1000)
+        self.postaviOgranicenja(240*8) # maks velicina levela
 
     def prati(self, objekt):
         self.x = objekt.x - (self.w - objekt.width)/2

@@ -9,8 +9,8 @@ def pomakni(a, b, vrijednost):
 class player: 
     x=96
     y=24
-    width=16
-    height=16
+    width=14
+    height=15
     hsp=0
     vsp=0
     desno=False
@@ -97,9 +97,9 @@ class player:
 
         #gravitacija i kolizije
         if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
-            self.vsp=0
             while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
                 self.y+=1
+            self.vsp=0
         else:
             self.vsp=self.vsp+self.gravitacija
 
@@ -112,12 +112,12 @@ class player:
         #blokiranje lijevo i desno
         if self.x>(pogled.ogranicenjeX - self.width) or self.ProvjeriKolizije(self, 1+self.hsp, 0):
             self.hsp=0
-            while self.ProvjeriKolizije(self, 0, 0) or self.x > (pogled.ogranicenjeX - self.width):
+            while self.x > (pogled.ogranicenjeX - self.width):
                 self.x-=1
             
         if self.x<0 or self.ProvjeriKolizije(self, -1+self.hsp, 0):
             self.hsp=0
-            while self.ProvjeriKolizije(self, 0, 0) or self.x < 0:
+            while self.x < 0:
                 self.x+=1
 
         self.x=self.x+self.hsp

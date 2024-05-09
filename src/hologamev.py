@@ -9,7 +9,7 @@
 
 state='menu' #varijabla za game state
 
-level = 0 #koji level je ucitan
+level = 2 #koji level je ucitan
 LEVEL_HEIGHT = 17
 
 def ZapocniLevel(level):
@@ -23,7 +23,7 @@ def TIC():
  if state=='game':
    cls(0)
 
-   map(0, level*LEVEL_HEIGHT, 36, 18, -int(pogled.x), -int(pogled.y), 0)
+   map(0, level*LEVEL_HEIGHT, 240, 18, -int(pogled.x), -int(pogled.y), 0)
 
    collidables = DefinirajKolizije([player, enemy, metci, projectiles], level, LEVEL_HEIGHT)
    #enemy.movement(enemy, collidables)
@@ -58,7 +58,7 @@ class collidable:
         self.y = y
         self.width = width
         self.height = height
-        self.draw_self()
+        #self.draw_self()
 
     def check_collision(self, other):
         if self.x < other.x + other.width and self.x + self.width > other.x and self.y < other.y + other.height and self.y + self.height > other.y:
@@ -122,8 +122,8 @@ def pomakni(a, b, vrijednost):
 class player: 
     x=96
     y=24
-    width=16
-    height=16
+    width=14
+    height=15
     hsp=0
     vsp=0
     desno=False
@@ -210,9 +210,10 @@ class player:
 
         #gravitacija i kolizije
         if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
+            if self.vsp > 0:
+                while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+                    self.y+=1
             self.vsp=0
-            while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
-                self.y+=1
         else:
             self.vsp=self.vsp+self.gravitacija
 
@@ -225,12 +226,12 @@ class player:
         #blokiranje lijevo i desno
         if self.x>(pogled.ogranicenjeX - self.width) or self.ProvjeriKolizije(self, 1+self.hsp, 0):
             self.hsp=0
-            while self.ProvjeriKolizije(self, 0, 0) or self.x > (pogled.ogranicenjeX - self.width):
+            while self.x > (pogled.ogranicenjeX - self.width):
                 self.x-=1
             
         if self.x<0 or self.ProvjeriKolizije(self, -1+self.hsp, 0):
             self.hsp=0
-            while self.ProvjeriKolizije(self, 0, 0) or self.x < 0:
+            while self.x < 0:
                 self.x+=1
 
         self.x=self.x+self.hsp
@@ -486,7 +487,7 @@ class Pogled:
     ogranicenjeX = 0
 
     def __init__(self):
-        self.postaviOgranicenja(1000)
+        self.postaviOgranicenja(240*8) # maks velicina levela
 
     def prati(self, objekt):
         self.x = objekt.x - (self.w - objekt.width)/2

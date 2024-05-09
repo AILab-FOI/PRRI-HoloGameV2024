@@ -9,7 +9,7 @@
 
 state='menu' #varijabla za game state
 
-level = 0 #koji level je ucitan
+level = 2 #koji level je ucitan
 LEVEL_HEIGHT = 17
 
 def ZapocniLevel(level):
@@ -23,7 +23,7 @@ def TIC():
  if state=='game':
    cls(0)
 
-   map(0, level*LEVEL_HEIGHT, 36, 18, -int(pogled.x), -int(pogled.y), 0)
+   map(0, level*LEVEL_HEIGHT, 240, 18, -int(pogled.x), -int(pogled.y), 0)
 
    collidables = DefinirajKolizije([player, enemy, metci, projectiles], level, LEVEL_HEIGHT)
    #enemy.movement(enemy, collidables)
