@@ -9,6 +9,13 @@
 
 state='menu' #varijabla za game state
 
+level = 0 #koji level je ucitan
+LEVEL_HEIGHT = 17
+
+def ZapocniLevel(level):
+  player.ProvjeriKolizije(player, 0, 0)
+
+
 def TIC():
  Final()
 
@@ -16,10 +23,10 @@ def TIC():
  if state=='game':
    cls(0)
 
-   map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
+   map(0, level*LEVEL_HEIGHT, 36, 18, -int(pogled.x), -int(pogled.y), 0)
 
-   collidables = DefinirajKolizije([player, enemy, metci, projectiles])
-   enemy.movement(enemy, collidables)
+   collidables = DefinirajKolizije([player, enemy, metci, projectiles], level, LEVEL_HEIGHT)
+   #enemy.movement(enemy, collidables)
    for projektil in projectiles:
       projektil.movement()
       Projectile.MetakCheck(projektil, collidables)

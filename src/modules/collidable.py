@@ -4,7 +4,7 @@ class collidable:
         self.y = y
         self.width = width
         self.height = height
-        #self.draw_self()
+        self.draw_self()
 
     def check_collision(self, other):
         if self.x < other.x + other.width and self.x + self.width > other.x and self.y < other.y + other.height and self.y + self.height > other.y:
@@ -20,7 +20,7 @@ class collidable:
         rect(self.x - int(pogled.x), self.y - int(pogled.y), self.width, self.height, 15)
 
 
-def DefinirajKolizije(listaObjekata):
+def DefinirajKolizije(listaObjekata, level, level_height):
     collidables = []
     # ako objekt nije lista prvi dio koda se raunna, inace je drugi (else)
     tile_size = 8
@@ -33,7 +33,7 @@ def DefinirajKolizije(listaObjekata):
 
         for xx in range(xrepeat):
             for yy in range(yrepeat):
-                tileHere = mget(xx + px, yy + py)
+                tileHere = mget(xx + px, yy + py + level*level_height)
                 if tileHere != 0:
                     collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
       else:

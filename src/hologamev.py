@@ -9,6 +9,13 @@
 
 state='menu' #varijabla za game state
 
+level = 0 #koji level je ucitan
+LEVEL_HEIGHT = 17
+
+def ZapocniLevel(level):
+  player.ProvjeriKolizije(player, 0, 0)
+
+
 def TIC():
  Final()
 
@@ -16,10 +23,10 @@ def TIC():
  if state=='game':
    cls(0)
 
-   map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
+   map(0, level*LEVEL_HEIGHT, 36, 18, -int(pogled.x), -int(pogled.y), 0)
 
-   collidables = DefinirajKolizije([player, enemy, metci, projectiles])
-   enemy.movement(enemy, collidables)
+   collidables = DefinirajKolizije([player, enemy, metci, projectiles], level, LEVEL_HEIGHT)
+   #enemy.movement(enemy, collidables)
    for projektil in projectiles:
       projektil.movement()
       Projectile.MetakCheck(projektil, collidables)
@@ -51,7 +58,7 @@ class collidable:
         self.y = y
         self.width = width
         self.height = height
-        #self.draw_self()
+        self.draw_self()
 
     def check_collision(self, other):
         if self.x < other.x + other.width and self.x + self.width > other.x and self.y < other.y + other.height and self.y + self.height > other.y:
@@ -67,7 +74,7 @@ class collidable:
         rect(self.x - int(pogled.x), self.y - int(pogled.y), self.width, self.height, 15)
 
 
-def DefinirajKolizije(listaObjekata):
+def DefinirajKolizije(listaObjekata, level, level_height):
     collidables = []
     # ako objekt nije lista prvi dio koda se raunna, inace je drugi (else)
     tile_size = 8
@@ -80,7 +87,7 @@ def DefinirajKolizije(listaObjekata):
 
         for xx in range(xrepeat):
             for yy in range(yrepeat):
-                tileHere = mget(xx + px, yy + py)
+                tileHere = mget(xx + px, yy + py + level*level_height)
                 if tileHere != 0:
                     collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
       else:
@@ -442,6 +449,7 @@ class menu:
         # Odabir 
         if key(48) and menu.m_ind==0:
             state = 'game'
+            ZapocniLevel(0)
         elif key(48) and menu.m_ind==1:
             exit()
 
