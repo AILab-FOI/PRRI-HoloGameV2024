@@ -23,7 +23,7 @@ class menu:
         # Odabir 
         if key(48) and menu.m_ind==0:
             state = 'game'
-            ZapocniLevel(0)
+            ZapocniLevel(level)
         elif key(48) and menu.m_ind==1:
             exit()
 

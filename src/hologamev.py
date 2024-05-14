@@ -9,11 +9,21 @@
 
 state='menu' #varijabla za game state
 
-level = 2 #koji level je ucitan
+level = 3 # koji level je ucitan (od 0 pa na dalje)
+player_starting_positions = [ # pocetna pozicija igraca za svaki level (u map editoru se prikazuje):
+  [7, 12], # level 0
+  [0, 30], # level 1
+  [10, 44], # level 2
+  [3, 63] # level 3
+]
 LEVEL_HEIGHT = 17
 
 def ZapocniLevel(level):
+  tile_size = 8
   player.ProvjeriKolizije(player, 0, 0)
+  starting_pos = player_starting_positions[level]
+  player.x = starting_pos[0]*tile_size
+  player.y = (starting_pos[1] - LEVEL_HEIGHT*level)*tile_size
 
 
 def TIC():
@@ -210,9 +220,8 @@ class player:
 
         #gravitacija i kolizije
         if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
-            if self.vsp > 0:
-                while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
-                    self.y+=1
+            while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+                self.y+=1
             self.vsp=0
         else:
             self.vsp=self.vsp+self.gravitacija
@@ -450,7 +459,7 @@ class menu:
         # Odabir 
         if key(48) and menu.m_ind==0:
             state = 'game'
-            ZapocniLevel(0)
+            ZapocniLevel(level)
         elif key(48) and menu.m_ind==1:
             exit()
 
