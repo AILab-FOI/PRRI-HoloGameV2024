@@ -10,7 +10,7 @@ class player:
     x=96
     y=24
     width=14
-    height=15
+    height=14
     hsp=0
     vsp=0
     desno=False

@@ -2,12 +2,23 @@ player_starting_positions = [ # pocetna pozicija igraca za svaki level (u map ed
     [7, 12], # level 0
     [0, 30], # level 1
     [10, 44], # level 2
-    [3, 63] # level 3
+    [3, 63], # level 3
+    [3, 72] # nepostojeci opet peti level
 ]
 level_finish_tile_indexes = [ # indexi tileova sa vratima za zavrsetak levela
     50, 51, 52, 
     66, 67, 68, 
     82, 83, 84
+]
+background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraju koliziju (pozadinski elementi)
+	69, 70, 71, 
+	56, 57, 58, 72, 73, 74, 
+	85, 86, 87, 
+	102, 103,
+    88, 89, 90, 
+    118, 119, 120, # zuti stol, no ima problem jer neki leveli koriste sredinu stola za platformu
+    48, 49, 64, 65, 80, 81, 96, 97, # ljestve
+    104, 11, 30
 ]
 LEVEL_HEIGHT = 17
 
