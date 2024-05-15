@@ -9,28 +9,14 @@
 
 state='menu' #varijabla za game state
 
+level = 0 # koji level je ucitan (od 0 pa na dalje)
+
 def TIC():
  Final()
 
  global state
  if state=='game':
-   cls(0)
-
-   map(0, 0, 36, 18, -int(pogled.x), -int(pogled.y), 0)
-
-   collidables = DefinirajKolizije([player, enemy, metci, projectiles])
-   enemy.movement(enemy, collidables)
-   for projektil in projectiles:
-      projektil.movement()
-      Projectile.MetakCheck(projektil, collidables)
-   Puska.Pucanje()
-   player.PlayerKontroler(player, collidables)
-   pogled.pratiIgraca()
-   for metak in metci:
-     Metak.MetakCheck(metak, collidables)
-   for metak in projectiles:
-     Projectile.MetakCheck(metak, collidables)
-   PromjenaPuska.PickUp(PromjenaPuska)
+   IgrajLevel()
  elif state=='menu':
    menu.Menu()
 

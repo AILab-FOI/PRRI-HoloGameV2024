@@ -1,7 +1,7 @@
 #lista projektila
 projectiles = []
 
-class enemy:
+class Enemy:
   x = 90 
   y = 90
   width = 16
@@ -17,17 +17,22 @@ class enemy:
   shotFreq = 2 # koliko cesto puca
   coll = []
 
+  def __init__(self, x, y):
+    tile_size = 8
+    self.x = x*tile_size
+    self.y = y*tile_size
+
   def movement(self, coll):
     self.coll = coll
     self.x = self.x + self.dx
-    if self.ProvjeriKolizije(self, 6*self.dx, 0):
-      if not self.ProvjeriKolizije(self, 3*self.dx, -9):
-        if self.ProvjeriKolizije(self, 0, 1):
+    if self.ProvjeriKolizije(6*self.dx, 0):
+      if not self.ProvjeriKolizije(3*self.dx, -9):
+        if self.ProvjeriKolizije(0, 1):
           self.vsp = -self.skokJacina
         else:
           self.dx = -self.dx
           self.desno = not self.desno
-    elif self.ProvjeriKolizije(self, 3*self.dx, 0):
+    elif self.ProvjeriKolizije(3*self.dx, 0):
       self.dx = -self.dx
       self.desno = not self.desno
     if self.x <= 0:
@@ -40,29 +45,29 @@ class enemy:
     self.shotTimer += 1  # svaki frame se povecava za 1
 
     # gravitacija
-    if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
+    if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(0, self.vsp + 1):
       self.vsp=0
-      while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+      while self.y<self.minY and not self.ProvjeriKolizije(0, 1):
         self.y+=1
     else:
       self.vsp=self.vsp+self.gravitacija
 
     if self.vsp<0:
-      if self.ProvjeriKolizije(self, 0, self.vsp - 1):
+      if self.ProvjeriKolizije(0, self.vsp - 1):
         self.vsp=0
 
     self.y = self.y + self.vsp
 
     # puca svakih dvije sekunde
     if self.shotTimer >= 60 * self.shotFreq:
-      self.shootProjectile(self)  # poziv funkcije za pucanje
+      self.shootProjectile()  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
     #crtanje samog sebe
-    if enemy.desno==True:
-      spr(320,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,0,0,2,2)
+    if self.desno==True:
+      spr(320,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
     else:
-      spr(320,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,1,0,2,2)
+      spr(320,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
     projectile = Projectile(self.x + 5, int(self.y)) 
