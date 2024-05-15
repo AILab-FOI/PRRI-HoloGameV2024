@@ -58,35 +58,30 @@ def DefinirajKolizije(listaObjekata, level, level_height):
     # ako objekt nije lista prvi dio koda se raunna, inace je drugi (else)
     tile_size = 8
     for objekt in listaObjekata:
+      sirinaKolizija = 8
       if not isinstance (objekt, list):
-        px = min(max(int(objekt.x/tile_size) - 4, 0), 239)
-        py = min(max(int(objekt.y/tile_size) - 4, 0), 135)
-        xrepeat = 10
-        yrepeat = 10
+        px = min(max(int(objekt.x/tile_size) - round(sirinaKolizija/2), 0), 239)
+        py = min(max(int(objekt.y/tile_size) - round(sirinaKolizija/2), 0), 135)
 
-        for xx in range(xrepeat):
-            for yy in range(yrepeat):
+        for xx in range(sirinaKolizija):
+            for yy in range(sirinaKolizija):
                 tileHere = mget(xx + px, yy + py + level*level_height)
                 if tileHere != 0 and tileHere not in level_finish_tile_indexes and tileHere not in background_tile_indexes:
                     pos_key = ("x", xx + px, "y", yy + py)
                     if pos_key not in collidables:
                         collidables[pos_key] = collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size)
-                    #collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
       else:
           for obj in objekt:
-              px = min(max(int(obj.x/tile_size) - 4, 0), 239)
-              py = min(max(int(obj.y/tile_size) - 4, 0), 135)
-              xrepeat = 10
-              yrepeat = 10
+              px = min(max(int(obj.x/tile_size) - round(sirinaKolizija/2), 0), 239)
+              py = min(max(int(obj.y/tile_size) - round(sirinaKolizija/2), 0), 135)
 
-              for xx in range(xrepeat):
-               for yy in range(yrepeat):
+              for xx in range(sirinaKolizija):
+               for yy in range(sirinaKolizija):
                 tileHere = mget(xx + px, yy + py + level*level_height)
                 if tileHere != 0 and tileHere not in level_finish_tile_indexes and tileHere not in background_tile_indexes:
                     pos_key = ("x", xx + px, "y", yy + py)
                     if pos_key not in collidables:
                         collidables[pos_key] = collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size)
-                    #collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
 
     return list(collidables.values())
 
