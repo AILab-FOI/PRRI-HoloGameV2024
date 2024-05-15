@@ -20,6 +20,14 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
     48, 49, 64, 65, 80, 81, 96, 97, # ljestve
     104, 11, 30
 ]
+enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
+    [Enemy(7, 12), Enemy(20, 13)], # level 0
+    [Enemy(17, 26)], # level 1
+    [Enemy(139, 46), Enemy(74, 46)], # level 2
+    [Enemy(64, 62)] # level 3
+]
+
+# sljedece varijable NE MIJENJATI:
 LEVEL_HEIGHT = 17
 
 def ZapocniLevel(level): # poziva se u menu.py kada se odabere opcija da se uđe u level
@@ -32,9 +40,14 @@ def ZapocniLevel(level): # poziva se u menu.py kada se odabere opcija da se uđe
 def IgrajLevel():
     cls(0)
     map(0, level*LEVEL_HEIGHT, 240, 18, -int(pogled.x), -int(pogled.y), 0)
-
-    collidables = DefinirajKolizije([player, enemy, metci, projectiles], level, LEVEL_HEIGHT)
-    #enemy.movement(enemy, collidables)
+    tile_size = 8
+    levelEnemies = enemies[level]
+    for enemy in levelEnemies:
+        while (enemy.y > LEVEL_HEIGHT*tile_size):
+            enemy.y -= LEVEL_HEIGHT*tile_size
+    collidables = DefinirajKolizije([player, levelEnemies, metci, projectiles], level, LEVEL_HEIGHT)
+    for enemy in levelEnemies:
+        enemy.movement(collidables)
     for projektil in projectiles:
         projektil.movement()
         Projectile.MetakCheck(projektil, collidables)

@@ -45,8 +45,8 @@ def DefinirajKolizije(listaObjekata, level, level_height):
 
               for xx in range(xrepeat):
                for yy in range(yrepeat):
-                tileHere = mget(xx + px, yy + py)
-                if tileHere != 0:
+                tileHere = mget(xx + px, yy + py + level*level_height)
+                if tileHere != 0 and tileHere not in level_finish_tile_indexes and tileHere not in background_tile_indexes:
                     collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
             
 

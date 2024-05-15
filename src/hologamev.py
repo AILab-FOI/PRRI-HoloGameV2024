@@ -78,8 +78,8 @@ def DefinirajKolizije(listaObjekata, level, level_height):
 
               for xx in range(xrepeat):
                for yy in range(yrepeat):
-                tileHere = mget(xx + px, yy + py)
-                if tileHere != 0:
+                tileHere = mget(xx + px, yy + py + level*level_height)
+                if tileHere != 0 and tileHere not in level_finish_tile_indexes and tileHere not in background_tile_indexes:
                     collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
             
 
@@ -260,7 +260,7 @@ class player:
 #lista projektila
 projectiles = []
 
-class enemy:
+class Enemy:
   x = 90 
   y = 90
   width = 16
@@ -276,17 +276,22 @@ class enemy:
   shotFreq = 2 # koliko cesto puca
   coll = []
 
+  def __init__(self, x, y):
+    tile_size = 8
+    self.x = x*tile_size
+    self.y = y*tile_size
+
   def movement(self, coll):
     self.coll = coll
     self.x = self.x + self.dx
-    if self.ProvjeriKolizije(self, 6*self.dx, 0):
-      if not self.ProvjeriKolizije(self, 3*self.dx, -9):
-        if self.ProvjeriKolizije(self, 0, 1):
+    if self.ProvjeriKolizije(6*self.dx, 0):
+      if not self.ProvjeriKolizije(3*self.dx, -9):
+        if self.ProvjeriKolizije(0, 1):
           self.vsp = -self.skokJacina
         else:
           self.dx = -self.dx
           self.desno = not self.desno
-    elif self.ProvjeriKolizije(self, 3*self.dx, 0):
+    elif self.ProvjeriKolizije(3*self.dx, 0):
       self.dx = -self.dx
       self.desno = not self.desno
     if self.x <= 0:
@@ -299,29 +304,29 @@ class enemy:
     self.shotTimer += 1  # svaki frame se povecava za 1
 
     # gravitacija
-    if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
+    if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(0, self.vsp + 1):
       self.vsp=0
-      while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+      while self.y<self.minY and not self.ProvjeriKolizije(0, 1):
         self.y+=1
     else:
       self.vsp=self.vsp+self.gravitacija
 
     if self.vsp<0:
-      if self.ProvjeriKolizije(self, 0, self.vsp - 1):
+      if self.ProvjeriKolizije(0, self.vsp - 1):
         self.vsp=0
 
     self.y = self.y + self.vsp
 
     # puca svakih dvije sekunde
     if self.shotTimer >= 60 * self.shotFreq:
-      self.shootProjectile(self)  # poziv funkcije za pucanje
+      self.shootProjectile()  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
     #crtanje samog sebe
-    if enemy.desno==True:
-      spr(320,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,0,0,2,2)
+    if self.desno==True:
+      spr(320,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
     else:
-      spr(320,int(enemy.x) - int(pogled.x),int(enemy.y) - int(pogled.y),6,1,1,0,2,2)
+      spr(320,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
     projectile = Projectile(self.x + 5, int(self.y)) 
@@ -425,6 +430,14 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
     48, 49, 64, 65, 80, 81, 96, 97, # ljestve
     104, 11, 30
 ]
+enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
+    [Enemy(7, 12), Enemy(20, 13)], # level 0
+    [Enemy(17, 26)], # level 1
+    [Enemy(139, 46), Enemy(74, 46)], # level 2
+    [Enemy(64, 62)] # level 3
+]
+
+# sljedece varijable NE MIJENJATI:
 LEVEL_HEIGHT = 17
 
 def ZapocniLevel(level): # poziva se u menu.py kada se odabere opcija da se uđe u level
@@ -437,9 +450,14 @@ def ZapocniLevel(level): # poziva se u menu.py kada se odabere opcija da se uđe
 def IgrajLevel():
     cls(0)
     map(0, level*LEVEL_HEIGHT, 240, 18, -int(pogled.x), -int(pogled.y), 0)
-
-    collidables = DefinirajKolizije([player, enemy, metci, projectiles], level, LEVEL_HEIGHT)
-    #enemy.movement(enemy, collidables)
+    tile_size = 8
+    levelEnemies = enemies[level]
+    for enemy in levelEnemies:
+        while (enemy.y > LEVEL_HEIGHT*tile_size):
+            enemy.y -= LEVEL_HEIGHT*tile_size
+    collidables = DefinirajKolizije([player, levelEnemies, metci, projectiles], level, LEVEL_HEIGHT)
+    for enemy in levelEnemies:
+        enemy.movement(collidables)
     for projektil in projectiles:
         projektil.movement()
         Projectile.MetakCheck(projektil, collidables)
