@@ -54,7 +54,7 @@ class collidable:
 
 
 def DefinirajKolizije(listaObjekata, level, level_height):
-    collidables = []
+    collidables = {}
     # ako objekt nije lista prvi dio koda se raunna, inace je drugi (else)
     tile_size = 8
     for objekt in listaObjekata:
@@ -68,7 +68,10 @@ def DefinirajKolizije(listaObjekata, level, level_height):
             for yy in range(yrepeat):
                 tileHere = mget(xx + px, yy + py + level*level_height)
                 if tileHere != 0 and tileHere not in level_finish_tile_indexes and tileHere not in background_tile_indexes:
-                    collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
+                    pos_key = ("x", xx + px, "y", yy + py)
+                    if pos_key not in collidables:
+                        collidables[pos_key] = collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size)
+                    #collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
       else:
           for obj in objekt:
               px = min(max(int(obj.x/tile_size) - 4, 0), 239)
@@ -80,12 +83,12 @@ def DefinirajKolizije(listaObjekata, level, level_height):
                for yy in range(yrepeat):
                 tileHere = mget(xx + px, yy + py + level*level_height)
                 if tileHere != 0 and tileHere not in level_finish_tile_indexes and tileHere not in background_tile_indexes:
-                    collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
-            
+                    pos_key = ("x", xx + px, "y", yy + py)
+                    if pos_key not in collidables:
+                        collidables[pos_key] = collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size)
+                    #collidables.append(collidable((xx + px)*tile_size, (yy + py)*tile_size, tile_size, tile_size))
 
-    
-
-    return collidables
+    return list(collidables.values())
 
 
 
