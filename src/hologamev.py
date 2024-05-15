@@ -677,10 +677,12 @@ class PromjenaPuska:
     
     pickUpBool = True
     
-    def __init__(self, x, y):
+    def __init__(self, x, y, puskaBr = 2): # uzima x, y i broj puske (opcionalno)
         tile_size = 8
         self.x = x*tile_size
         self.y = y*tile_size
+        self.puskaBr = puskaBr
+        self.puskaSpr = Puska.svespr[puskaBr]
     
     def PickUp(self):
         spr(self.puskaSpr, int(self.x) - int(pogled.x), int(self.y) - int(pogled.y), 0,1,0,0,1,1)
@@ -729,7 +731,7 @@ enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koj
 pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispisuje koja)
     [PromjenaPuska(10, 4)], # level 0
     [], # level 1
-    [PromjenaPuska(138, 39), PromjenaPuska(74, 39)], # level 2
+    [PromjenaPuska(138, 39, 0), PromjenaPuska(74, 39)], # level 2
     [] # level 3
 ]
 
@@ -741,7 +743,9 @@ def ZapocniLevel(level): # poziva se u menu.py kada se odabere opcija da se uđe
     starting_pos = player_starting_positions[level]
     player.x = starting_pos[0]*tile_size
     player.y = (starting_pos[1] - LEVEL_HEIGHT*level)*tile_size
-    Pogled.x = player.x - (pogled.w - player.width)/2
+    pogled.x = max(0, player.x - (pogled.w - player.width)/2)
+    player.hsp = 0
+    player.vsp = 0
 
 def IgrajLevel():
     cls(0)
@@ -769,15 +773,12 @@ def IgrajLevel():
         while (pickup.y > LEVEL_HEIGHT*tile_size):
             pickup.y -= LEVEL_HEIGHT*tile_size
         pickup.PickUp()
-    #PromjenaPuska.PickUp(PromjenaPuska)
     ProvjeravajJeLiIgracKodVrata()
 
 def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
-    print(level, 16, 16)
     if kojiTile in level_finish_tile_indexes:
-        print("LOL!!!", 16, 32)
         ZavrsiLevel()
 
 def ZavrsiLevel():
