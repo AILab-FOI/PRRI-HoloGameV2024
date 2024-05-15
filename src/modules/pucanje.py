@@ -183,9 +183,10 @@ class PromjenaPuska:
     
     pickUpBool = True
     
-    def __init__(self):  # konstruktor klase
-        self.x = 100
-        self.y = 100
+    def __init__(self, x, y):
+        tile_size = 8
+        self.x = x*tile_size
+        self.y = y*tile_size
     
     def PickUp(self):
         spr(self.puskaSpr, int(self.x) - int(pogled.x), int(self.y) - int(pogled.y), 0,1,0,0,1,1)

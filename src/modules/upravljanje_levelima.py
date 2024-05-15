@@ -26,6 +26,12 @@ enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koj
     [Enemy(139, 46), Enemy(74, 46)], # level 2
     [Enemy(64, 62)] # level 3
 ]
+pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispisuje koja)
+    [PromjenaPuska(10, 4)], # level 0
+    [], # level 1
+    [PromjenaPuska(138, 39), PromjenaPuska(74, 39)], # level 2
+    [] # level 3
+]
 
 # sljedece varijable NE MIJENJATI:
 LEVEL_HEIGHT = 17
@@ -58,7 +64,12 @@ def IgrajLevel():
         Metak.MetakCheck(metak, collidables)
     for metak in projectiles:
         Projectile.MetakCheck(metak, collidables)
-    PromjenaPuska.PickUp(PromjenaPuska)
+    levelPickups = pickups[level]
+    for pickup in levelPickups:
+        while (pickup.y > LEVEL_HEIGHT*tile_size):
+            pickup.y -= LEVEL_HEIGHT*tile_size
+        pickup.PickUp()
+    #PromjenaPuska.PickUp(PromjenaPuska)
     ProvjeravajJeLiIgracKodVrata()
 
 def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
