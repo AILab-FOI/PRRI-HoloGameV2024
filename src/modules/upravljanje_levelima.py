@@ -1,6 +1,6 @@
 player_starting_positions = [ # pocetna pozicija igraca za svaki level (u map editoru se prikazuje):
     [7, 12], # level 0
-    [0, 30], # level 1
+    [5, 28], # level 1
     [10, 44], # level 2
     [3, 63], # level 3
     [3, 72] # nepostojeci opet peti level
@@ -8,7 +8,10 @@ player_starting_positions = [ # pocetna pozicija igraca za svaki level (u map ed
 level_finish_tile_indexes = [ # indexi tileova sa vratima za zavrsetak levela
     50, 51, 52, 
     66, 67, 68, 
-    82, 83, 84
+    82, 83, 84,
+    211, 212, 213, 
+    227, 228, 229, 
+    243, 244, 245
 ]
 background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraju koliziju (pozadinski elementi)
 	69, 70, 71, 
@@ -22,7 +25,7 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
 ]
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
     [Enemy(7, 12), Enemy(20, 13)], # level 0
-    [Enemy(17, 26)], # level 1
+    [], # level 1
     [Enemy(139, 46), Enemy(74, 46)], # level 2
     [Enemy(64, 62)] # level 3
 ]
