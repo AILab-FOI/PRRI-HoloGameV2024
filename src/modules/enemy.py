@@ -126,7 +126,6 @@ class Projectile:
                     del metak
             elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
                 if metak in projectiles:
-                    print("Player pogoen", 80, 50)
                     player.Pogoden(player, 1) # damage ovdje ide ako cemo ga mijenjati 
                     projectiles.remove(metak)
                     del metak

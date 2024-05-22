@@ -12,13 +12,25 @@ state='menu' #varijabla za game state
 level = 0 # koji level je ucitan (od 0 pa na dalje)
 
 def TIC():
+ 
+ ShowHealth()
+ 
  Final()
-
  global state
  if state=='game':
    IgrajLevel()
+   ShowHealth()
  elif state=='menu':
    menu.Menu()
+   
+ 
+   
+ 
+ 
+
+def ShowHealth():
+  for i in range(player.health):
+    rect(10 * i, 10, 3, 3, 10)
 
 def Final():
 	cls(13) 
@@ -241,8 +253,8 @@ class player:
     def Pogoden(self, dmg):
         self.health -= dmg
         self.hitVar = 0
-        if self.health < 0:
-            print("HP MANJI OD 0")
+        if self.health < 1:
+            reset()
 
 
 
@@ -374,7 +386,6 @@ class Projectile:
                     del metak
             elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
                 if metak in projectiles:
-                    print("Player pogoen", 80, 50)
                     player.Pogoden(player, 1) # damage ovdje ide ako cemo ga mijenjati 
                     projectiles.remove(metak)
                     del metak
@@ -930,7 +941,7 @@ def ZavrsiLevel():
 # 253:e0000000e00fffffe0000000e00fffffe0000000e0000000eeeeeeeeeeeeeeee
 # 254:000ee000f00ee00f000ee000f00ee00f000ee000000ee000eeeeeeeeeeeeeeee
 # 255:0000000efffff00e0000000efffff00e0000000e0000000eeeeeeeeeeeeeeeee
-# <TILES>
+#<TILES>
 # 001:8888888888888888888888888888888888888088888888888888888888888888
 # 002:9999999999999999999999999999999999999999999999999999999999999999
 # 003:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
