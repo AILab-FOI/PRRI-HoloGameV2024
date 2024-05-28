@@ -78,10 +78,15 @@ def IgrajLevel():
     ProvjeravajJeLiIgracKodVrata()
 
 def HUD():
-    rect(0, 0, 240, 8, 6)
+    rect(0, 0, 240, 8, 0)
     print("Level: 1", 1, 1, 12, True, 1, False)
-    print("Health: 20", 60, 1, 12, True, 1, False)
-    print("Ammo: 5", 121, 1, 12, True, 1, False)
+    spr(364, 58, 0, 6, 1, 0, 0, 1, 1)
+    rect(70, 1, 100, 5, 6)
+    if Puska.tp == 0:
+       spr(360, 230, 1, 6, 1, 0, 0, 1, 1)
+    else:	
+       spr(376, 230, 1, 6, 1, 0, 0, 1, 1)
+    print("Ammo: 5", 180, 1, 12, True, 1, False)
 
 def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
     tile_size = 8
