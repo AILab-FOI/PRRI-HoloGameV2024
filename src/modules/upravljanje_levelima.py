@@ -51,6 +51,7 @@ def ZapocniLevel(level): # poziva se u menu.py kada se odabere opcija da se uđe
 def IgrajLevel():
     cls(0)
     map(0, level*LEVEL_HEIGHT, 240, 18, -int(pogled.x), -int(pogled.y), 0)
+    HUD()
     tile_size = 8
     levelEnemies = enemies[level]
     for enemy in levelEnemies:
@@ -75,6 +76,12 @@ def IgrajLevel():
             pickup.y -= LEVEL_HEIGHT*tile_size
         pickup.PickUp()
     ProvjeravajJeLiIgracKodVrata()
+
+def HUD():
+    rect(0, 0, 240, 8, 6)
+    print("Level: 1", 1, 1, 12, True, 1, False)
+    print("Health: 20", 60, 1, 12, True, 1, False)
+    print("Ammo: 5", 121, 1, 12, True, 1, False)
 
 def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
     tile_size = 8
