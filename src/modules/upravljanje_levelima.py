@@ -81,10 +81,11 @@ def HUD():
     rect(0, 0, 240, 8, 0)
     print("Level: 1", 1, 1, 12, True, 1, False)
     spr(364, 58, 0, 6, 1, 0, 0, 1, 1)
-    rect(70, 1, 100, 5, 6)
+    rect(70, 1, player.health*30, 5, 6)
+    rect(70+player.health*30, 1, 90-player.health*30, 5, 3)
     if Puska.tp == 0:
        spr(360, 230, 1, 6, 1, 0, 0, 1, 1)
-    else:	
+    elif Puska.tp == 1:	
        spr(376, 230, 1, 6, 1, 0, 0, 1, 1)
     print("Ammo: 5", 180, 1, 12, True, 1, False)
 
