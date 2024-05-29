@@ -89,7 +89,7 @@ def ZavrsiLevel():
     ZapocniLevel(level)
 
 def HUD():
-    rect(0, 0, 200, 8, 0)
+    rect(0, 0, 110, 8, 0)
     print("Level:" + str(level), 1, 1, 12, True, 1, False)
     # Prikaz zivota
     spr(364, 50, 0, 6, 1, 0, 0, 1, 1)
