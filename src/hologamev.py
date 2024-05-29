@@ -782,12 +782,8 @@ def HUD():
         print(str(player.health) + "HP", 142, 1, 12, True, 1, False)
     else: 
         print("0HP", 142, 1, 12, True, 1, False)
-        rect(70, 1, player.health*30, 5, 3)
     # Prikaz puske i metaka
-    if Puska.tp == 0:
-       spr(360, 230, 1, 6, 1, 0, 0, 1, 1)
-    elif Puska.tp == 1:	
-       spr(376, 230, 1, 6, 1, 0, 0, 1, 1)
+    spr(Puska.svespr[Puska.p[Puska.tp]], 230, 1, 6, 1, 0, 0, 1, 1)
     print("Ammo: 5", 180, 1, 12, True, 1, False)
 
 def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
@@ -799,8 +795,7 @@ def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
 def ZavrsiLevel():
     global level
     level = level + 1
-    ZapocniLevel(level)
-# <TILES>
+    ZapocniLevel(level)# <TILES>
 # 001:8888888888888888888888888888888888888088888888888888888888888888
 # 002:9999999999999999999999999999999999999999999999999999999999999999
 # 003:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb

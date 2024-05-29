@@ -89,10 +89,7 @@ def HUD():
     else: 
         print("0HP", 142, 1, 12, True, 1, False)
     # Prikaz puske i metaka
-    if Puska.tp == 0:
-       spr(360, 230, 1, 6, 1, 0, 0, 1, 1)
-    elif Puska.tp == 1:	
-       spr(376, 230, 1, 6, 1, 0, 0, 1, 1)
+    spr(Puska.svespr[Puska.p[Puska.tp]], 230, 1, 6, 1, 0, 0, 1, 1)
     print("Ammo: 5", 180, 1, 12, True, 1, False)
 
 def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
