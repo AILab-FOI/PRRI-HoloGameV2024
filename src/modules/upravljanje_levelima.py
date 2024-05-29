@@ -77,21 +77,6 @@ def IgrajLevel():
         pickup.PickUp()
     ProvjeravajJeLiIgracKodVrata()
 
-def HUD():
-    rect(0, 0, 240, 8, 0)
-    print("Level: 1", 1, 1, 12, True, 1, False)
-    # Prikaz zivota
-    spr(364, 58, 0, 6, 1, 0, 0, 1, 1)
-    rect(70, 1, player.health*30, 5, 6)
-    if player.health > 0:
-        rect(70+player.health*30, 1, 90-player.health*30, 5, 3)
-        print(str(player.health) + "HP", 142, 1, 12, True, 1, False)
-    else: 
-        print("0HP", 142, 1, 12, True, 1, False)
-    # Prikaz puske i metaka
-    spr(Puska.svespr[Puska.p[Puska.tp]], 230, 1, 6, 1, 0, 0, 1, 1)
-    print("Ammo: 5", 180, 1, 12, True, 1, False)
-
 def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
@@ -102,3 +87,19 @@ def ZavrsiLevel():
     global level
     level = level + 1
     ZapocniLevel(level)
+
+def HUD():
+    rect(0, 0, 200, 8, 0)
+    print("Level:" + str(level), 1, 1, 12, True, 1, False)
+    # Prikaz zivota
+    spr(364, 50, 0, 6, 1, 0, 0, 1, 1)
+    rect(60, 1, player.health*10, 5, 6)
+    if player.health > 0:
+        rect(60+player.health*10, 1, 30-player.health*10, 5, 3)
+        print(str(player.health) + "HP", 92, 1, 12, True, 1, False)
+    else: 
+        print("0HP", 142, 1, 12, True, 1, False)
+    # Prikaz puske i metaka
+    rect(0, 8, 100, 8, 0)
+    spr(Puska.svespr[Puska.p[Puska.tp]], 50, 8, 6, 1, 0, 0, 1, 1)
+    print("Ammo: 5", 1, 8, 12, True, 1, False)
