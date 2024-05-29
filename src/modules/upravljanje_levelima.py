@@ -80,9 +80,15 @@ def IgrajLevel():
 def HUD():
     rect(0, 0, 240, 8, 0)
     print("Level: 1", 1, 1, 12, True, 1, False)
+    # Prikaz zivota
     spr(364, 58, 0, 6, 1, 0, 0, 1, 1)
     rect(70, 1, player.health*30, 5, 6)
-    rect(70+player.health*30, 1, 90-player.health*30, 5, 3)
+    if player.health > 0:
+        rect(70+player.health*30, 1, 90-player.health*30, 5, 3)
+        print(str(player.health) + "HP", 142, 1, 12, True, 1, False)
+    else: 
+        print("0HP", 142, 1, 12, True, 1, False)
+    # Prikaz puske i metaka
     if Puska.tp == 0:
        spr(360, 230, 1, 6, 1, 0, 0, 1, 1)
     elif Puska.tp == 1:	
