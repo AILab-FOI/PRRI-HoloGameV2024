@@ -12,7 +12,7 @@ import sys
 sys.path.append("../src/modules")
 from controller import pomakni, player
 
-GAME = GAMES['abe']  # change this when multiple games are available
+GAME = GAMES['hologamev']  # change this when multiple games are available
 
 ADDR_OUT = '0.0.0.0'
 PORT = 5000
@@ -52,8 +52,8 @@ def popen_and_call(on_exit, *popen_args):
     # returns immediately after the thread starts
     return thread
 
-def run_tic_80():
-    subprocess.run(["tic-80", "-code", "load('hologame.py')", "-code", "run()"])
+def run_tic_80(game_script):
+    subprocess.run(["tic-80", "-code", f"load('{game_script}')", "-code", "run()"])
 
 
 @socketio.on('connect')
@@ -65,8 +65,8 @@ def connect():
     print("total players: ", PLAYERS)
 
     if(PLAYERS == 1):
-        print("running tic-80 hologame.py")
-        run_tic_80()
+        print("running tic-80 hologamev.py")
+        run_tic_80("hologamev.py")
 
 @socketio.on('disconnect')
 def disconnect():
@@ -134,7 +134,7 @@ def ctrl():
 
     popen_and_call(lambda: game_exit_callback(), GAME['executable'])
     GAME_STARTED = True  
-    return render_template('ctrl.html', game='abe')
+    return render_template('ctrl.html', game='hologamev')
 
 
 # Route for serving the start button

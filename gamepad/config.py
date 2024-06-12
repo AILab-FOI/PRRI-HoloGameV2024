@@ -25,4 +25,28 @@ abe = {
     ]
 }
 
-GAMES = { "abe":abe }
+hologamev = {
+    "title": "HoloGame V",
+    "players": 1,
+    "executable": "tic-80",
+    'toggles': ['UP', 'DOWN', 'LEFT', 'RIGHT'],
+    'taps': ['SELECT', 'START', 'A', 'B'],
+    "description": """A TIC-80 game.""",
+    "website": "example.com",
+    "developer": "Your Name",
+    "controls": [
+        {
+            'UP': 'up',
+            'DOWN': 'down',
+            'LEFT': 'left',
+            'RIGHT': 'right',
+            'SELECT': 'esc',
+            'START': 'enter',
+            'A': 'space',
+            'B': 'enter'
+        }
+    ]
+}
+
+GAMES = { "abe": abe, "hologamev": hologamev }
+
