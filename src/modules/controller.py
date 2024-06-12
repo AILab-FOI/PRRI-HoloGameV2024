@@ -160,7 +160,7 @@ class player:
     def Pogoden(self, dmg):
         self.health -= dmg
         self.hitVar = 0
-        if self.health < 0:
-            print("HP MANJI OD 0")
+        if self.health < 1:
+            reset()
 
 
