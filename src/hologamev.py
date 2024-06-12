@@ -242,8 +242,8 @@ class player:
     def Pogoden(self, dmg):
         self.health -= dmg
         self.hitVar = 0
-        if self.health < 0:
-            print("HP MANJI OD 0")
+        if self.health < 1:
+            reset()
 
 
 
@@ -995,7 +995,7 @@ def test( a, b ):
     return a+b
 
 player_starting_positions = [ # pocetna pozicija igraca za svaki level (u map editoru se prikazuje):
-    [7, 12], # level 0
+    [2, 12], # level 0
     [5, 28], # level 1
     [10, 44], # level 2
     [3, 63], # level 3
@@ -1017,10 +1017,11 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
     88, 89, 90, 
     118, 119, 120, # zuti stol, no ima problem jer neki leveli koriste sredinu stola za platformu
     48, 49, 64, 65, 80, 81, 96, 97, # ljestve
-    104, 11, 30
+    104, 11, 30,
+    59, 231, 247
 ]
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
-    [Enemy(7, 12), Enemy(20, 13)], # level 0
+    [Enemy(20, 13)], # level 0
     [], # level 1
     [Enemy(139, 46), Enemy(74, 46)], # level 2
     [Enemy(64, 62)] # level 3
@@ -1030,6 +1031,12 @@ pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispis
     [], # level 1
     [PromjenaPuska(138, 39, 0), PromjenaPuska(74, 39)], # level 2
     [] # level 3
+]
+lava = [ # tile lave
+    59
+]
+spikes = [ # tileovi spikeova
+    231, 247
 ]
 
 # sljedece varijable NE MIJENJATI:
@@ -1072,12 +1079,26 @@ def IgrajLevel():
             pickup.y -= LEVEL_HEIGHT*tile_size
         pickup.PickUp()
     ProvjeravajJeLiIgracKodVrata()
+    ProvjeravajJeLiIgracULavi()
+    ProvjeravajJeLiIgracNaSiljku()
 
 def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
     if kojiTile in level_finish_tile_indexes:
         ZavrsiLevel()
+        
+def ProvjeravajJeLiIgracULavi():
+    tile_size = 8
+    kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
+    if kojiTile in lava:
+        player.Pogoden(player, 1)
+    
+def ProvjeravajJeLiIgracNaSiljku():
+    tile_size = 8
+    kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + 2 + level*LEVEL_HEIGHT)
+    if kojiTile in spikes:
+        player.Pogoden(player, 1)
 
 def ZavrsiLevel():
     global level
