@@ -19,6 +19,8 @@ def TIC():
    IgrajLevel()
  elif state=='menu':
    menu.Menu()
+ elif state=='over':
+   menu.Over()
 
 def Final():
 	cls(13) 

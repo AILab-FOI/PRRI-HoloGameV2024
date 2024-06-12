@@ -19,6 +19,8 @@ def TIC():
    IgrajLevel()
  elif state=='menu':
    menu.Menu()
+ elif state=='over':
+   menu.Over()
 
 def Final():
 	cls(13) 
@@ -240,10 +242,11 @@ class player:
             self.skok = 0
      
     def Pogoden(self, dmg):
+        global state
         self.health -= dmg
         self.hitVar = 0
         if self.health < 1:
-            reset()
+            state = 'over'
 
 
 
@@ -748,6 +751,18 @@ class menu:
             rectb(0,0,240,136,3)
         elif(time()%500>550):
             rectb(0,0,240,136,10)
+            
+            
+            
+            
+            
+    def Over():
+
+        print('GAME OVER', 100, 50, 4, False, 1, False)
+        print('R za reset', 97, 70, 4, False, 1, False)
+        
+        if key(18):
+            reset()
 
 
 def lerp(a, b, t):

@@ -158,9 +158,10 @@ class player:
             self.skok = 0
      
     def Pogoden(self, dmg):
+        global state
         self.health -= dmg
         self.hitVar = 0
         if self.health < 1:
-            reset()
+            state = 'over'
 
 
