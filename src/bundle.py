@@ -33,7 +33,7 @@ for filename in os.listdir(modules_dir):
         new_file_content += '\n' + file.read()  # Append the content of the file
 
 # Append the content from <TILES> to the end of the hologamev.py file
-new_file_content += '# <TILES>' + '<TILES>'.join(hologamev_content_parts[1:])
+new_file_content += '\n# <TILES>' + '<TILES>'.join(hologamev_content_parts[1:])
 
 # Write the new content to the hologamep.py file in the current directory
 with open('hologamev.py', 'w') as new_file:

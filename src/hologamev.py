@@ -344,12 +344,12 @@ class Projectile:
   width=4
   height=4
   
-  def __init__(self, x, y):  # konstruktor klase
+  def __init__(self, x, y, _speed = 5):  # konstruktor klase
     self.x = x
     self.y = y
     self.dx = 1 
     self.dy = 0
-    self.speed = 5  # brzina projektila
+    self.speed = _speed  # brzina projektila
     self.desno = True
     self.width = 4
     self.height = 4
@@ -401,7 +401,7 @@ class Projectile:
 #lista projektila
 projectiles = []
 
-class Enemy:
+class Enemy2(Enemy):
   x = 90 
   y = 90
   width = 16
@@ -487,72 +487,10 @@ class Enemy:
     self.x -= xdodatak
     self.y -= ydodatak
     return False
-
-class Projectile:
-  x=0
-  y=0
-    
-  width=4
-  height=4
-  
-  def __init__(self, x, y):  # konstruktor klase
-    self.x = x
-    self.y = y
-    self.dx = 1 
-    self.dy = 0
-    self.speed = 5  # brzina projektila
-    self.desno = True
-    self.width = 4
-    self.height = 4
-  
-  def movement(self):
-    if self.desno == True:
-      self.x = self.x + self.speed
-    else:
-      self.x = self.x - self.speed
-
-    #crtanje sebe
-    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 0, 1, 0, 0, 1, 1)
-
-      
-  def MetakCheck(metak, colls):
-            metak.coll=colls
-            # metak se unisti
-            if metak.x < 0 or metak.x > pogled.ogranicenjeX or Projectile.ProvjeriKolizije(metak, 0, 1):
-                if metak in projectiles:
-                    projectiles.remove(metak)
-                    del metak
-                else:
-                    del metak
-            elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
-                if metak in projectiles:
-                    print("Player pogoen", 80, 50)
-                    player.Pogoden(player, 1) # damage ovdje ide ako cemo ga mijenjati 
-                    projectiles.remove(metak)
-                    del metak
-                else:
-                    del metak
-            # ako je pogoden player (elif)
-              
-    
-  # 1-2.-3 5---8.---11
-    
-  def ProvjeriKolizije(self, xdodatak, ydodatak):
-        self.x += xdodatak
-        self.y += ydodatak
-        for obj in self.coll:
-            if obj.check_collision(self):
-                self.x -= xdodatak
-                self.y -= ydodatak
-                return True
-        self.x -= xdodatak
-        self.y -= ydodatak
-        return False
-     
 #lista projektila
 projectiles = []
 
-class Enemy:
+class Enemy3(Enemy):
   x = 90 
   y = 90
   width = 16
@@ -621,7 +559,7 @@ class Enemy:
       spr(352,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
-    projectile = Projectile(self.x + 5, int(self.y)) 
+    projectile = Projectile(self.x + 5, int(self.y), 3) 
 
     projectile.desno = self.desno
     # doda projektil u listu
@@ -638,67 +576,6 @@ class Enemy:
     self.x -= xdodatak
     self.y -= ydodatak
     return False
-
-class Projectile:
-  x=0
-  y=0
-    
-  width=4
-  height=4
-  
-  def __init__(self, x, y):  # konstruktor klase
-    self.x = x
-    self.y = y
-    self.dx = 1 
-    self.dy = 0
-    self.speed = 3  # brzina projektila
-    self.desno = True
-    self.width = 4
-    self.height = 4
-  
-  def movement(self):
-    if self.desno == True:
-      self.x = self.x + self.speed
-    else:
-      self.x = self.x - self.speed
-
-    #crtanje sebe
-    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 0, 1, 0, 0, 1, 1)
-
-      
-  def MetakCheck(metak, colls):
-            metak.coll=colls
-            # metak se unisti
-            if metak.x < 0 or metak.x > pogled.ogranicenjeX or Projectile.ProvjeriKolizije(metak, 0, 1):
-                if metak in projectiles:
-                    projectiles.remove(metak)
-                    del metak
-                else:
-                    del metak
-            elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
-                if metak in projectiles:
-                    print("Player pogoen", 80, 50)
-                    player.Pogoden(player, 3) # damage ovdje ide ako cemo ga mijenjati 
-                    projectiles.remove(metak)
-                    del metak
-                else:
-                    del metak
-            # ako je pogoden player (elif)
-              
-    
-  # 1-2.-3 5---8.---11
-    
-  def ProvjeriKolizije(self, xdodatak, ydodatak):
-        self.x += xdodatak
-        self.y += ydodatak
-        for obj in self.coll:
-            if obj.check_collision(self):
-                self.x -= xdodatak
-                self.y -= ydodatak
-                return True
-        self.x -= xdodatak
-        self.y -= ydodatak
-        return False
      
 
 
@@ -1022,8 +899,8 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
     [Enemy(7, 12), Enemy(20, 13)], # level 0
     [], # level 1
-    [Enemy(139, 46), Enemy(74, 46)], # level 2
-    [Enemy(64, 62)] # level 3
+    [Enemy2(139, 46), Enemy2(74, 46)], # level 2
+    [Enemy3(64, 62)] # level 3
 ]
 pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispisuje koja)
     [PromjenaPuska(10, 4)], # level 0
@@ -1099,6 +976,7 @@ def HUD():
     rect(0, 8, 100, 8, 0)
     spr(Puska.svespr[Puska.p[Puska.tp]], 50, 8, 6, 1, 0, 0, 1, 1)
     print("Ammo: 5", 1, 8, 12, True, 1, False)
+
 # <TILES>
 # 001:8888888888888888888888888888888888888088888888888888888888888888
 # 002:9999999999999999999999999999999999999999999999999999999999999999

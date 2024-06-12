@@ -1,7 +1,7 @@
 #lista projektila
 projectiles = []
 
-class Enemy:
+class Enemy3(Enemy):
   x = 90 
   y = 90
   width = 16
@@ -70,7 +70,7 @@ class Enemy:
       spr(352,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
-    projectile = Projectile(self.x + 5, int(self.y)) 
+    projectile = Projectile(self.x + 5, int(self.y), 3) 
 
     projectile.desno = self.desno
     # doda projektil u listu
@@ -87,65 +87,4 @@ class Enemy:
     self.x -= xdodatak
     self.y -= ydodatak
     return False
-
-class Projectile:
-  x=0
-  y=0
-    
-  width=4
-  height=4
-  
-  def __init__(self, x, y):  # konstruktor klase
-    self.x = x
-    self.y = y
-    self.dx = 1 
-    self.dy = 0
-    self.speed = 3  # brzina projektila
-    self.desno = True
-    self.width = 4
-    self.height = 4
-  
-  def movement(self):
-    if self.desno == True:
-      self.x = self.x + self.speed
-    else:
-      self.x = self.x - self.speed
-
-    #crtanje sebe
-    spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 0, 1, 0, 0, 1, 1)
-
-      
-  def MetakCheck(metak, colls):
-            metak.coll=colls
-            # metak se unisti
-            if metak.x < 0 or metak.x > pogled.ogranicenjeX or Projectile.ProvjeriKolizije(metak, 0, 1):
-                if metak in projectiles:
-                    projectiles.remove(metak)
-                    del metak
-                else:
-                    del metak
-            elif metak.x < player.x + player.width and metak.y < player.y + player.height and metak.x > player.x - player.width + 8 and metak.y > player.y - player.height:
-                if metak in projectiles:
-                    print("Player pogoen", 80, 50)
-                    player.Pogoden(player, 3) # damage ovdje ide ako cemo ga mijenjati 
-                    projectiles.remove(metak)
-                    del metak
-                else:
-                    del metak
-            # ako je pogoden player (elif)
-              
-    
-  # 1-2.-3 5---8.---11
-    
-  def ProvjeriKolizije(self, xdodatak, ydodatak):
-        self.x += xdodatak
-        self.y += ydodatak
-        for obj in self.coll:
-            if obj.check_collision(self):
-                self.x -= xdodatak
-                self.y -= ydodatak
-                return True
-        self.x -= xdodatak
-        self.y -= ydodatak
-        return False
      
