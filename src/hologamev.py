@@ -9,7 +9,7 @@
 
 state='menu' #varijabla za game state
 
-level = 0 # koji level je ucitan (od 0 pa na dalje)
+level = 3 # koji level je ucitan (od 0 pa na dalje)
 
 def TIC():
  Final()
@@ -17,6 +17,9 @@ def TIC():
  global state
  if state=='game':
    IgrajLevel()
+   if level == 0:
+     print("WASD za micanje, F za pucanje", 0, 16)
+     print("S za promjenu oruzja", 0, 22)
  elif state=='menu':
    menu.Menu()
  elif state=='over':
@@ -914,7 +917,7 @@ class Puska:
     
     svep = [prvaPuska, drugaPuska, trecaPuska]  # sve puske
     tp = 0   # trenutna puska
-    p = [0, 1]  # puske koje imamo
+    p = [0, 0]  # puske koje imamo
     
     
     def pucaj(puska):
@@ -979,14 +982,14 @@ class Puska:
 
             
 class PromjenaPuska:
-    puskaBr = 2
+    puskaBr = 0
     puskaSpr = 376
-    x = 100
-    y = 100
+    x = -1
+    y = -1
     
     pickUpBool = True
     
-    def __init__(self, x, y, puskaBr = 2): # uzima x, y i broj puske (opcionalno)
+    def __init__(self, x, y, puskaBr = 0): # uzima x, y i broj puske (opcionalno)
         tile_size = 8
         self.x = x*tile_size
         self.y = y*tile_size
@@ -1037,14 +1040,14 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
 ]
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
     [Enemy(20, 13)], # level 0
-    [], # level 1
-    [Enemy(139, 46), Enemy(74, 46)], # level 2
+    [Enemy(20, 30), Enemy(29, 30), Enemy(60, 30), Enemy(83, 30), Enemy(155, 35), Enemy(182, 35)], # level 1
+    [Enemy(139, 46), Enemy(74, 46), Enemy(58, 46), Enemy(75, 46), Enemy(127, 46), Enemy(184, 46), Enemy(174, 46)], # level 2
     [Enemy(64, 62)] # level 3
 ]
 pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispisuje koja)
-    [PromjenaPuska(10, 4)], # level 0
-    [], # level 1
-    [PromjenaPuska(138, 39, 0), PromjenaPuska(74, 39)], # level 2
+    [], # level 0
+    [PromjenaPuska(130, 22, 1)], # level 1
+    [PromjenaPuska(168, 40, 2)], # level 2
     [] # level 3
 ]
 lava = [ # tile lave
