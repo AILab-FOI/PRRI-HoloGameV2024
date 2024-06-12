@@ -9,7 +9,7 @@
 
 state='menu' #varijabla za game state
 
-level = 3 # koji level je ucitan (od 0 pa na dalje)
+level = 0 # koji level je ucitan (od 0 pa na dalje)
 
 def TIC():
  Final()
