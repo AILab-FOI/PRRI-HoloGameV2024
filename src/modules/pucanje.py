@@ -111,7 +111,7 @@ class Puska:
     
     svep = [prvaPuska, drugaPuska, trecaPuska]  # sve puske
     tp = 0   # trenutna puska
-    p = [0, 1]  # puske koje imamo
+    p = [0, 0]  # puske koje imamo
     
     
     def pucaj(puska):
@@ -176,14 +176,14 @@ class Puska:
 
             
 class PromjenaPuska:
-    puskaBr = 2
+    puskaBr = 0
     puskaSpr = 376
-    x = 100
-    y = 100
+    x = -1
+    y = -1
     
     pickUpBool = True
     
-    def __init__(self, x, y, puskaBr = 2): # uzima x, y i broj puske (opcionalno)
+    def __init__(self, x, y, puskaBr = 0): # uzima x, y i broj puske (opcionalno)
         tile_size = 8
         self.x = x*tile_size
         self.y = y*tile_size

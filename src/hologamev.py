@@ -17,8 +17,13 @@ def TIC():
  global state
  if state=='game':
    IgrajLevel()
+   if level == 0:
+     print("WASD za micanje, F za pucanje", 0, 16)
+     print("S za promjenu oruzja", 0, 22)
  elif state=='menu':
    menu.Menu()
+ elif state=='over':
+   menu.Over()
 
 def Final():
 	cls(13) 
@@ -240,10 +245,11 @@ class player:
             self.skok = 0
      
     def Pogoden(self, dmg):
+        global state
         self.health -= dmg
         self.hitVar = 0
         if self.health < 1:
-            reset()
+            state = 'over'
 
 
 
@@ -625,6 +631,18 @@ class menu:
             rectb(0,0,240,136,3)
         elif(time()%500>550):
             rectb(0,0,240,136,10)
+            
+            
+            
+            
+            
+    def Over():
+
+        print('GAME OVER', 100, 50, 4, False, 1, False)
+        print('R za reset', 97, 70, 4, False, 1, False)
+        
+        if key(18):
+            reset()
 
 
 def lerp(a, b, t):
@@ -776,7 +794,7 @@ class Puska:
     
     svep = [prvaPuska, drugaPuska, trecaPuska]  # sve puske
     tp = 0   # trenutna puska
-    p = [0, 1]  # puske koje imamo
+    p = [0, 0]  # puske koje imamo
     
     
     def pucaj(puska):
@@ -841,14 +859,14 @@ class Puska:
 
             
 class PromjenaPuska:
-    puskaBr = 2
+    puskaBr = 0
     puskaSpr = 376
-    x = 100
-    y = 100
+    x = -1
+    y = -1
     
     pickUpBool = True
     
-    def __init__(self, x, y, puskaBr = 2): # uzima x, y i broj puske (opcionalno)
+    def __init__(self, x, y, puskaBr = 0): # uzima x, y i broj puske (opcionalno)
         tile_size = 8
         self.x = x*tile_size
         self.y = y*tile_size
@@ -872,7 +890,7 @@ def test( a, b ):
     return a+b
 
 player_starting_positions = [ # pocetna pozicija igraca za svaki level (u map editoru se prikazuje):
-    [7, 12], # level 0
+    [2, 12], # level 0
     [5, 28], # level 1
     [10, 44], # level 2
     [3, 63], # level 3
@@ -894,19 +912,26 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
     88, 89, 90, 
     118, 119, 120, # zuti stol, no ima problem jer neki leveli koriste sredinu stola za platformu
     48, 49, 64, 65, 80, 81, 96, 97, # ljestve
-    104, 11, 30
+    104, 11, 30,
+    59, 231, 247
 ]
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
-    [Enemy(7, 12), Enemy(20, 13)], # level 0
-    [], # level 1
-    [Enemy2(139, 46), Enemy2(74, 46)], # level 2
-    [Enemy3(64, 62)] # level 3
+    [Enemy(20, 13)], # level 0
+    [Enemy(20, 30), Enemy(29, 30), Enemy(60, 30), Enemy(83, 30), Enemy(155, 35), Enemy(182, 35)], # level 1
+    [Enemy(139, 46), Enemy(74, 46), Enemy(58, 46), Enemy(75, 46), Enemy(127, 46), Enemy(184, 46), Enemy(174, 46)], # level 2
+    [Enemy(64, 62)] # level 3
 ]
 pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispisuje koja)
-    [PromjenaPuska(10, 4)], # level 0
-    [], # level 1
-    [PromjenaPuska(138, 39, 0), PromjenaPuska(74, 39)], # level 2
+    [], # level 0
+    [PromjenaPuska(130, 22, 1)], # level 1
+    [PromjenaPuska(168, 40, 2)], # level 2
     [] # level 3
+]
+lava = [ # tile lave
+    59
+]
+spikes = [ # tileovi spikeova
+    231, 247
 ]
 
 # sljedece varijable NE MIJENJATI:
@@ -949,12 +974,26 @@ def IgrajLevel():
             pickup.y -= LEVEL_HEIGHT*tile_size
         pickup.PickUp()
     ProvjeravajJeLiIgracKodVrata()
+    ProvjeravajJeLiIgracULavi()
+    ProvjeravajJeLiIgracNaSiljku()
 
 def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
     if kojiTile in level_finish_tile_indexes:
         ZavrsiLevel()
+        
+def ProvjeravajJeLiIgracULavi():
+    tile_size = 8
+    kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
+    if kojiTile in lava:
+        player.Pogoden(player, 1)
+    
+def ProvjeravajJeLiIgracNaSiljku():
+    tile_size = 8
+    kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + 2 + level*LEVEL_HEIGHT)
+    if kojiTile in spikes:
+        player.Pogoden(player, 1)
 
 def ZavrsiLevel():
     global level
