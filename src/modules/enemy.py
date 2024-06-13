@@ -95,12 +95,12 @@ class Projectile:
   width=4
   height=4
   
-  def __init__(self, x, y):  # konstruktor klase
+  def __init__(self, x, y, _speed = 5):  # konstruktor klase
     self.x = x
     self.y = y
     self.dx = 1 
     self.dy = 0
-    self.speed = 5  # brzina projektila
+    self.speed = _speed  # brzina projektila
     self.desno = True
     self.width = 4
     self.height = 4
