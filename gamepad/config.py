@@ -25,4 +25,27 @@ abe = {
     ]
 }
 
-GAMES = { "abe":abe }
+hologamev = {
+    "title": "HoloGame V",
+    "players": 1,
+    "executable": "\"C:\\Users\\dinob\\Desktop\\tic80 2.0.exe\"",
+    'toggles': ['UP', 'DOWN', 'LEFT', 'RIGHT'],
+    'taps': ['SELECT', 'START', 'A', 'B'],
+    "description": """A TIC-80 game.""",
+    "website": "example.com",
+    "developer": "Your Name",
+    "controls": [
+        {
+            'UP': 'W',
+            'DOWN': 'A',
+            'LEFT': 'S',
+            'RIGHT': 'D',
+            'SELECT': 'esc',
+            'START': 'space',
+            'A': 'space',
+            'B': 'enter'
+        }
+    ]
+}
+
+GAMES = { "abe": abe, "hologamev": hologamev }
