@@ -76,9 +76,10 @@ class player:
 
         #skakanje
         if key(48) and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
-            if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime:
+            if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime or self.on_ladders:
                 self.vsp = -self.skokJacina
                 self.jumped = True
+                self.on_ladders = False
 
         #coyote time
         if not self.on_ladders:
@@ -111,6 +112,8 @@ class player:
         else:
             if not self.on_ladders:
                 self.vsp=self.vsp+self.gravitacija
+                if self.ProvjeriKolizije(self, 0, self.vsp):
+                    self.vsp = 0
 
         if self.vsp<0:
             if self.ProvjeriKolizije(self, 0, self.vsp - 1):
@@ -118,13 +121,15 @@ class player:
 
         #pomicanje po ljestvama
         if self.on_ladders:
-            print("on ladders", 16, 64)
             if key(23): 
                 self.vsp=pomakni(self.vsp,-self.maxBrzina,self.akceleracija)
             elif key(19):
                 self.vsp=pomakni(self.vsp,self.maxBrzina,self.akceleracija)
             else:
                 self.vsp=pomakni(self.vsp,0,self.akceleracija)
+            
+            if self.ProvjeriKolizije(self, 0, self.vsp) or self.y + self.vsp >= self.minY:
+                self.vsp=0
 
         #blokiranje lijevo i desno
         if self.x>(pogled.ogranicenjeX - self.width) or self.ProvjeriKolizije(self, 1+self.hsp, 0):
@@ -169,10 +174,18 @@ class player:
             state = 'over'
 
     def CheckOnLadders(self):
-        self.on_ladders = False
-        for i in range(0, int(self.width), int(self.width/2)):
-            for j in range(0, int(self.height), int(self.height/2)):
-                if mget(round((self.x + i)/8), round((self.y + j)/8)) in ladder_tile_indexes:
-                    self.on_ladders = True
+        if self.on_ladders:
+            for i in range(0, int(self.width), int(self.width/2)):
+                for j in range(0, int(self.height), int(self.height/2)):
+                    if mget(round((self.x + i)/8), round((self.y + j)/8) + level*LEVEL_HEIGHT) in ladder_tile_indexes:
+                        return
+            self.on_ladders = False
+        else:
+            if not key(23) and not key(19):
+                return
+            for i in range(0, int(self.width), int(self.width/2)):
+                for j in range(0, int(self.height), int(self.height/2)):
+                    if mget(round((self.x + i)/8), round((self.y + j)/8) + level*LEVEL_HEIGHT) in ladder_tile_indexes:
+                        self.on_ladders = True
 
 
