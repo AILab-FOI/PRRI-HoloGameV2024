@@ -38,13 +38,13 @@ class player:
     minX=10000 #najdesnija tocka
 
     #Osnovne Varijable
-    akceleracija=0.5
-    maxBrzina=3
-    gravitacija=0.3
+    akceleracija=0.25
+    maxBrzina=2
+    gravitacija=0.24
 
 
     #Varijable skakanja
-    skokJacina=5.2
+    skokJacina=4.4
 
     #jetpack
     jetpackTrajanje=50
