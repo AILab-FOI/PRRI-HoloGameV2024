@@ -12,6 +12,8 @@ state='menu' #varijabla za game state
 level = 0 # koji level je ucitan (od 0 pa na dalje)
 
 def TIC():
+ update_keys()
+
  Final()
 
  global state

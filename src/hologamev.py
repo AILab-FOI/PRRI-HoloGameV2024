@@ -12,6 +12,8 @@ state='menu' #varijabla za game state
 level = 0 # koji level je ucitan (od 0 pa na dalje)
 
 def TIC():
+ update_keys()
+
  Final()
 
  global state
@@ -28,6 +30,27 @@ def TIC():
 def Final():
 	cls(13) 
 
+prev_key_space = False
+prev_key_switch = False
+
+def update_keys():
+    global key_space, key_left, key_right, key_up, key_down, key_shoot, key_switch
+    global prev_key_space, prev_key_switch
+
+    current_key_space = key(48)
+    current_key_switch = key(5)
+
+    key_space = current_key_space and not prev_key_space
+    key_switch = current_key_switch and not prev_key_switch
+
+    key_left = key(1)
+    key_right = key(4)
+    key_up = key(23)
+    key_down = key(19)
+    key_shoot = key(6)
+
+    prev_key_space = current_key_space
+    prev_key_switch = current_key_switch
 class collidable:
     def __init__(self, x, y, width, height):
         self.x = x
@@ -162,7 +185,7 @@ class player:
             self.akceleracija = self.acc_normal
 
         #skakanje
-        if key(48) and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
+        if key_space and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
             if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime or self.on_ladders:
                 self.vsp = -self.skokJacina
                 self.jumped = True
@@ -178,11 +201,11 @@ class player:
         
 
         #kretanje lijevo desno
-        if key(1): 
+        if key_left: 
             self.hsp=pomakni(self.hsp,-self.maxBrzina,self.akceleracija)
             self.desno=False
             self.is_walking = True
-        elif key(4):
+        elif key_right:
             self.hsp=pomakni(self.hsp,self.maxBrzina,self.akceleracija)
             self.is_walking = True
             self.desno=True
@@ -209,9 +232,9 @@ class player:
 
         #pomicanje po ljestvama
         if self.on_ladders:
-            if key(23): 
+            if key_up: 
                 self.vsp=pomakni(self.vsp,-self.maxBrzina,self.akceleracija)
-            elif key(19):
+            elif key_down:
                 self.vsp=pomakni(self.vsp,self.maxBrzina,self.akceleracija)
             else:
                 self.vsp=pomakni(self.vsp,0,self.akceleracija)
@@ -236,7 +259,7 @@ class player:
         if self.is_walking == True:
             self.spriteTimer += 0.1
         elif self.on_ladders:
-            if key(23) or key(19):
+            if key_up or key_down:
                 self.spriteTimer += 0.1
 
         #renderanje spritea
@@ -277,7 +300,7 @@ class player:
                         return
             self.on_ladders = False
         else:
-            if not key(23) and not key(19):
+            if not key_up and not key_down:
                 return
             for i in range(0, int(self.width), int(self.width/2)):
                 for j in range(0, int(self.height), int(self.height/2)):
@@ -641,16 +664,16 @@ class menu:
         print('Quit', 100, 60, 4, False, 1, False)
 
         #  Šetanje po opcijama na meniju
-        if btnp(1) and 48+10*menu.m_ind<50: #ako se budu dodavale još koje opcije, promijeniti uvijet
+        if key_down and 48+10*menu.m_ind<50: #ako se budu dodavale još koje opcije, promijeniti uvijet
             menu.m_ind += 1
-        elif btnp(0) and 48+10*menu.m_ind>=50:
+        elif key_up and 48+10*menu.m_ind>=50:
             menu.m_ind += -1
 
         # Odabir 
-        if key(48) and menu.m_ind==0:
+        if key_space and menu.m_ind==0:
             state = 'game'
             ZapocniLevel(level)
-        elif key(48) and menu.m_ind==1:
+        elif key_space and menu.m_ind==1:
             exit()
 
     def AnimateTitle():
@@ -680,9 +703,9 @@ class menu:
     def Over():
 
         print('GAME OVER', 100, 50, 4, False, 1, False)
-        print('R za reset', 97, 70, 4, False, 1, False)
+        print('Start (space) za reset', 97, 70, 4, False, 1, False)
         
-        if key(18):
+        if key_space:
             reset()
 
 
@@ -852,9 +875,9 @@ class Puska:
     
     def Pucanje():
       if player.shootTimer < 0:
-        if key(6):
+        if key_shoot:
             Puska.pucaj(prvaPuska)
-        if keyp(5):
+        if key_switch:
             Puska.PromijeniPusku()
       
       eksdes = 12

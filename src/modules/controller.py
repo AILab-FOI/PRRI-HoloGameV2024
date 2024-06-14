@@ -75,7 +75,7 @@ class player:
             self.akceleracija = self.acc_normal
 
         #skakanje
-        if key(48) and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
+        if key_space and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
             if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime or self.on_ladders:
                 self.vsp = -self.skokJacina
                 self.jumped = True
@@ -91,11 +91,11 @@ class player:
         
 
         #kretanje lijevo desno
-        if key(1): 
+        if key_left: 
             self.hsp=pomakni(self.hsp,-self.maxBrzina,self.akceleracija)
             self.desno=False
             self.is_walking = True
-        elif key(4):
+        elif key_right:
             self.hsp=pomakni(self.hsp,self.maxBrzina,self.akceleracija)
             self.is_walking = True
             self.desno=True
@@ -122,9 +122,9 @@ class player:
 
         #pomicanje po ljestvama
         if self.on_ladders:
-            if key(23): 
+            if key_up: 
                 self.vsp=pomakni(self.vsp,-self.maxBrzina,self.akceleracija)
-            elif key(19):
+            elif key_down:
                 self.vsp=pomakni(self.vsp,self.maxBrzina,self.akceleracija)
             else:
                 self.vsp=pomakni(self.vsp,0,self.akceleracija)
@@ -149,7 +149,7 @@ class player:
         if self.is_walking == True:
             self.spriteTimer += 0.1
         elif self.on_ladders:
-            if key(23) or key(19):
+            if key_up or key_down:
                 self.spriteTimer += 0.1
 
         #renderanje spritea
@@ -190,7 +190,7 @@ class player:
                         return
             self.on_ladders = False
         else:
-            if not key(23) and not key(19):
+            if not key_up and not key_down:
                 return
             for i in range(0, int(self.width), int(self.width/2)):
                 for j in range(0, int(self.height), int(self.height/2)):
