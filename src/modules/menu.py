@@ -15,16 +15,16 @@ class menu:
         print('Quit', 100, 60, 4, False, 1, False)
 
         #  Šetanje po opcijama na meniju
-        if btnp(1) and 48+10*menu.m_ind<50: #ako se budu dodavale još koje opcije, promijeniti uvijet
+        if key_down and 48+10*menu.m_ind<50: #ako se budu dodavale još koje opcije, promijeniti uvijet
             menu.m_ind += 1
-        elif btnp(0) and 48+10*menu.m_ind>=50:
+        elif key_up and 48+10*menu.m_ind>=50:
             menu.m_ind += -1
 
         # Odabir 
-        if key(48) and menu.m_ind==0:
+        if key_space and menu.m_ind==0:
             state = 'game'
             ZapocniLevel(level)
-        elif key(48) and menu.m_ind==1:
+        elif key_space and menu.m_ind==1:
             exit()
 
     def AnimateTitle():
@@ -54,8 +54,8 @@ class menu:
     def Over():
 
         print('GAME OVER', 100, 50, 4, False, 1, False)
-        print('R za reset', 97, 70, 4, False, 1, False)
+        print('START (space) za reset', 64, 70, 4, False, 1, False)
         
-        if key(18):
+        if key_space:
             reset()
 

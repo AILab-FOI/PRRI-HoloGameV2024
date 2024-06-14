@@ -138,9 +138,9 @@ class Puska:
     
     def Pucanje():
       if player.shootTimer < 0:
-        if key(6):
+        if key_shoot:
             Puska.pucaj(prvaPuska)
-        if keyp(19):
+        if key_switch:
             Puska.PromijeniPusku()
       
       eksdes = 12

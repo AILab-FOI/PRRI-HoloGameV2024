@@ -12,14 +12,16 @@ state='menu' #varijabla za game state
 level = 0 # koji level je ucitan (od 0 pa na dalje)
 
 def TIC():
+ update_keys()
+
  Final()
 
  global state
  if state=='game':
    IgrajLevel()
    if level == 0:
-     print("WASD za micanje, F za pucanje", 0, 16)
-     print("S za promjenu oruzja", 0, 22)
+     print("Strjelice (WASD) za micanje, A (F) za pucanje", 0, 16)
+     print("SELECT (E) za promjenu oruzja", 0, 22)
  elif state=='menu':
    menu.Menu()
  elif state=='over':

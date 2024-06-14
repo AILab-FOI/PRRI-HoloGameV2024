@@ -1,7 +1,7 @@
 player_starting_positions = [ # pocetna pozicija igraca za svaki level (u map editoru se prikazuje):
     [2, 12], # level 0
     [5, 28], # level 1
-    [10, 44], # level 2
+    [9, 44], # level 2
     [3, 63], # level 3
     [3, 72] # nepostojeci opet peti level
 ]
@@ -22,11 +22,15 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
     118, 119, 120, # zuti stol, no ima problem jer neki leveli koriste sredinu stola za platformu
     48, 49, 64, 65, 80, 81, 96, 97, # ljestve
     104, 11, 30,
-    59, 231, 247
+    59, 231, 247,
+    219, 220, 221, 222, 223, # oni "ormarici"
+    235, 236, 237, 238, 239,
+    251, 252, 253, 254, 255,
+    133, 134, # torta
 ]
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
     [Enemy(20, 13)], # level 0
-    [Enemy(20, 30), Enemy(29, 30), Enemy(60, 30), Enemy(83, 30), Enemy(155, 35), Enemy(182, 35)], # level 1
+    [Enemy(60, 30), Enemy(155, 35), Enemy(182, 35)], # level 1
     [Enemy(139, 46), Enemy(74, 46), Enemy(58, 46), Enemy(75, 46), Enemy(127, 46), Enemy(184, 46), Enemy(174, 46)], # level 2
     [Enemy(64, 62)] # level 3
 ]

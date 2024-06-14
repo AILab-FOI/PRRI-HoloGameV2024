@@ -37,13 +37,13 @@ hologamev = {
     "controls": [
         {
             'UP': 'W',
-            'DOWN': 'A',
-            'LEFT': 'S',
+            'DOWN': 'S',
+            'LEFT': 'A',
             'RIGHT': 'D',
-            'SELECT': 'esc',
+            'SELECT': 'E',
             'START': 'space',
-            'A': 'space',
-            'B': 'enter'
+            'A': 'F',
+            'B': 'space'
         }
     ]
 }
