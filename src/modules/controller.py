@@ -147,14 +147,20 @@ class player:
 
         if self.is_walking == True:
             self.spriteTimer += 0.1
+        elif self.on_ladders:
+            if key(23) or key(19):
+                self.spriteTimer += 0.1
 
         #renderanje spritea
-        if self.desno==True and self.is_walking==True:
-            spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
-        elif self.desno==False and self.is_walking==True:
-            spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
+        if self.on_ladders:
+            spr(290 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
         else:
-            spr(self.frame,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
+            if self.desno==True and self.is_walking==True:
+                spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
+            elif self.desno==False and self.is_walking==True:
+                spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
+            else:
+                spr(self.frame,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
 
 
         if self.hitTimer > self.hitVar:

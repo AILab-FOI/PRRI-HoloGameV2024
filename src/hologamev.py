@@ -234,14 +234,20 @@ class player:
 
         if self.is_walking == True:
             self.spriteTimer += 0.1
+        elif self.on_ladders:
+            if key(23) or key(19):
+                self.spriteTimer += 0.1
 
         #renderanje spritea
-        if self.desno==True and self.is_walking==True:
-            spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
-        elif self.desno==False and self.is_walking==True:
-            spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
+        if self.on_ladders:
+            spr(290 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
         else:
-            spr(self.frame,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
+            if self.desno==True and self.is_walking==True:
+                spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
+            elif self.desno==False and self.is_walking==True:
+                spr(258 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
+            else:
+                spr(self.frame,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
 
 
         if self.hitTimer > self.hitVar:
@@ -1317,8 +1323,8 @@ def HUD():
 # 033:0006666622006666222006662222066622020666220206662222066622220666
 # 034:6666666066666605666660556666011160060555044015550ee015550eeee155
 # 035:0006666655006666555066661111066655550666555506665555066655550006
-# 036:666666606666660566666055666601116666055566601555600015550440e155
-# 037:0006666655006666555066661111066655550666555500065555044055550ee0
+# 036:6666600066660055666605556660111166605555666055556660155560001555
+# 037:0666666650666666550666661110666655506006555e0440555e0ee055eeeee0
 # 038:66666000666600556600055560011111605055446000544466000444600e1544
 # 039:0066666650066666550066661110666640406666404066664440666644406666
 # 040:66666000666600556600055560011111605055446000544466000444600e1544
@@ -1331,8 +1337,8 @@ def HUD():
 # 049:2220006622202066220220660000066602220066600220666600006666666666
 # 050:600eee15660ee0e166000eee6666000066600eee6660eee0660ee00666000066
 # 051:55e00440eee0eee0110eee0000110066eee0066600ee06666000066666666666
-# 052:0eeeee15600ee0e1660eeeee666000006660eeee660ee0006600006666666666
-# 053:55e0eee0eee0ee06110ee00600110666eee066660ee0066660ee066660000666
+# 052:044001550eee0e1100eee0ee6600ee0066600eee6660ee006660000666666666
+# 053:5eeee006ee0ee0661110006600006666eee006660eee0666600ee06666000066
 # 054:60eee15500ee0e1e0ee0eee1044000000000eeee660ee00060ee006660000666
 # 055:55006006e000022000422400ee420066ee000666ee0066660ee0666600006666
 # 056:60eee15500ee0e1e0ee0eee1044000000000eeee660ee00060ee006660000666
