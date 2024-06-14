@@ -199,16 +199,12 @@ class player:
 
     def UnStuck(self):
         if self.ProvjeriKolizije(self, 0, 0):
-            if self.hsp == 0 and self.vsp == 0:
-                if self.ProvjeriKolizije(self, 0, 1):
-                    self.x += 1
-                    return
-                if self.ProvjeriKolizije(self, 0, -1):
-                    self.x -= 1
-                    return
-                if self.Desno:
-                    self.x -= 1
-                elif self.Lijevo:
-                    self.x += 1
-
-
+            for skok in range (1, 3):
+                for i in range (-skok, skok, skok):
+                    for j in range (-skok, skok, skok):
+                        if i == 0 and j == 0:
+                            continue
+                        if not self.ProvjeriKolizije(self, i, j):
+                            self.x += i
+                            self.y += j
+                            return
