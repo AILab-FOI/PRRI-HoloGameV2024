@@ -6,6 +6,10 @@ def pomakni(a, b, vrijednost):
     else:
         return max(a - vrijednost, b)
 
+ladder_tile_indexes = [
+    48, 49, 64, 65, 80, 81, 96, 97
+]
+
 class player: 
     x=96
     y=24
@@ -17,10 +21,10 @@ class player:
     is_walking = False
     frame = 256
     shootTimer=0
-    jetpackGorivo=0
     skok=0
     coll=[]
     spriteTimer = 0
+    on_ladders = False
 
     def ProvjeriKolizije(self, xdodatak, ydodatak):
         self.x += xdodatak
@@ -38,17 +42,15 @@ class player:
     minX=10000 #najdesnija tocka
 
     #Osnovne Varijable
-    akceleracija=0.25
+    acc_normal = 0.25
+    acc_ladders = 1
+    akceleracija = 0.25
     maxBrzina=2
     gravitacija=0.24
 
 
     #Varijable skakanja
     skokJacina=4.4
-
-    #jetpack
-    jetpackTrajanje=50
-    jetpackJacina=2
     
     #Koyote time
     coyoteTime=7
@@ -64,6 +66,14 @@ class player:
 
     def PlayerKontroler(self, coll):
         self.coll=coll
+        self.CheckOnLadders(self)
+
+        #promjena akceleracije ovisno o ljestvama
+        if self.on_ladders:
+            self.akceleracija = self.acc_ladders
+        else:
+            self.akceleracija = self.acc_normal
+
         #skakanje
         if key(48) and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
             if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime:
@@ -71,11 +81,12 @@ class player:
                 self.jumped = True
 
         #coyote time
-        if self.ProvjeriKolizije(self, 0, 1):
-            self.ctVar = 0
-            self.jumped = False
-        else:
-            self.ctVar += 1
+        if not self.on_ladders:
+            if self.ProvjeriKolizije(self, 0, 1):
+                self.ctVar = 0
+                self.jumped = False
+            else:
+                self.ctVar += 1
         
 
         #kretanje lijevo desno
@@ -90,9 +101,6 @@ class player:
         else:
             self.hsp=pomakni(self.hsp,0,self.akceleracija)
             self.is_walking = False
-
-        if key(23):
-            self.JetpackJoyride(self)
             
 
         #gravitacija i kolizije
@@ -101,13 +109,22 @@ class player:
                 self.y+=1
             self.vsp=0
         else:
-            self.vsp=self.vsp+self.gravitacija
+            if not self.on_ladders:
+                self.vsp=self.vsp+self.gravitacija
 
         if self.vsp<0:
             if self.ProvjeriKolizije(self, 0, self.vsp - 1):
                 self.vsp=0
 
-        
+        #pomicanje po ljestvama
+        if self.on_ladders:
+            print("on ladders", 16, 64)
+            if key(23): 
+                self.vsp=pomakni(self.vsp,-self.maxBrzina,self.akceleracija)
+            elif key(19):
+                self.vsp=pomakni(self.vsp,self.maxBrzina,self.akceleracija)
+            else:
+                self.vsp=pomakni(self.vsp,0,self.akceleracija)
 
         #blokiranje lijevo i desno
         if self.x>(pogled.ogranicenjeX - self.width) or self.ProvjeriKolizije(self, 1+self.hsp, 0):
@@ -122,12 +139,6 @@ class player:
 
         self.x=self.x+self.hsp
         self.y=self.y+self.vsp
-            
-        
-        #jetpack
-        
-        if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY: # ZAMIJENITI SA DOK STOJI NA NEKOM OBJEKTU
-            self.jetpackGorivo=self.jetpackTrajanje
 
         if self.is_walking == True:
             self.spriteTimer += 0.1
@@ -149,13 +160,6 @@ class player:
                 spr(266 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
             else:
                 spr(266,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
-            
-            
-    def JetpackJoyride(self):
-        if self.jetpackGorivo > 0:
-            self.vsp = -self.jetpackJacina
-            self.jetpackGorivo = self.jetpackGorivo - 1
-            self.skok = 0
      
     def Pogoden(self, dmg):
         global state
@@ -163,5 +167,12 @@ class player:
         self.hitVar = 0
         if self.health < 1:
             state = 'over'
+
+    def CheckOnLadders(self):
+        self.on_ladders = False
+        for i in range(0, int(self.width), int(self.width/2)):
+            for j in range(0, int(self.height), int(self.height/2)):
+                if mget(round((self.x + i)/8), round((self.y + j)/8)) in ladder_tile_indexes:
+                    self.on_ladders = True
 
 

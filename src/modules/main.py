@@ -19,7 +19,7 @@ def TIC():
    IgrajLevel()
    if level == 0:
      print("WASD za micanje, F za pucanje", 0, 16)
-     print("S za promjenu oruzja", 0, 22)
+     print("E za promjenu oruzja", 0, 22)
  elif state=='menu':
    menu.Menu()
  elif state=='over':

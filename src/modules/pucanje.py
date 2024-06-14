@@ -140,7 +140,7 @@ class Puska:
       if player.shootTimer < 0:
         if key(6):
             Puska.pucaj(prvaPuska)
-        if keyp(19):
+        if keyp(5):
             Puska.PromijeniPusku()
       
       eksdes = 12
