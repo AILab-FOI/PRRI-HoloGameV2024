@@ -193,8 +193,9 @@ class player:
 
         #gravitacija i kolizije
         if self.y+self.vsp>=self.minY or self.ProvjeriKolizije(self, 0, self.vsp + 1):
-            while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
-                self.y+=1
+            if self.vsp > 0:
+                while self.y<self.minY and not self.ProvjeriKolizije(self, 0, 1):
+                    self.y+=1
             self.vsp=0
         else:
             if not self.on_ladders:
@@ -258,6 +259,8 @@ class player:
                 spr(266 + 2*(round(self.spriteTimer)%2==0),int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
             else:
                 spr(266,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,int(self.desno==False),0,2,2)
+
+        self.UnStuck(self)
      
     def Pogoden(self, dmg):
         global state
@@ -280,6 +283,20 @@ class player:
                 for j in range(0, int(self.height), int(self.height/2)):
                     if mget(round((self.x + i)/8), round((self.y + j)/8) + level*LEVEL_HEIGHT) in ladder_tile_indexes:
                         self.on_ladders = True
+
+    def UnStuck(self):
+        if self.ProvjeriKolizije(self, 0, 0):
+            if self.hsp == 0 and self.vsp == 0:
+                if self.ProvjeriKolizije(self, 0, 1):
+                    self.x += 1
+                    return
+                if self.ProvjeriKolizije(self, 0, -1):
+                    self.x -= 1
+                    return
+                if self.Desno:
+                    self.x -= 1
+                elif self.Lijevo:
+                    self.x += 1
 
 
 
