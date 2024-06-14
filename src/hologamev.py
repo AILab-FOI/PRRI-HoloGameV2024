@@ -20,8 +20,8 @@ def TIC():
  if state=='game':
    IgrajLevel()
    if level == 0:
-     print("WASD za micanje, F za pucanje", 0, 16)
-     print("E za promjenu oruzja", 0, 22)
+     print("Strjelice (WASD) za micanje, A (F) za pucanje", 0, 16)
+     print("SELECT (E) za promjenu oruzja", 0, 22)
  elif state=='menu':
    menu.Menu()
  elif state=='over':
@@ -37,17 +37,17 @@ def update_keys():
     global key_space, key_left, key_right, key_up, key_down, key_shoot, key_switch
     global prev_key_space, prev_key_switch
 
-    current_key_space = key(48)
-    current_key_switch = key(5)
+    current_key_space = key(48) # 'SPACE' ili 'START' ili 'B' na gamepadu (prirodno skakati na B, a birati na 'START')
+    current_key_switch = key(5) # 'E' ili 'SELECT' na gamepadu
 
     key_space = current_key_space and not prev_key_space
     key_switch = current_key_switch and not prev_key_switch
 
-    key_left = key(1)
-    key_right = key(4)
-    key_up = key(23)
-    key_down = key(19)
-    key_shoot = key(6)
+    key_left = key(1) # 'A' ili lijevo na gamepadu
+    key_right = key(4) # 'D' ili desno na gamepadu
+    key_up = key(23) # 'W' ili gore na gamepadu
+    key_down = key(19) # 'S' ili dolje na gamepadu
+    key_shoot = key(6) # 'F' ili 'A' na gamepadu
 
     prev_key_space = current_key_space
     prev_key_switch = current_key_switch
@@ -703,7 +703,7 @@ class menu:
     def Over():
 
         print('GAME OVER', 100, 50, 4, False, 1, False)
-        print('Start (space) za reset', 97, 70, 4, False, 1, False)
+        print('START (space) za reset', 64, 70, 4, False, 1, False)
         
         if key_space:
             reset()

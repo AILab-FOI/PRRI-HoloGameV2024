@@ -54,7 +54,7 @@ class menu:
     def Over():
 
         print('GAME OVER', 100, 50, 4, False, 1, False)
-        print('Start (space) za reset', 97, 70, 4, False, 1, False)
+        print('START (space) za reset', 64, 70, 4, False, 1, False)
         
         if key_space:
             reset()
