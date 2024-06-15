@@ -21,7 +21,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 PLAYERS = 0
 GAME_STARTED = False
-
+# qe
 # A set to keep track of connected clients
 connected_clients = set()
 
