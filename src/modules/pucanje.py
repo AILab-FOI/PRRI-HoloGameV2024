@@ -9,7 +9,7 @@ class prvaPuska:
     
     firerate = 0.6
     speed=16
-    dmg=4
+    dmg=1
     
     explosive=False
     spr=363
@@ -69,9 +69,24 @@ class Metak:
     
     
     
-    def MetakCheck(metak, colls):
+    def MetakCheck(metak, colls, enemies):
             metak.coll=colls
-            if metak.x < 0 or metak.x > pogled.ogranicenjeX or Metak.ProvjeriKolizije(metak, 0, 1):
+            metak = metak
+            metakIsHere = True
+            i = 0
+            for enemys in enemies:
+              for enemy in enemys:
+                if metakIsHere and metak.x < enemy.x + enemy.width and metak.y < enemy.y + enemy.height and metak.x > enemy.x - enemy.width + 8 and metak.y > enemy.y - enemy.height:
+                    if metak in metci:
+                        enemy.Pogoden(metak.dmg, i)
+                        metci.remove(metak)
+                        del metak
+                        metakIsHere = False
+                    else:
+                        del metak 
+                        metakIsHere = False
+            if metakIsHere: 
+               if metak.x < 0 or metak.x > pogled.ogranicenjeX or Metak.ProvjeriKolizije(metak, 0, 1):
                 if metak in metci:
                     # za rakete i ekpslozije
                     if metak.explosive and metak.explVar < trecaPuska.explLenght * 60:
@@ -87,6 +102,7 @@ class Metak:
                         del metak
                 else:
                     del metak
+            
             
     
     def ProvjeriKolizije(self, xdodatak, ydodatak):

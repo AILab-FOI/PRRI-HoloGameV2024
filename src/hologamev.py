@@ -173,12 +173,14 @@ class player:
     health = 5
     hitTimer = 10
     hitVar = 0
-
+    enemyHit = False
 
 
     def PlayerKontroler(self, coll):
         self.coll=coll
         self.CheckOnLadders(self)
+        player.Hitters(player, enemies)
+        print(player.enemyHit, 50, 0)
 
         #promjena akceleracije ovisno o ljestvama
         if self.on_ladders:
@@ -320,6 +322,18 @@ class player:
                             self.x += i
                             self.y += j
                             return
+                        
+    def Hitters(self, enemies):
+        hitt = False
+        for enemys in enemies:
+            for enemy in enemys:
+                if player.x < enemy.x + enemy.width and player.y < enemy.y + enemy.height and player.x > enemy.x - enemy.width and player.y > enemy.y - enemy.height:
+                    if not player.enemyHit and not enemy.dead:
+                        player.Pogoden(player, 1)
+                    player.enemyHit = True
+                    hitt = True
+        if not hitt:
+            player.enemyHit = False
 #lista projektila
 projectiles = []
 
@@ -338,6 +352,8 @@ class Enemy:
   shotTimer = 0  # timer za pucanje
   shotFreq = 2 # koliko cesto puca
   coll = []
+  health = 2
+  dead = False
 
   def __init__(self, x, y):
     tile_size = 8
@@ -347,20 +363,20 @@ class Enemy:
   def movement(self, coll):
     self.coll = coll
     self.x = self.x + self.dx
-    if self.ProvjeriKolizije(6*self.dx, 0):
+    if not self.dead and self.ProvjeriKolizije(6*self.dx, 0):
       if not self.ProvjeriKolizije(3*self.dx, -9):
         if self.ProvjeriKolizije(0, 1):
           self.vsp = -self.skokJacina
         else:
           self.dx = -self.dx
           self.desno = not self.desno
-    elif self.ProvjeriKolizije(3*self.dx, 0):
+    elif not self.dead and self.ProvjeriKolizije(3*self.dx, 0):
       self.dx = -self.dx
       self.desno = not self.desno
-    if self.x <= 0:
+    if not self.dead and self.x <= 0:
       self.dx = 1  # mijenja stranu kad takne lijevu stranu
       self.desno = True
-    elif self.x >= pogled.ogranicenjeX:
+    elif not self.dead and self.x >= pogled.ogranicenjeX:
       self.dx = -1  # mijenja stranu kad takne desnu stranu
       self.desno = False
 
@@ -381,14 +397,14 @@ class Enemy:
     self.y = self.y + self.vsp
 
     # puca svakih dvije sekunde
-    if self.shotTimer >= 60 * self.shotFreq:
+    if not self.dead and self.shotTimer >= 60 * self.shotFreq:
       self.shootProjectile()  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
     #crtanje samog sebe
-    if self.desno==True:
+    if not self.dead and self.desno==True:
       spr(320,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
-    else:
+    elif not self.dead:
       spr(320,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
@@ -409,6 +425,11 @@ class Enemy:
     self.x -= xdodatak
     self.y -= ydodatak
     return False
+  
+  def Pogoden(self, damage, removeInt):
+    self.health = self.health - damage
+    if self.health < 1:
+      self.dead = True
 
 class Projectile:
   x=0
@@ -488,6 +509,7 @@ class Enemy2(Enemy):
   shotTimer = 0  # timer za pucanje
   shotFreq = 1 # koliko cesto puca
   coll = []
+  health = 4
 
   def __init__(self, x, y):
     tile_size = 8
@@ -496,21 +518,21 @@ class Enemy2(Enemy):
 
   def movement(self, coll):
     self.coll = coll
-    self.x = self.x + 2*self.dx
-    if self.ProvjeriKolizije(6*self.dx, 0):
+    self.x = self.x + self.dx
+    if not self.dead and self.ProvjeriKolizije(6*self.dx, 0):
       if not self.ProvjeriKolizije(3*self.dx, -9):
         if self.ProvjeriKolizije(0, 1):
           self.vsp = -self.skokJacina
         else:
           self.dx = -self.dx
           self.desno = not self.desno
-    elif self.ProvjeriKolizije(3*self.dx, 0):
+    elif not self.dead and self.ProvjeriKolizije(3*self.dx, 0):
       self.dx = -self.dx
       self.desno = not self.desno
-    if self.x <= 0:
+    if not self.dead and self.x <= 0:
       self.dx = 1  # mijenja stranu kad takne lijevu stranu
       self.desno = True
-    elif self.x >= pogled.ogranicenjeX:
+    elif not self.dead and self.x >= pogled.ogranicenjeX:
       self.dx = -1  # mijenja stranu kad takne desnu stranu
       self.desno = False
 
@@ -531,14 +553,14 @@ class Enemy2(Enemy):
     self.y = self.y + self.vsp
 
     # puca svakih 1 sekundu
-    if self.shotTimer >= 60 * self.shotFreq:
+    if not self.dead and self.shotTimer >= 60 * self.shotFreq:
       self.shootProjectile()  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
     #crtanje samog sebe
-    if self.desno==True:
+    if not self.dead and self.desno==True:
       spr(326,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
-    else:
+    elif not self.dead:
       spr(326,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
@@ -559,6 +581,11 @@ class Enemy2(Enemy):
     self.x -= xdodatak
     self.y -= ydodatak
     return False
+  
+  def Pogoden(self, damage, removeInt):
+    self.health = self.health - damage
+    if self.health < 1:
+      self.dead = True
 #lista projektila
 projectiles = []
 
@@ -577,6 +604,7 @@ class Enemy3(Enemy):
   shotTimer = 0  # timer za pucanje
   shotFreq = 2 # koliko cesto puca
   coll = []
+  health = 6
 
   def __init__(self, x, y):
     tile_size = 8
@@ -586,20 +614,20 @@ class Enemy3(Enemy):
   def movement(self, coll):
     self.coll = coll
     self.x = self.x + self.dx
-    if self.ProvjeriKolizije(6*self.dx, 0):
+    if not self.dead and self.ProvjeriKolizije(6*self.dx, 0):
       if not self.ProvjeriKolizije(3*self.dx, -9):
         if self.ProvjeriKolizije(0, 1):
           self.vsp = -self.skokJacina
         else:
           self.dx = -self.dx
           self.desno = not self.desno
-    elif self.ProvjeriKolizije(3*self.dx, 0):
+    elif not self.dead and self.ProvjeriKolizije(3*self.dx, 0):
       self.dx = -self.dx
       self.desno = not self.desno
-    if self.x <= 0:
+    if not self.dead and self.x <= 0:
       self.dx = 1  # mijenja stranu kad takne lijevu stranu
       self.desno = True
-    elif self.x >= pogled.ogranicenjeX:
+    elif not self.dead and self.x >= pogled.ogranicenjeX:
       self.dx = -1  # mijenja stranu kad takne desnu stranu
       self.desno = False
 
@@ -620,14 +648,14 @@ class Enemy3(Enemy):
     self.y = self.y + self.vsp
 
     # puca svakih dvije sekunde
-    if self.shotTimer >= 60 * self.shotFreq:
+    if not self.dead and self.shotTimer >= 60 * self.shotFreq:
       self.shootProjectile()  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
     #crtanje samog sebe
-    if self.desno==True:
+    if not self.dead and self.desno==True:
       spr(352,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
-    else:
+    elif not self.dead:
       spr(352,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
@@ -648,6 +676,11 @@ class Enemy3(Enemy):
     self.x -= xdodatak
     self.y -= ydodatak
     return False
+  
+  def Pogoden(self, damage, removeInt):
+    self.health = self.health - damage
+    if self.health < 1:
+      self.dead = True
      
 
 
@@ -765,7 +798,7 @@ class prvaPuska:
     
     firerate = 0.6
     speed=16
-    dmg=4
+    dmg=1
     
     explosive=False
     spr=363
@@ -825,9 +858,24 @@ class Metak:
     
     
     
-    def MetakCheck(metak, colls):
+    def MetakCheck(metak, colls, enemies):
             metak.coll=colls
-            if metak.x < 0 or metak.x > pogled.ogranicenjeX or Metak.ProvjeriKolizije(metak, 0, 1):
+            metak = metak
+            metakIsHere = True
+            i = 0
+            for enemys in enemies:
+              for enemy in enemys:
+                if metakIsHere and metak.x < enemy.x + enemy.width and metak.y < enemy.y + enemy.height and metak.x > enemy.x - enemy.width + 8 and metak.y > enemy.y - enemy.height:
+                    if metak in metci:
+                        enemy.Pogoden(metak.dmg, i)
+                        metci.remove(metak)
+                        del metak
+                        metakIsHere = False
+                    else:
+                        del metak 
+                        metakIsHere = False
+            if metakIsHere: 
+               if metak.x < 0 or metak.x > pogled.ogranicenjeX or Metak.ProvjeriKolizije(metak, 0, 1):
                 if metak in metci:
                     # za rakete i ekpslozije
                     if metak.explosive and metak.explVar < trecaPuska.explLenght * 60:
@@ -843,6 +891,7 @@ class Metak:
                         del metak
                 else:
                     del metak
+            
             
     
     def ProvjeriKolizije(self, xdodatak, ydodatak):
@@ -994,9 +1043,9 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
 ]
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
     [Enemy(20, 13)], # level 0
-    [Enemy(60, 30), Enemy(155, 35), Enemy(182, 35)], # level 1
-    [Enemy(139, 46), Enemy(74, 46), Enemy(58, 46), Enemy(75, 46), Enemy(127, 46), Enemy(184, 46), Enemy(174, 46)], # level 2
-    [Enemy(64, 62)] # level 3
+    [Enemy(60, 30), Enemy2(155, 35), Enemy(182, 35)], # level 1
+    [Enemy2(139, 46), Enemy2(79, 46), Enemy2(58, 46), Enemy2(127, 46), Enemy2(184, 46), Enemy2(174, 46)], # level 2
+    [Enemy3(64, 62)] # level 3
 ]
 pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispisuje koja)
     [], # level 0
@@ -1042,7 +1091,7 @@ def IgrajLevel():
     player.PlayerKontroler(player, collidables)
     pogled.pratiIgraca()
     for metak in metci:
-        Metak.MetakCheck(metak, collidables)
+        Metak.MetakCheck(metak, collidables, enemies)
     for metak in projectiles:
         Projectile.MetakCheck(metak, collidables)
     levelPickups = pickups[level]
@@ -1068,7 +1117,7 @@ def ProvjeravajJeLiIgracULavi():
     
 def ProvjeravajJeLiIgracNaSiljku():
     tile_size = 8
-    kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + 2 + level*LEVEL_HEIGHT)
+    kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + 1 + level*LEVEL_HEIGHT)
     if kojiTile in spikes:
         player.Pogoden(player, 1)
 
