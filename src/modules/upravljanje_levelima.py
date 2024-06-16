@@ -18,7 +18,7 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
 	56, 57, 58, 72, 73, 74, 
 	85, 86, 87, 
 	102, 103,
-    88, 89, 90, 
+    88, 89, 90,
     118, 119, 120, # zuti stol, no ima problem jer neki leveli koriste sredinu stola za platformu
     48, 49, 64, 65, 80, 81, 96, 97, # ljestve
     104, 11, 30,
