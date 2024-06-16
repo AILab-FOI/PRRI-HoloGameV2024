@@ -1082,7 +1082,7 @@ def ZavrsiLevel():
         state = 'win'
 
 def HUD():
-    rect(0, 0, 110, 8, 0)
+    rect(0, 0, 240, 8, 0)
     print("Level:" + str(level), 1, 1, 12, True, 1, False)
     # Prikaz zivota
     spr(364, 50, 0, 6, 1, 0, 0, 1, 1)
@@ -1093,8 +1093,7 @@ def HUD():
     else: 
         print("0HP", 120, 1, 12, True, 1, False)
     # Prikaz puske i metaka
-    spr(Puska.svespr[Puska.p[Puska.tp]], 230, 1, 6, 1, 0, 0, 1, 1)
-    print("Ammo: 5", 180, 1, 12, True, 1, False)
+    spr(Puska.svespr[Puska.p[Puska.tp]], 150, 0, 6, 1, 0, 0, 1, 1)
 
 # <TILES>
 # 001:8888888888888888888888888888888888888088888888888888888888888888
