@@ -20,8 +20,11 @@ def TIC():
  if state=='game':
    IgrajLevel()
    if level == 0:
-     print("Strjelice (WASD) za micanje, A (F) za pucanje", 0, 16)
-     print("SELECT (E) za promjenu oruzja", 0, 22)
+     print("Keys (AD) for moving left and right", 0, 16)
+     print("Keys (WS) for moving up and down by laders", 0, 24)
+     print("Key (B) for jump, key (E) for weapon change", 0, 32)
+     print("Key (F) for shooting. Be aware of lava nad spikes!!!", 0, 40)
+     print("Touching the enemy also decreases health!!!", 0, 48)
  elif state=='menu':
    menu.Menu()
  elif state=='over':

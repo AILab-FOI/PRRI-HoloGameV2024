@@ -61,12 +61,13 @@ class player:
     health = 5
     hitTimer = 10
     hitVar = 0
-
+    enemyHit = False
 
 
     def PlayerKontroler(self, coll):
         self.coll=coll
         self.CheckOnLadders(self)
+        player.Hitters(player, enemies)
 
         #promjena akceleracije ovisno o ljestvama
         if self.on_ladders:
@@ -208,3 +209,15 @@ class player:
                             self.x += i
                             self.y += j
                             return
+                        
+    def Hitters(self, enemies):
+        hitt = False
+        for enemys in enemies:
+            for enemy in enemys:
+                if player.x < enemy.x + enemy.width and player.y < enemy.y + enemy.height and player.x > enemy.x - enemy.width and player.y > enemy.y - enemy.height:
+                    if not player.enemyHit and not enemy.dead:
+                        player.Pogoden(player, 1)
+                    player.enemyHit = True
+                    hitt = True
+        if not hitt:
+            player.enemyHit = False

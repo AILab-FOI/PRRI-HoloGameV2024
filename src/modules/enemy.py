@@ -16,6 +16,8 @@ class Enemy:
   shotTimer = 0  # timer za pucanje
   shotFreq = 2 # koliko cesto puca
   coll = []
+  health = 2
+  dead = False
 
   def __init__(self, x, y):
     tile_size = 8
@@ -25,20 +27,20 @@ class Enemy:
   def movement(self, coll):
     self.coll = coll
     self.x = self.x + self.dx
-    if self.ProvjeriKolizije(6*self.dx, 0):
+    if not self.dead and self.ProvjeriKolizije(6*self.dx, 0):
       if not self.ProvjeriKolizije(3*self.dx, -9):
         if self.ProvjeriKolizije(0, 1):
           self.vsp = -self.skokJacina
         else:
           self.dx = -self.dx
           self.desno = not self.desno
-    elif self.ProvjeriKolizije(3*self.dx, 0):
+    elif not self.dead and self.ProvjeriKolizije(3*self.dx, 0):
       self.dx = -self.dx
       self.desno = not self.desno
-    if self.x <= 0:
+    if not self.dead and self.x <= 0:
       self.dx = 1  # mijenja stranu kad takne lijevu stranu
       self.desno = True
-    elif self.x >= pogled.ogranicenjeX:
+    elif not self.dead and self.x >= pogled.ogranicenjeX:
       self.dx = -1  # mijenja stranu kad takne desnu stranu
       self.desno = False
 
@@ -59,14 +61,14 @@ class Enemy:
     self.y = self.y + self.vsp
 
     # puca svakih dvije sekunde
-    if self.shotTimer >= 60 * self.shotFreq:
+    if not self.dead and self.shotTimer >= 60 * self.shotFreq:
       self.shootProjectile()  # poziv funkcije za pucanje
       self.shotTimer = 0  # resetiranje timera
 
     #crtanje samog sebe
-    if self.desno==True:
+    if not self.dead and self.desno==True:
       spr(320,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,0,0,2,2)
-    else:
+    elif not self.dead:
       spr(320,int(self.x) - int(pogled.x),int(self.y) - int(pogled.y),6,1,1,0,2,2)
 
   def shootProjectile(self):
@@ -87,6 +89,11 @@ class Enemy:
     self.x -= xdodatak
     self.y -= ydodatak
     return False
+  
+  def Pogoden(self, damage, removeInt):
+    self.health = self.health - damage
+    if self.health < 1:
+      self.dead = True
 
 class Projectile:
   x=0
