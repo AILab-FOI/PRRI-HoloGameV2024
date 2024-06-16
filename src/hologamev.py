@@ -170,7 +170,7 @@ class player:
     jumped=False
 
     #hp
-    health = 300
+    health = 5
     hitTimer = 10
     hitVar = 0
 
@@ -673,7 +673,7 @@ class menu:
 
         # Odabir 
         if key_space and menu.m_ind==0:
-            state = 'win'
+            state = 'game'
             ZapocniLevel(level)
         elif key_space and menu.m_ind==1:
             exit()
@@ -710,8 +710,8 @@ class menu:
             
     def Over():
         cls(0)
-        print('GAME OVER', 100, 50, 2, False, 1, False)
-        print('START (space) for restart', 64, 70, 4, False, 1, False)
+        print('GAME OVER', 75, 50, 2, False, 2, False)
+        print('START (space) for restart', 58, 70, 4, False, 1, False)
 
         
         if key_space:
