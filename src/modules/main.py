@@ -26,6 +26,8 @@ def TIC():
    menu.Menu()
  elif state=='over':
    menu.Over()
+ elif state=='win':
+   menu.PrikaziZaslonPobjede()
 
 def Final():
 	cls(13) 

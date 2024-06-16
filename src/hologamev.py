@@ -26,6 +26,8 @@ def TIC():
    menu.Menu()
  elif state=='over':
    menu.Over()
+ elif state=='win':
+   menu.PrikaziZaslonPobjede()
 
 def Final():
 	cls(13) 
@@ -168,7 +170,7 @@ class player:
     jumped=False
 
     #hp
-    health = 3
+    health = 300
     hitTimer = 10
     hitVar = 0
 
@@ -695,10 +697,16 @@ class menu:
             rectb(0,0,240,136,3)
         elif(time()%500>550):
             rectb(0,0,240,136,10)
-            
-            
-            
-            
+
+    def AnimateWinTitle():
+        if(time()%500>250):
+            print('YOU WON!', 57, 20, 6, False, 2, False)
+        elif(time()%500>150):
+            print('YOU WON!', 57, 20, 2, False, 2, False)
+        elif(time()%500>350):
+            print('YOU WON!', 57, 20, 3, False, 2, False)
+        elif(time()%500>550):
+            print('YOU WON!', 57, 20, 10, False, 2, False)
             
     def Over():
 
@@ -708,6 +716,13 @@ class menu:
         if key_space:
             reset()
 
+    def PrikaziZaslonPobjede():
+        global state
+        cls(0)
+        menu.AnimateFrame()
+        menu.AnimateWinTitle()
+
+        rect(1,48+10*menu.m_ind,238,10,2)
 
 class Pogled:
     x = 0
@@ -1055,8 +1070,12 @@ def ProvjeravajJeLiIgracNaSiljku():
 
 def ZavrsiLevel():
     global level
-    level = level + 1
-    ZapocniLevel(level)
+    level = 3
+    if level <=3:
+        ZapocniLevel(level)
+    else:
+        global state
+        state = 'win'
 
 def HUD():
     rect(0, 0, 110, 8, 0)

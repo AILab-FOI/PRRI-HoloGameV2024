@@ -58,7 +58,7 @@ class player:
     jumped=False
 
     #hp
-    health = 3
+    health = 300
     hitTimer = 10
     hitVar = 0
 

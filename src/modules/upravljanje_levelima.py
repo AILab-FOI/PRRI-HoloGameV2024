@@ -111,7 +111,11 @@ def ProvjeravajJeLiIgracNaSiljku():
 def ZavrsiLevel():
     global level
     level = level + 1
-    ZapocniLevel(level)
+    if level <=3:
+        ZapocniLevel(level)
+    else:
+        global state
+        state = 'win'
 
 def HUD():
     rect(0, 0, 110, 8, 0)
