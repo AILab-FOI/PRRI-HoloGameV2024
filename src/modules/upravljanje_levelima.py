@@ -111,7 +111,11 @@ def ProvjeravajJeLiIgracNaSiljku():
 def ZavrsiLevel():
     global level
     level = level + 1
-    ZapocniLevel(level)
+    if level <=3:
+        ZapocniLevel(level)
+    else:
+        global state
+        state = 'win'
 
 def HUD():
     rect(0, 0, 110, 8, 0)
@@ -120,11 +124,10 @@ def HUD():
     spr(364, 50, 0, 6, 1, 0, 0, 1, 1)
     rect(60, 1, player.health*10, 5, 6)
     if player.health > 0:
-        rect(60+player.health*10, 1, 30-player.health*10, 5, 3)
-        print(str(player.health) + "HP", 92, 1, 12, True, 1, False)
+        rect(60+player.health*10, 1, 50-player.health*10, 5, 3)
+        print(str(player.health) + "HP", 120, 1, 12, True, 1, False)
     else: 
-        print("0HP", 142, 1, 12, True, 1, False)
+        print("0HP", 120, 1, 12, True, 1, False)
     # Prikaz puske i metaka
-    rect(0, 8, 100, 8, 0)
-    spr(Puska.svespr[Puska.p[Puska.tp]], 50, 8, 6, 1, 0, 0, 1, 1)
-    print("Ammo: 5", 1, 8, 12, True, 1, False)
+    spr(Puska.svespr[Puska.p[Puska.tp]], 230, 1, 6, 1, 0, 0, 1, 1)
+    print("Ammo: 5", 180, 1, 12, True, 1, False)

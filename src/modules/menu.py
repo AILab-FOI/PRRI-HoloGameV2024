@@ -46,16 +46,33 @@ class menu:
             rectb(0,0,240,136,3)
         elif(time()%500>550):
             rectb(0,0,240,136,10)
-            
-            
-            
-            
+
+    def AnimateWinTitle():
+        if(time()%500>250):
+            print('YOU WON!', 80, 50, 6, False, 2, False)
+        elif(time()%500>150):
+            print('YOU WON!', 80, 50, 6, False, 2, False)
+        elif(time()%500>350):
+            print('YOU WON!', 80, 50, 6, False, 2, False)
+        elif(time()%500>550):
+            print('YOU WON!', 80, 50, 6, False, 2, False)
             
     def Over():
+        cls(0)
+        print('GAME OVER', 75, 50, 2, False, 2, False)
+        print('START (space) for restart', 58, 70, 4, False, 1, False)
 
-        print('GAME OVER', 100, 50, 4, False, 1, False)
-        print('START (space) za reset', 64, 70, 4, False, 1, False)
         
         if key_space:
             reset()
 
+    def PrikaziZaslonPobjede():
+        global state
+        cls(0)
+        menu.AnimateFrame()
+        menu.AnimateWinTitle()
+
+        print('START (space) for exit', 62, 70, 4, False, 1, False)
+
+        if key_space:
+            state = 'menu'
