@@ -77,6 +77,7 @@ class player:
 
         #skakanje
         if key_space and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
+            sfx(9, "C-4", 10, 0, 2, 0)
             if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime or self.on_ladders:
                 self.vsp = -self.skokJacina
                 self.jumped = True
@@ -181,6 +182,7 @@ class player:
         self.health -= dmg
         self.hitVar = 0
         if self.health < 1:
+            sfx(8, "C-4", 30, 0, 5, 0)
             state = 'over'
 
     def CheckOnLadders(self):

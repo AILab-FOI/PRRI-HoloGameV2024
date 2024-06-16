@@ -192,6 +192,7 @@ class player:
 
         #skakanje
         if key_space and self.vsp == 0: #<- ovo je manje bugged ali bez coyote time  #and not self.jumped:
+            sfx(9, "C-4", 10, 0, 2, 0)
             if self.ProvjeriKolizije(self, 0, 1) or self.y>=self.minY or self.ctVar < self.coyoteTime or self.on_ladders:
                 self.vsp = -self.skokJacina
                 self.jumped = True
@@ -296,6 +297,7 @@ class player:
         self.health -= dmg
         self.hitVar = 0
         if self.health < 1:
+            sfx(8, "C-4", 30, 0, 5, 0)
             state = 'over'
 
     def CheckOnLadders(self):
@@ -415,6 +417,7 @@ class Enemy:
     projectile.desno = self.desno
     # doda projektil u listu
     projectiles.append(projectile)
+    sfx(1, "D-2", 3, 0, 2, 3)
 
   def ProvjeriKolizije(self, xdodatak, ydodatak):
     self.x += xdodatak
@@ -458,7 +461,6 @@ class Projectile:
 
     #crtanje sebe
     spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 0, 1, 0, 0, 1, 1)
-
       
   def MetakCheck(metak, colls):
             metak.coll=colls
@@ -572,6 +574,8 @@ class Enemy2(Enemy):
     # doda projektil u listu
     projectiles.append(projectile)
 
+    sfx(3, "E-4", 3, 0, 2, 3)
+
   def ProvjeriKolizije(self, xdodatak, ydodatak):
     self.x += xdodatak
     self.y += ydodatak
@@ -666,6 +670,9 @@ class Enemy3(Enemy):
     projectile.desno = self.desno
     # doda projektil u listu
     projectiles.append(projectile)
+
+    sfx(7, "C-4", 3, 0, 2, 3)
+
 
   def ProvjeriKolizije(self, xdodatak, ydodatak):
     self.x += xdodatak
@@ -913,6 +920,8 @@ class Metak:
 class Puska:
     x=0
     y=0
+
+    id=0
     
     svespr = [360, 361, 376]
     
@@ -931,6 +940,13 @@ class Puska:
         metak.speed = Puska.svep[Puska.p[Puska.tp]].speed
         metak.explosive = Puska.svep[Puska.p[Puska.tp]].explosive
         metak.spr = Puska.svep[Puska.p[Puska.tp]].spr
+
+        if Puska.svep[Puska.p[Puska.tp]].spr == 363:
+            sfx(2, "C-4", 5, 0, 2, -4)
+        elif Puska.svep[Puska.p[Puska.tp]].spr == 362:
+            sfx(4, "G-4", 5, 0, 2, 2)
+        elif Puska.svep[Puska.p[Puska.tp]].spr == 378:
+            sfx(11, "C-6", 5, 0, 2, 1)
 
         metci.append(metak)
         player.shootTimer=Puska.svep[Puska.p[Puska.tp]].firerate * 60
@@ -1002,6 +1018,7 @@ class PromjenaPuska:
         
         if self.pickUpBool and self.x < player.x + player.width and self.y < player.y + player.height and self.x > player.x - player.width + 8 and self.y > player.y - player.height:
             #zamijeni puske
+            sfx(10, "C-2", 3, 0, 2, 3)
             self.puskaSpr = Puska.svespr[Puska.p[Puska.tp]]
             noviBr = self.puskaBr
             self.puskaBr = Puska.p[Puska.tp] 
@@ -1109,18 +1126,21 @@ def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
     if kojiTile in level_finish_tile_indexes:
+        sfx(6, "C-4", 15, 0, 2, 1)
         ZavrsiLevel()
         
 def ProvjeravajJeLiIgracULavi():
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
     if kojiTile in lava:
+        sfx(8, "C-4", 15, 0, 2, 1)
         player.Pogoden(player, 1)
     
 def ProvjeravajJeLiIgracNaSiljku():
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + 1 + level*LEVEL_HEIGHT)
     if kojiTile in spikes:
+        sfx(8, "C-4", 15, 0, 2, 1)
         player.Pogoden(player, 1)
 
 def ZavrsiLevel():
@@ -1588,7 +1608,18 @@ def HUD():
 # </WAVES>
 
 # <SFX>
-# 000:000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000104000000000
+# 000:000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000304000000000
+# 001:0497047504540442144214411441145414502450246f346f347f448f448f448f548e548e548e648e648d748d749d849d849d94ada4cdc4dce4fcf4fc112000000000
+# 002:5596859695d5a5b4b593c592c59fd59ed58de58de57ce56cf55cf53bf53bf52af51af519f518f518f508f508f508f508f508f508f508f508f508f508300000000400
+# 003:0ef01ec02eb03ea04e905e806e707e608e409e30ae30be20ce20de10de10ee10fe00fe00fe00fe00fe00fe00fe00fe00fe00fe00fe00fe00fe00fe00304000000500
+# 004:11f721d631c441a35191518f617c716981589150a140a140b130c130d120e120f120f120f120f120f120f120f120f120f120f120f120f120f120f120307000000009
+# 005:451065008500a500b500c500d500d500d500e500e500f500f500f500f500f500f500f500f500f500f500f500f500f500f500f500f500f500f500f5003f2000000100
+# 006:c6077604060416013600460f560e760d860ca60bb60ac609c609d600d600d600e600e600e600f600f600f600f600f600f600f600f600f600f600f600b6000000000d
+# 007:07168730076d1777470e8708e700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700370000000406
+# 008:3748873837188748476897485708a70867099709470a970b670b970c770db70e670fb70f8701d7029703d703c704d705d706d706d707d707e707f700360000000000
+# 009:e700970f670ed70df700e70dc70ca70b570cf700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700f700b60000000000
+# 010:3708570837f157ffa7f7c7f7d7f7d7f7e7f7e7f7f7f7770887089708b708c708c708e708e708e708e708e708f708f708f708f708f708f708f708f708900000000000
+# 011:0307031603250334034303520361037f038e239d43ac63bb83caa3d9c3e8f3f8f3f8f3f8f3f8f3f8f3f8f3f8f3f8f3f8f3f8f3f8f3f8f3f8f3f8f3f8d80000000000
 # </SFX>
 
 # <TRACKS>

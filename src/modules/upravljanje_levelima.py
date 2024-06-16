@@ -94,18 +94,21 @@ def ProvjeravajJeLiIgracKodVrata(): # sluzi za kraj levela
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
     if kojiTile in level_finish_tile_indexes:
+        sfx(6, "C-4", 15, 0, 2, 1)
         ZavrsiLevel()
         
 def ProvjeravajJeLiIgracULavi():
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + level*LEVEL_HEIGHT)
     if kojiTile in lava:
+        sfx(8, "C-4", 15, 0, 2, 1)
         player.Pogoden(player, 1)
     
 def ProvjeravajJeLiIgracNaSiljku():
     tile_size = 8
     kojiTile = mget(round(player.x/tile_size), round(player.y/tile_size) + 1 + level*LEVEL_HEIGHT)
     if kojiTile in spikes:
+        sfx(8, "C-4", 15, 0, 2, 1)
         player.Pogoden(player, 1)
 
 def ZavrsiLevel():

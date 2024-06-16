@@ -77,6 +77,9 @@ class Enemy3(Enemy):
     # doda projektil u listu
     projectiles.append(projectile)
 
+    sfx(7, "C-4", 3, 0, 2, 3)
+
+
   def ProvjeriKolizije(self, xdodatak, ydodatak):
     self.x += xdodatak
     self.y += ydodatak
