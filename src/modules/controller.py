@@ -68,7 +68,6 @@ class player:
         self.coll=coll
         self.CheckOnLadders(self)
         player.Hitters(player, enemies)
-        print(player.enemyHit, 50, 0)
 
         #promjena akceleracije ovisno o ljestvama
         if self.on_ladders:
