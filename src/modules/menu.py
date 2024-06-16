@@ -22,7 +22,7 @@ class menu:
 
         # Odabir 
         if key_space and menu.m_ind==0:
-            state = 'game'
+            state = 'win'
             ZapocniLevel(level)
         elif key_space and menu.m_ind==1:
             exit()
@@ -49,18 +49,19 @@ class menu:
 
     def AnimateWinTitle():
         if(time()%500>250):
-            print('YOU WON!', 57, 20, 6, False, 2, False)
+            print('YOU WON!', 80, 50, 6, False, 2, False)
         elif(time()%500>150):
-            print('YOU WON!', 57, 20, 2, False, 2, False)
+            print('YOU WON!', 80, 50, 6, False, 2, False)
         elif(time()%500>350):
-            print('YOU WON!', 57, 20, 3, False, 2, False)
+            print('YOU WON!', 80, 50, 6, False, 2, False)
         elif(time()%500>550):
-            print('YOU WON!', 57, 20, 10, False, 2, False)
+            print('YOU WON!', 80, 50, 6, False, 2, False)
             
     def Over():
+        cls(0)
+        print('GAME OVER', 100, 50, 2, False, 1, False)
+        print('START (space) for restart', 64, 70, 4, False, 1, False)
 
-        print('GAME OVER', 100, 50, 4, False, 1, False)
-        print('START (space) za reset', 64, 70, 4, False, 1, False)
         
         if key_space:
             reset()
@@ -71,4 +72,7 @@ class menu:
         menu.AnimateFrame()
         menu.AnimateWinTitle()
 
-        rect(1,48+10*menu.m_ind,238,10,2)
+        print('START (space) for exit', 62, 70, 4, False, 1, False)
+
+        if key_space:
+            state = 'menu'
