@@ -29,10 +29,10 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
     133, 134, # torta
 ]
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
-    [Enemy(20, 13)], # level 0
-    [Enemy(60, 30), Enemy2(155, 35), Enemy(182, 35)], # level 1
+    [], # level 0
+    [Enemy(60, 30),Enemy(79, 30), Enemy(182, 35)], # level 1
     [Enemy2(139, 46), Enemy2(79, 46), Enemy2(58, 46), Enemy2(127, 46), Enemy2(184, 46), Enemy2(174, 46)], # level 2
-    [Enemy3(64, 62)] # level 3
+    [Enemy3(64, 62), Enemy3(154, 56), Enemy3(167, 61), Enemy3(206, 65), Enemy3(197, 65)] # level 3
 ]
 pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispisuje koja)
     [], # level 0
@@ -118,7 +118,7 @@ def ZavrsiLevel():
         state = 'win'
 
 def HUD():
-    rect(0, 0, 110, 8, 0)
+    rect(0, 0, 240, 8, 0)
     print("Level:" + str(level), 1, 1, 12, True, 1, False)
     # Prikaz zivota
     spr(364, 50, 0, 6, 1, 0, 0, 1, 1)
@@ -129,5 +129,4 @@ def HUD():
     else: 
         print("0HP", 120, 1, 12, True, 1, False)
     # Prikaz puske i metaka
-    spr(Puska.svespr[Puska.p[Puska.tp]], 230, 1, 6, 1, 0, 0, 1, 1)
-    print("Ammo: 5", 180, 1, 12, True, 1, False)
+    spr(Puska.svespr[Puska.p[Puska.tp]], 150, 0, 6, 1, 0, 0, 1, 1)
