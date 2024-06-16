@@ -31,8 +31,8 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
     [Enemy(20, 13)], # level 0
     [Enemy(60, 30), Enemy2(155, 35), Enemy(182, 35)], # level 1
-    [Enemy2(139, 46), Enemy2(74, 46), Enemy2(58, 46), Enemy2(75, 46), Enemy2(127, 46), Enemy2(184, 46), Enemy2(174, 46)], # level 2
-    [Enemy3(64, 62), Enemy3(85, 62), Enemy3(116, 52), Enemy3(123, 62), Enemy3(163, 62), Enemy3(229, 62)] # level 3
+    [Enemy2(139, 46), Enemy2(79, 46), Enemy2(58, 46), Enemy2(127, 46), Enemy2(184, 46), Enemy2(174, 46)], # level 2
+    [Enemy3(64, 62)] # level 3
 ]
 pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispisuje koja)
     [], # level 0

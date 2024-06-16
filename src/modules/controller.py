@@ -216,7 +216,7 @@ class player:
         for enemys in enemies:
             for enemy in enemys:
                 if player.x < enemy.x + enemy.width and player.y < enemy.y + enemy.height and player.x > enemy.x - enemy.width and player.y > enemy.y - enemy.height:
-                    if not player.enemyHit:
+                    if not player.enemyHit and not enemy.dead:
                         player.Pogoden(player, 1)
                     player.enemyHit = True
                     hitt = True

@@ -168,7 +168,7 @@ class player:
     jumped=False
 
     #hp
-    health = 30000
+    health = 3
     hitTimer = 10
     hitVar = 0
     enemyHit = False
@@ -326,7 +326,7 @@ class player:
         for enemys in enemies:
             for enemy in enemys:
                 if player.x < enemy.x + enemy.width and player.y < enemy.y + enemy.height and player.x > enemy.x - enemy.width and player.y > enemy.y - enemy.height:
-                    if not player.enemyHit:
+                    if not player.enemyHit and not enemy.dead:
                         player.Pogoden(player, 1)
                     player.enemyHit = True
                     hitt = True
@@ -1025,8 +1025,8 @@ background_tile_indexes = [ # indexi tileova sa elementima koji nemaju definiraj
 enemies = [ # pocetne pozicije enemyja za svaki level (u editoru se ispisuje koja)
     [Enemy(20, 13)], # level 0
     [Enemy(60, 30), Enemy2(155, 35), Enemy(182, 35)], # level 1
-    [Enemy2(139, 46), Enemy2(74, 46), Enemy2(58, 46), Enemy2(75, 46), Enemy2(127, 46), Enemy2(184, 46), Enemy2(174, 46)], # level 2
-    [Enemy3(64, 62), Enemy3(85, 62), Enemy3(116, 52), Enemy3(123, 62), Enemy3(163, 62), Enemy3(229, 62)] # level 3
+    [Enemy2(139, 46), Enemy2(79, 46), Enemy2(58, 46), Enemy2(127, 46), Enemy2(184, 46), Enemy2(174, 46)], # level 2
+    [Enemy3(64, 62)] # level 3
 ]
 pickups = [ # pocetna pozicija pick up pusaka za svaki level (u editoru se ispisuje koja)
     [], # level 0
