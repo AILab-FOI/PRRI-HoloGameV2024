@@ -77,6 +77,7 @@ class Enemy:
     projectile.desno = self.desno
     # doda projektil u listu
     projectiles.append(projectile)
+    sfx(1, "D-2", 3, 0, 2, 3)
 
   def ProvjeriKolizije(self, xdodatak, ydodatak):
     self.x += xdodatak
@@ -120,7 +121,6 @@ class Projectile:
 
     #crtanje sebe
     spr(104, self.x - int(pogled.x), self.y - int(pogled.y), 0, 1, 0, 0, 1, 1)
-
       
   def MetakCheck(metak, colls):
             metak.coll=colls
